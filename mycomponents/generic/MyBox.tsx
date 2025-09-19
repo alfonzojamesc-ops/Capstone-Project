@@ -2,34 +2,34 @@ import React from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
 const enableBackground = false;
-const enableLayouting = true;
+const enableLayouting = false;
 
-const Box = ({
+const MyBox = ({
   children = <Text>Lorem Ipsum</Text>,
   f,
   n = 0,
   style,
 }: BoxProps) => {
-  return (
+  return enableLayouting ? (
     <View
       style={[
         s.container,
         f != null ? { flex: f } : null,
-        enableLayouting
-          ? {
-              borderWidth: enableBackground ? 0 : 3,
-              borderColor: getColor(n) == getColor(0) ? "black" : getColor(n),
-              backgroundColor: enableBackground ? getColor(n) : getColor(0),
-            }
-          : null,
+        {
+          borderWidth: enableBackground ? 0 : 3,
+          borderColor: getColor(n) == getColor(0) ? "black" : getColor(n),
+          backgroundColor: enableBackground ? getColor(n) : getColor(0),
+        },
         style,
       ]}
     >
       {children}
     </View>
+  ) : (
+    <View style={[s.container, style]}>{children}</View>
   );
 };
-export default Box;
+export default MyBox;
 
 type BoxProps = {
   children?: React.ReactNode;
