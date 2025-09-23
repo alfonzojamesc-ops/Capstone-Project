@@ -17,13 +17,13 @@ const FABStyle = "rounded-full";
 const FABIcon = <LucideMenu size={FABIconSize} />;
 const FABText = "Inquire";
 
-const menuStyle = "bg-transparent border-0 shadow-0 gap-2"; // gluestack tailwind
+const menuStyle = "bg-transparent border-0 shadow-0 gap-2 items-end"; // gluestack tailwind
 const menuStripPlacement = "top right"; // gluestack placement token
 const menuStripOffset = 20;
 
 // TODO: make item lists hug their child's width
 const menuItemStyle =
-  "p-4 rounded-full bg-secondary-0 border border-primary-950 gap-4";
+  "p-4 rounded-full bg-secondary-0 border border-primary-950 gap-4 w-fit";
 const menuItemTextSize = "lg";
 const menuItemTextAlignment = "right";
 
