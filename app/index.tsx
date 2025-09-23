@@ -1,10 +1,10 @@
 import { Text } from "@/components/ui/text";
 import Bx from "@/my/components/generic/mybox";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-//const backgroundPlaceholder = <Image source={require('./assets/images/placeholder.jpg')} style={{height:'100%', width:'100%'}}/>;
-const backgroundPlaceholder = <Text>3D Map</Text>;
+const backgroundPlaceholder = <Image source={require('@/my/assets/images/placeholder.jpg')} style={{height:'100%', width:'100%'}}/>;
+// const backgroundPlaceholder = <Text>3D Map</Text>;
 const titlePlaceholder = <Text>BRS3DVNAV: San Jose Cemetery Park</Text>;
 const dropdownPlaceholder = <Text>FAB Button</Text>;
 const searchbarPlaceholder = <Text>Search Bar</Text>;
