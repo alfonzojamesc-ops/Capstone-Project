@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "myapp",
-    "slug": "myapp-fd1k4d",
+    "name": "capstoneproject",
+    "slug": "capstoneproject-fd1k4d",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "capstoneproject",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
