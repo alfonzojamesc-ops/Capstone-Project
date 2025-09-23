@@ -1,2 +1,2 @@
-const layoutMode = true;
+const layoutMode = false;
 export default layoutMode;

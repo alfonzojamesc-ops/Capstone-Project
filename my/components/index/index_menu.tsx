@@ -23,7 +23,7 @@ const menuStripOffset = 20;
 
 // TODO: make item lists hug their child's width
 const menuItemStyle =
-  "p-4 rounded-full bg-secondary-0 border border-primary-950 gap-4 w-fit";
+  "p-4 rounded-full bg-secondary-0 border border-primary-950 gap-4 w-fit min-w-[50px]";
 const menuItemTextSize = "lg";
 const menuItemTextAlignment = "right";
 
