@@ -1,13 +1,20 @@
 import { Text } from "@/components/ui/text";
 import Bx from "@/my/components/generic/mybox";
-import { StyleSheet, Image } from "react-native";
+import { IndexMenu } from "@/my/components/index/index_menu";
+import { IndexSearchBar } from "@/my/components/index/index_searchbar";
+import { IndexTitleCard } from "@/my/components/index/index_titlecard";
+import { Image, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-const backgroundPlaceholder = <Image source={require('@/my/assets/images/placeholder.jpg')} style={{height:'100%', width:'100%'}}/>;
-// const backgroundPlaceholder = <Text>3D Map</Text>;
-const titlePlaceholder = <Text>BRS3DVNAV: San Jose Cemetery Park</Text>;
-const dropdownPlaceholder = <Text>FAB Button</Text>;
-const searchbarPlaceholder = <Text>Search Bar</Text>;
+const backgroundPlaceholder = (
+  <Image
+    source={require("@/my/assets/images/placeholder.jpg")}
+    style={{ height: "100%", width: "100%" }}
+  />
+);
+const titlePlaceholder = <IndexTitleCard/>;
+const dropdownPlaceholder = <IndexMenu />;
+const searchbarPlaceholder = <IndexSearchBar/>
 
 export default function HomeScreen() {
   return (
@@ -65,6 +72,7 @@ const s = StyleSheet.create({
     width: "100%",
     // flexDirection: "row",
     // justifyContent: "space-between",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
+    gap: 20,
   },
 });
