@@ -1,17 +1,7 @@
-import { Slot } from 'expo-router'
-import { useEffect } from 'react'
-import { Appearance } from 'react-native'
-import { useThemeStore } from '@/my-scripts/stores/my-themeStore'
+import DetectTheme from "@/my-scripts/my-theme-detector";
+import { Stack } from "expo-router";
 
 export default function Layout() {
-  const setMode = useThemeStore((s) => s.setMode)
-
-  useEffect(() => {
-    const listener = Appearance.addChangeListener(({ colorScheme }) => {
-      setMode(colorScheme ?? 'light')
-    })
-    return () => listener.remove()
-  }, [])
-
-  return <Slot />
+  DetectTheme();
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

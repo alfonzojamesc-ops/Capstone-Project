@@ -1,18 +1,21 @@
-import { View, Text, StyleSheet } from 'react-native'
-import { useThemeStore } from '@/my-scripts/stores/my-themeStore'
+import {
+  MyIcon,
+  MyLayouter,
+  MyText,
+} from "@/my-components/my-generic-components";
+import { useThemeStore } from "@/my-scripts/my-stores/my-store-theme";
+import { AlarmClock } from "lucide-react";
 
 export default function Home() {
-  const { colors, mode } = useThemeStore()
+  const { colors } = useThemeStore();
   return (
-    <View style={[styles.container, { backgroundColor: colors.backgroundFill }]}>
-      <Text style={[styles.text, { color: colors.textPrimary }]}>
-        Theme: {mode}
-      </Text>
-    </View>
-  )
+    <MyLayouter
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
+      <MyLayouter c="32">
+        <MyText>test</MyText>
+        <MyIcon name={AlarmClock} />
+      </MyLayouter>
+    </MyLayouter>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  text: { fontSize: 20 },
-})
