@@ -17,10 +17,10 @@ const MyIcon = memo(({ name: Icon, size, color, stroke }: MyIconProps) => {
   const iconProps = useMemo(
     () => ({
       size,
-      color: color ?? colors.textPrimary,
+      color: color ?? colors.neutral1,
       strokeWidth: stroke,
     }),
-    [size, color, stroke, colors.textPrimary]
+    [size, color, stroke, colors.neutral1]
   );
 
   return <Icon {...iconProps} />;

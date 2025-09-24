@@ -1,4 +1,5 @@
 import {
+  MyFab,
   MyIcon,
   MyLayouter,
   MyText,
@@ -15,6 +16,10 @@ export default function Home() {
       <MyLayouter c="32">
         <MyText>test</MyText>
         <MyIcon name={AlarmClock} />
+        <MyFab />
+        <MyFab>
+          <MyIcon name={AlarmClock} />
+        </MyFab>
       </MyLayouter>
     </MyLayouter>
   );
