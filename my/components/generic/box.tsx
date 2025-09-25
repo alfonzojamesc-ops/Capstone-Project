@@ -1,4 +1,4 @@
-import layoutMode from "@/my-constants/my-layout-mode";
+import layoutMode from "@/my/constants/layout-mode";
 import React from "react";
 import { StyleProp, Text, View, ViewStyle } from "react-native";
 

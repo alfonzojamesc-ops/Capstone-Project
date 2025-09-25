@@ -3,5 +3,38 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+
+  "files.exclude": {
+    "**/node_modules": true,
+    ".expo": true,
+    "assets": true,
+    "README.md": true,
+    "eslint.config.js": true,
+    "expo-env.d.ts": true,
+    ".gitignore": true,
+    "tsconfig.json": true,
+    "app.json": true,
+    "package-lock.json": true,
+    "package.json": true,
+    ".vscode": true
+  },
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.expo": true,
+    "**/.git": true,
+    "assets": true,
+    "README.md": true,
+    "eslint.config.js": true,
+    "expo-env.d.ts": true,
+    ".gitignore": true,
+    "tsconfig.json": true,
+    "app.json": true,
+    "package-lock.json": true,
+    "package.json": true,
+    ".vscode": true
+  },
+  "search.collapseResults": "alwaysCollapse",
+  "search.decorations.colors": true
 }
