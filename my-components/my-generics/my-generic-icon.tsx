@@ -9,7 +9,7 @@ type MyIconProps = {
   stroke?: number;
 };
 
-const MyIcon = memo(({ name: Icon, size, color, stroke }: MyIconProps) => {
+const MyIcon = memo(({ name: Icon, size=36, color, stroke }: MyIconProps) => {
   const { colors } = useThemeStore();
 
   if (!Icon) return null;
