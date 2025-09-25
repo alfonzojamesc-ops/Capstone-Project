@@ -11,8 +11,8 @@ const MyBox = memo(({ style, children }: MyBoxProps) => {
   const { colors } = useThemeStore();
 
   const combinedStyles = useMemo(
-    () => StyleSheet.flatten([{ backgroundColor: colors.neutral6 }, style]),
-    [colors.neutral6, style]
+    () => StyleSheet.flatten([{ backgroundColor: colors.neutral4 }, style]),
+    [colors.neutral4, style]
   );
 
   return <View style={combinedStyles}>{children}</View>;
