@@ -14,9 +14,8 @@ const MyBox = ({ style, children }: MyBoxProps) => {
     () =>
       StyleSheet.create({
         container: {
+          overflow: "hidden",
           backgroundColor: palette.neutral4,
-          justifyContent: "center",
-          alignItems: "center",
         },
       }).container,
     [palette.neutral4]

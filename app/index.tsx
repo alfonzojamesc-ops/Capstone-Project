@@ -1,21 +1,11 @@
-import { useMyTheme } from "my/scripts/my-theme-context";
-import { Text, View } from "react-native";
+import MyBox from "@/my/components/primitive/my-box";
+import MyText from "@/my/components/primitive/my-text";
+import cs from "@/my/constants/my-const-styles";
 
 export default function Index() {
-  const { palette } = useMyTheme();
-
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: palette.neutral4,
-      }}
-    >
-      <Text style={{ color: palette.neutral1 }}>
-        Edit app/index.tsx to edit this screen.
-      </Text>
-    </View>
+    <MyBox style={[cs.hvcenter, cs.flex1]}>
+      <MyText>Lorem Ipsum</MyText>
+    </MyBox>
   );
 }

@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useMyTheme } from "my/scripts/my-theme-context";
+import { useMyTheme } from "@/my/scripts/my-theme-context";
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import MyBox from "./primitive/my-box";
