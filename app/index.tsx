@@ -19,12 +19,12 @@ const searchbarPlaceholder = <MyHomeSearchBar />;
 export default function Index() {
   return (
     <MySafeArea>
-      <MyLayout c="0" style={s.container}>
+      <MyLayout style={s.container}>
         {backgroundPlaceholder}
-        <MyLayout c="1" style={s.titleContainer}>
+        <MyLayout c="0" style={s.titleContainer}>
           {titlePlaceholder}
         </MyLayout>
-        <MyLayout c="1" style={s.dropDownAndSearchBarContainer}>
+        <MyLayout c="0" style={s.dropDownAndSearchBarContainer}>
           {dropdownPlaceholder}
           {searchbarPlaceholder}
         </MyLayout>
@@ -48,8 +48,8 @@ const s = StyleSheet.create({
     ...commonUIStyles,
   },
   dropDownAndSearchBarContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "flex-end",
+    gap: 30,
     bottom: screenPadding,
     ...commonUIStyles,
   },
