@@ -1,4 +1,4 @@
-import myTheme from "@/my/constants/my-theme";
+import myTheme from "my/constants/my-theme";
 import React, {
   createContext,
   useCallback,

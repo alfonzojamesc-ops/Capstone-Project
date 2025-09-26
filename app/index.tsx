@@ -1,4 +1,4 @@
-import { useMyTheme } from "@/my/scripts/my-theme-context";
+import { useMyTheme } from "my/scripts/my-theme-context";
 import { Text, View } from "react-native";
 
 export default function Index() {
