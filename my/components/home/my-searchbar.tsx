@@ -2,7 +2,7 @@ import cs from "@/my/constants/my-const-styles";
 import { useMyTheme } from "@/my/scripts/my-theme-context";
 import { Search, X } from "lucide-react";
 import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
-import { Pressable, StyleSheet, TextInput } from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import MyBox from "../primitive/my-box";
 import MyIcon from "../primitive/my-icon";
 
@@ -19,7 +19,6 @@ const MyHomeSearchBar = forwardRef<MyHomeSearchBarRef, Props>((props, ref) => {
   const [inputValue, setValue] = useState("");
   const { palette } = useMyTheme();
   const iconSize = 24;
-
   useImperativeHandle(ref, () => ({
     getValue: () => inputValue,
     clear: () => setValue(""),
@@ -31,9 +30,8 @@ const MyHomeSearchBar = forwardRef<MyHomeSearchBarRef, Props>((props, ref) => {
         container: {
           ...cs.rounded,
           flexDirection: "row",
-          justifyContent: "flex-start",
           padding: 3,
-          gap: 1,
+          paddingHorizontal: 9,
 
           borderWidth: 2,
           borderColor: palette.neutral2,
@@ -51,7 +49,9 @@ const MyHomeSearchBar = forwardRef<MyHomeSearchBarRef, Props>((props, ref) => {
 
   return (
     <MyBox style={s.container}>
-      <MyIcon name={Search} size={iconSize} />
+      <View>
+        <MyIcon name={Search} size={iconSize} />
+      </View>
       <TextInput
         placeholder="Search burial info..."
         placeholderTextColor={palette.neutral2}
