@@ -1,5 +1,5 @@
-import MyHomeSearchBar from "@/my/components/home/my-searchbar";
-import MyHomeTitleCard from "@/my/components/home/my-title-card";
+import MySearchBar from "@/my/components/home/my-searchbar";
+import MyTitleCard from "@/my/components/home/my-title-card";
 import MyLayout from "@/my/components/my-layouter";
 import { MySafeArea } from "@/my/components/my-safeareaview";
 import cs from "@/my/constants/my-const-styles";
@@ -12,9 +12,9 @@ const backgroundPlaceholder = (
     style={cs.whfit}
   />
 );
-const titlePlaceholder = <MyHomeTitleCard />;
+const titlePlaceholder = <MyTitleCard />;
 const dropdownPlaceholder = <Text>Dropdown Menu</Text>;
-const searchbarPlaceholder = <MyHomeSearchBar />;
+const searchbarPlaceholder = <MySearchBar />;
 
 export default function Index() {
   return (

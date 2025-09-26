@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import MyBox from "../primitive/my-box";
 import MyIcon from "../primitive/my-icon";
 
-export type MyHomeSearchBarRef = {
+export type MySearchBarRef = {
   getValue: () => string;
   clear: () => void;
 };
@@ -15,7 +15,7 @@ type Props = {
   id?: string;
 };
 
-const MyHomeSearchBar = forwardRef<MyHomeSearchBarRef, Props>((props, ref) => {
+const MySearchBar = forwardRef<MySearchBarRef, Props>((props, ref) => {
   const [inputValue, setValue] = useState("");
   const { palette } = useMyTheme();
   const iconSize = 24;
@@ -69,4 +69,4 @@ const MyHomeSearchBar = forwardRef<MyHomeSearchBarRef, Props>((props, ref) => {
     </MyBox>
   );
 });
-export default MyHomeSearchBar;
+export default MySearchBar;

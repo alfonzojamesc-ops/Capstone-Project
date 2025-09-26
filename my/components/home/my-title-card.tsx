@@ -7,7 +7,7 @@ import { StyleSheet } from "react-native";
 import MyLayout from "../my-layouter";
 import MyIcon from "../primitive/my-icon";
 
-export default function MyHomeTitleCard() {
+export default function MyTitleCard() {
   const { palette } = useMyTheme();
 
   const s = useMemo(
