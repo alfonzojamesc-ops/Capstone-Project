@@ -2,26 +2,26 @@ import cs from "@/my/constants/my-const-styles";
 import { useMyTheme } from "@/my/scripts/my-theme-context";
 import React, { useMemo } from "react";
 import {
-  Pressable,
-  PressableProps,
   StyleProp,
   StyleSheet,
   Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
 
-type MyPressableProps = {
+type MyTouchableOpacityProps = {
   label?: string;
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
-} & Omit<PressableProps, "style">;
+} & Omit<TouchableOpacityProps, "style">;
 
-const MyPressable = ({
+const MyTouchableOpacity = ({
   label,
   style,
   children,
   ...props
-}: MyPressableProps) => {
+}: MyTouchableOpacityProps) => {
   const { palette } = useMyTheme();
 
   const baseStyle = useMemo(
@@ -33,32 +33,20 @@ const MyPressable = ({
           paddingHorizontal: 16,
           paddingVertical: 8,
           overflow: "hidden",
+          backgroundColor: palette.primary1,
         },
       }).container,
-    []
+    [palette.primary1]
   );
 
   return (
-    <Pressable
-      style={({ pressed, hovered }) => [
-        baseStyle,
-        {
-          backgroundColor: pressed
-            ? palette.primary1
-            : hovered
-            ? palette.primary2
-            : palette.primary1,
-        },
-        style,
-      ]}
-      {...props}
-    >
+    <TouchableOpacity style={[baseStyle, style]} activeOpacity={0.7} {...props}>
       {children ?? (
         <Text style={{ color: palette.neutral1 }}>{label ?? "Button"}</Text>
       )}
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
-MyPressable.displayName = "MyPressable";
-export default MyPressable;
+MyTouchableOpacity.displayName = "MyTouchableOpacity";
+export default MyTouchableOpacity;
