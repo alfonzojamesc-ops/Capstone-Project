@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 
 type ThemedStackProps = React.ComponentProps<typeof Stack>;
 
-export function ThemedStack(props: ThemedStackProps) {
+const ThemedStack = (props: ThemedStackProps) => {
   const { palette } = useMyTheme();
 
   const styles = useMemo(
@@ -38,4 +38,5 @@ export function ThemedStack(props: ThemedStackProps) {
       {...props}
     />
   );
-}
+};
+export default ThemedStack;

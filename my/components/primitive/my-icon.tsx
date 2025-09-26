@@ -12,16 +12,17 @@ type MyIconProps = {
 const MyIcon = memo(({ name: Icon, size = 24, color, stroke }: MyIconProps) => {
   const { palette } = useMyTheme();
 
-  if (!Icon) return null;
-
+  const resolvedColor = color ?? palette.neutral1;
   const iconProps = useMemo(
     () => ({
       size,
-      color: color ?? palette.neutral1,
+      color: resolvedColor,
       strokeWidth: stroke,
     }),
-    [size, color, stroke, palette.neutral1]
+    [size, resolvedColor, stroke]
   );
+
+  if (!Icon) return null;
 
   return <Icon {...iconProps} />;
 });

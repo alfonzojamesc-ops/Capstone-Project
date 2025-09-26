@@ -1,7 +1,7 @@
 import layoutMode from "@/my/constants/my-layout-mode";
 import React, { memo } from "react";
 import { StyleProp, Text, View, ViewProps, ViewStyle } from "react-native";
-import cs from "../constants/my-const-styles";
+import cs from "../../constants/my-const-styles";
 
 // bail out before release
 const COLOR_MAP: Record<string, string> = {

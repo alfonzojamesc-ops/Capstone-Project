@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import cs from "../constants/my-const-styles";
+import cs from "../../constants/my-const-styles";
 
 type MySafeAreaProps = {
   children?: ReactNode;
@@ -9,7 +9,7 @@ type MySafeAreaProps = {
   edges?: ("top" | "bottom" | "left" | "right")[];
 };
 
-export const MySafeArea = ({
+const MySafeArea = ({
   children,
   style,
   edges = ["top", "bottom"],
@@ -22,3 +22,4 @@ export const MySafeArea = ({
     </SafeAreaProvider>
   );
 };
+export default MySafeArea;

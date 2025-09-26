@@ -44,7 +44,7 @@ const MySearchBar = forwardRef<MySearchBarRef, Props>((props, ref) => {
           width: "100%",
         },
       }),
-    [palette.neutral1, palette.neutral2]
+    [palette.neutral2]
   );
 
   return (
@@ -69,4 +69,5 @@ const MySearchBar = forwardRef<MySearchBarRef, Props>((props, ref) => {
     </MyBox>
   );
 });
+MySearchBar.displayName = "MySearchBar";
 export default MySearchBar;

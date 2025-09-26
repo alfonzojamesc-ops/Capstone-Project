@@ -1,4 +1,4 @@
-import { ThemedStack } from "@/my/components/my-themed-stack";
+import  ThemedStack  from "@/my/components/_layout/my-themed-stack";
 import { MyThemeProvider } from "@/my/scripts/my-theme-context";
 
 export default function RootLayout() {

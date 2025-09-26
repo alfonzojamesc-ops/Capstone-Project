@@ -1,7 +1,7 @@
 import MySearchBar from "@/my/components/home/my-searchbar";
 import MyTitleCard from "@/my/components/home/my-title-card";
-import MyLayout from "@/my/components/my-layouter";
-import { MySafeArea } from "@/my/components/my-safeareaview";
+import MyLayout from "@/my/components/utils/my-layouter";
+import MySafeArea from "@/my/components/utils/my-safeareaview";
 import cs from "@/my/constants/my-const-styles";
 import { Image } from "expo-image";
 import { StyleProp, StyleSheet, Text, ViewStyle } from "react-native";

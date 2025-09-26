@@ -4,10 +4,10 @@ import { useMyTheme } from "@/my/scripts/my-theme-context";
 import { Cross } from "lucide-react";
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import MyLayout from "../my-layouter";
 import MyIcon from "../primitive/my-icon";
+import MyLayout from "../utils/my-layouter";
 
-export default function MyTitleCard() {
+const MyTitleCard = () => {
   const { palette } = useMyTheme();
 
   const s = useMemo(
@@ -56,3 +56,4 @@ export default function MyTitleCard() {
     </MyBox>
   );
 }
+export default MyTitleCard;
