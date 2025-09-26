@@ -1,10 +1,12 @@
-import { Stack } from "expo-router";
+import MyBox from "@/my/components/primitive/my-box";
 import { useMyTheme } from "@/my/scripts/my-theme-context";
+import { Stack } from "expo-router";
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import MyBox from "./primitive/my-box";
 
-export function ThemedStack() {
+type ThemedStackProps = React.ComponentProps<typeof Stack>;
+
+export function ThemedStack(props: ThemedStackProps) {
   const { palette } = useMyTheme();
 
   const styles = useMemo(
@@ -33,6 +35,7 @@ export function ThemedStack() {
         headerTintColor: palette.neutral1,
         headerShadowVisible: false,
       }}
+      {...props}
     />
   );
 }

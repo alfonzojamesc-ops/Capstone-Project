@@ -1,6 +1,6 @@
 import layoutMode from "@/my/constants/my-layout-mode";
 import React, { memo } from "react";
-import { StyleProp, Text, View, ViewStyle } from "react-native";
+import { StyleProp, Text, View, ViewProps, ViewStyle } from "react-native";
 import cs from "../constants/my-const-styles";
 import MyBox from "./primitive/my-box";
 
@@ -25,10 +25,10 @@ type MyLayouterProps = {
   c?: string;
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
-};
+} & ViewProps;
 
 const MyLayouter = memo(
-  ({ c = "", style, children = DEFAULT_CHILD }: MyLayouterProps) => {
+  ({ c = "", style, children = DEFAULT_CHILD, ...props }: MyLayouterProps) => {
     if (!layoutMode) return <MyBox style={style}>{children}</MyBox>;
 
     const borderColor = getColor(c[0]) ?? "black";
@@ -47,6 +47,7 @@ const MyLayouter = memo(
           },
           style,
         ]}
+        {...props}
       >
         {children}
       </View>
