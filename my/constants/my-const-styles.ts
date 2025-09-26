@@ -14,5 +14,12 @@ const cs = StyleSheet.create({
   rounded: {
     borderRadius: 9999,
   },
+  layout: {
+    borderColor: "fuchsia",
+    borderWidth: 3,
+  },
+  layoutbg: {
+    backgroundColor: "fuchsia",
+  },
 });
 export default cs;
