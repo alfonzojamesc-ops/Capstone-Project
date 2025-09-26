@@ -30,8 +30,8 @@ const MyTouchableOpacity = ({
         container: {
           ...cs.rounded,
           ...cs.hvcenter,
-          paddingHorizontal: 16,
-          paddingVertical: 8,
+          paddingHorizontal: 10,
+          paddingVertical: 10,
           overflow: "hidden",
           backgroundColor: palette.primary1,
         },
