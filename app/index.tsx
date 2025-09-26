@@ -8,7 +8,7 @@ import { StyleProp, StyleSheet, Text, ViewStyle } from "react-native";
 
 const backgroundPlaceholder = (
   <Image
-    source={require("@/my/assets/images/placeholder.jpg")}
+    source={require("@/my/assets/images/my-placeholder.jpg")}
     style={cs.whfit}
   />
 );
