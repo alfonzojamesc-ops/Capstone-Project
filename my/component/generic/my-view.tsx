@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 import { StyleSheet, Text, View, ViewProps, ViewStyle } from "react-native";
 
-const DEBUG_LAYOUT = 0;
+const DEBUG_LAYOUT = 1;
 
 const COLORS = [
   "black",
