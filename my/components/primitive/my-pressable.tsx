@@ -1,4 +1,3 @@
-import cs from "@/my/constants/my-const-styles";
 import { useMyTheme } from "@/my/scripts/my-theme-context";
 import React, { useMemo } from "react";
 import {
@@ -28,8 +27,9 @@ const MyPressable = ({
     () =>
       StyleSheet.create({
         container: {
-          ...cs.rounded,
-          ...cs.hvcenter,
+          borderRadius: 9999,
+          justifyContent: "center",
+          alignItems: "center",
           paddingHorizontal: 10,
           paddingVertical: 10,
           overflow: "hidden",

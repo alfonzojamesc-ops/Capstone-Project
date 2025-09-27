@@ -1,4 +1,3 @@
-import cs from "@/my/constants/my-const-styles";
 import { useMyTheme } from "@/my/scripts/my-theme-context";
 import { Search, X } from "lucide-react";
 import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
@@ -17,18 +16,19 @@ type Props = {
 
 const MySearchBar = forwardRef<MySearchBarRef, Props>((props, ref) => {
   const [inputValue, setValue] = useState("");
-  const { palette } = useMyTheme();
-  const iconSize = 24;
+
   useImperativeHandle(ref, () => ({
     getValue: () => inputValue,
     clear: () => setValue(""),
   }));
 
+  const { palette } = useMyTheme();
+  const iconSize = 24;
   const s = useMemo(
     () =>
       StyleSheet.create({
         container: {
-          ...cs.rounded,
+          borderRadius: 9999,
           flexDirection: "row",
           padding: 3,
           paddingHorizontal: 9,
@@ -36,15 +36,18 @@ const MySearchBar = forwardRef<MySearchBarRef, Props>((props, ref) => {
           borderWidth: 2,
           borderColor: palette.neutral2,
 
-          width: "50%",
           minWidth: 150,
           maxWidth: 300,
         },
         textInput: {
           width: "100%",
         },
+        pressableWrapper: {
+          width: iconSize,
+          height: iconSize,
+        },
       }),
-    [palette.neutral2]
+    [palette.neutral2, iconSize]
   );
 
   return (
@@ -59,13 +62,17 @@ const MySearchBar = forwardRef<MySearchBarRef, Props>((props, ref) => {
         onChangeText={setValue}
         style={s.textInput}
       />
-      <Pressable
-        style={{ display: inputValue.length > 0 ? "contents" : "none" }}
-        onPress={() => setValue("")}
-        focusable={false}
-      >
-        <MyIcon name={X} size={iconSize} />
-      </Pressable>
+      <View style={s.pressableWrapper}>
+        <Pressable
+          style={{
+            display: inputValue.length > 0 ? "contents" : "none",
+          }}
+          onPress={() => setValue("")}
+          focusable={false}
+        >
+          <MyIcon name={X} size={iconSize} />
+        </Pressable>
+      </View>
     </MyBox>
   );
 });

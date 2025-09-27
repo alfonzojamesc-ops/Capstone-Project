@@ -1,7 +1,6 @@
 import layoutMode from "@/my/constants/my-layout-mode";
 import React, { memo } from "react";
 import { StyleProp, Text, View, ViewProps, ViewStyle } from "react-native";
-import cs from "../../constants/my-const-styles";
 
 // bail out before release
 const COLOR_MAP: Record<string, string> = {
@@ -29,7 +28,13 @@ type MyLayouterProps = {
 const MyLayout = memo(
   ({ c = "", style, children = DEFAULT_CHILD, ...props }: MyLayouterProps) => {
     if (!layoutMode)
-      return <View style={[cs.hvcenter, style]}>{children}</View>;
+      return (
+        <View
+          style={[{ justifyContent: "center", alignItems: "center" }, style]}
+        >
+          {children}
+        </View>
+      );
 
     const borderColor = getColor(c[0]) ?? "black";
     const bgColor = getColor(c[1]) ?? "transparent";
@@ -39,7 +44,8 @@ const MyLayout = memo(
       <View
         style={[
           {
-            ...cs.hvcenter,
+            justifyContent: "center",
+            alignItems: "center",
             borderWidth: overrideBorder ? 0 : 3,
             borderColor: borderColor,
             backgroundColor: bgColor,

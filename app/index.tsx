@@ -2,14 +2,13 @@ import MySearchBar from "@/my/components/home/my-searchbar";
 import MyTitleCard from "@/my/components/home/my-title-card";
 import MyLayout from "@/my/components/utils/my-layouter";
 import MySafeArea from "@/my/components/utils/my-safeareaview";
-import cs from "@/my/constants/my-const-styles";
 import { Image } from "expo-image";
-import { StyleProp, StyleSheet, Text, ViewStyle } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 const backgroundPlaceholder = (
   <Image
     source={require("@/my/assets/images/my-placeholder.jpg")}
-    style={cs.whfit}
+    style={{ height: "100%", width: "100%" }}
   />
 );
 const titlePlaceholder = <MyTitleCard />;
@@ -24,8 +23,10 @@ export default function Index() {
         <MyLayout c="0" style={s.titleContainer}>
           {titlePlaceholder}
         </MyLayout>
-        <MyLayout c="0" style={s.dropDownAndSearchBarContainer}>
+        <MyLayout c="0" style={s.dropDownContainer}>
           {dropdownPlaceholder}
+        </MyLayout>
+        <MyLayout c="0" style={s.searchBarContainer}>
           {searchbarPlaceholder}
         </MyLayout>
       </MyLayout>
@@ -33,24 +34,26 @@ export default function Index() {
   );
 }
 
-const screenPadding = "2%";
-const commonUIStyles: StyleProp<ViewStyle> = {
-  position: "absolute",
-  left: screenPadding,
-  right: screenPadding,
-};
 const s = StyleSheet.create({
   container: {
-    ...cs.flex1,
+    flex: 1,
   },
   titleContainer: {
-    top: screenPadding,
-    ...commonUIStyles,
+    position: "absolute",
+    margin: 20,
+    top: 0,
   },
-  dropDownAndSearchBarContainer: {
+  dropDownContainer: {
+    position: "absolute",
+    margin: 20,
+    bottom: 75,
+    right: 0,
+  },
+  searchBarContainer: {
     alignItems: "flex-end",
-    gap: 30,
-    bottom: screenPadding,
-    ...commonUIStyles,
+    position: "absolute",
+    margin: 20,
+    bottom: 0,
+    right: 0,
   },
 });

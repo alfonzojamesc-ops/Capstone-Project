@@ -55,5 +55,5 @@ const MyTitleCard = () => {
       </MyLayout>
     </MyBox>
   );
-}
+};
 export default MyTitleCard;
