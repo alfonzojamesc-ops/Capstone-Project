@@ -1,4 +1,4 @@
-import myTheme from "@/my/constants/my-theme";
+import myTheme from "@/my/const/my-theme";
 import React, {
   createContext,
   useCallback,
@@ -9,12 +9,14 @@ import React, {
 } from "react";
 import { Appearance } from "react-native";
 
-type Mode = "light" | "dark";
-type Palette = typeof myTheme.colors.light;
+const DEBUG_DARK_MODE = 0;
+
+type ReferenceColorTheme = typeof myTheme.colors.light;
+type ReferenceThemeModes = "light" | "dark";
 
 const MyThemeContext = createContext<{
-  palette: Palette;
-  mode: Mode;
+  palette: ReferenceColorTheme;
+  mode: ReferenceThemeModes;
   toggle: () => void;
 }>({
   palette: myTheme.colors.light,
@@ -27,7 +29,7 @@ export const useMyTheme = () => useContext(MyThemeContext);
 export const MyThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [mode, setMode] = useState<Mode>(
+  const [mode, setMode] = useState<ReferenceThemeModes>(
     Appearance.getColorScheme() === "dark" ? "dark" : "light"
   );
 
@@ -47,6 +49,11 @@ export const MyThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     () => ({ mode, palette: myTheme.colors[mode], toggle }),
     [mode, toggle]
   );
+
+  if (DEBUG_DARK_MODE) {
+    value.mode = "dark";
+    value.palette = myTheme.colors.dark;
+  }
 
   return (
     <MyThemeContext.Provider value={value}>{children}</MyThemeContext.Provider>

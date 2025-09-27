@@ -1,8 +1,8 @@
-import MyBox from "@/my/components/primitive/my-box";
-import { useMyTheme } from "@/my/scripts/my-theme-context";
+import { useMyTheme } from "@/my/script/my-theme-context";
 import { Stack } from "expo-router";
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
+import MyView from "../generic/my-view";
 
 type ThemedStackProps = React.ComponentProps<typeof Stack>;
 
@@ -24,7 +24,7 @@ const ThemedStack = (props: ThemedStackProps) => {
     [palette.neutral3, palette.neutral4]
   );
 
-  const HeaderBackground = () => <MyBox style={styles.headerBox} />;
+  const HeaderBackground = () => <MyView style={styles.headerBox} />;
 
   return (
     <Stack

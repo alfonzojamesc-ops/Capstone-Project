@@ -13,6 +13,13 @@ const myTheme = {
       neutral2: "#4A4A5A",
       neutral3: "#BFC2CC",
       neutral4: "#FAFAF7",
+
+      absneutral1: "#12121B",
+      absneutral2: "#4A4A5A",
+      absneutral3: "#BFC2CC",
+      absneutral4: "#FAFAF7",
+
+      primary1LtoNeutral4D: "#1E90FF",
     },
     dark: {
       primary1: "#339CFF",
@@ -27,6 +34,13 @@ const myTheme = {
       neutral2: "#C0C3C8",
       neutral3: "#6B6E77",
       neutral4: "#12121B",
+
+      absneutral1: "#12121B",
+      absneutral2: "#4A4A5A",
+      absneutral3: "#BFC2CC",
+      absneutral4: "#FAFAF7",
+
+      primary1LtoNeutral4D: "#12121B",
     },
   },
 };
