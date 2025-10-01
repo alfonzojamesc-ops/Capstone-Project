@@ -1,4 +1,5 @@
 import { MyPaletteProp } from "@/my/script/my-theme-context";
+import { useRouter } from "expo-router";
 import { CalendarClock, MapPinCheckInside, Phone, Plus } from "lucide-react";
 import { memo, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
@@ -11,6 +12,7 @@ function MyFabMenu({ palette }: MyPaletteProp) {
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
   };
+  const router = useRouter();
   const style = StyleSheet.create({
     fab: {
       width: 56,
@@ -68,7 +70,7 @@ function MyFabMenu({ palette }: MyPaletteProp) {
         <MyView id="menu" style={style.menu}>
           <MyTouchableOpacity
             style={style.menuItem}
-            onPress={() => alert("Item 1 clicked")}
+            onPress={() => router.push("/burial-plots")}
           >
             <MyIcon name={MapPinCheckInside} color={style.menuItemIcon.color} />
             <Text
