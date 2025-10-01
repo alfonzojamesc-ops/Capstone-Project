@@ -31,6 +31,4 @@ const MyTouchableOpacity = ({
     </TouchableOpacity>
   );
 };
-
-MyTouchableOpacity.displayName = "MyTouchableOpacity";
 export default memo(MyTouchableOpacity);

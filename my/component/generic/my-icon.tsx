@@ -24,5 +24,4 @@ const MyIcon = ({
   if (!Icon) return null;
   return <Icon size={size} color={color} strokeWidth={strokeWidth} />;
 };
-MyIcon.displayName = "MyIcon";
 export default memo(MyIcon);

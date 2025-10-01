@@ -43,6 +43,4 @@ const MyView = ({ style, children, ...etc }: ViewProps) => {
     </View>
   );
 };
-
-MyView.displayName = "MyView";
 export default memo(MyView);

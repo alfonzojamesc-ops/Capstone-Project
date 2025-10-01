@@ -50,6 +50,4 @@ const MyPressable = ({ style, children, ...props }: MyPressableProps) => {
     </Pressable>
   );
 };
-
-MyPressable.displayName = "MyPressable";
 export default memo(MyPressable);
