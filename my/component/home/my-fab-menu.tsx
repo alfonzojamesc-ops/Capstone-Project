@@ -1,5 +1,5 @@
 import { MyPaletteProp } from "@/my/script/my-theme-context";
-import { Plus } from "lucide-react";
+import { CalendarClock, MapPinCheckInside, Phone, Plus } from "lucide-react";
 import { memo, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import MyIcon from "../generic/my-icon";
@@ -36,6 +36,9 @@ function MyFabMenu({ palette }: MyPaletteProp) {
     menuItem: {
       alignSelf: "flex-end",
 
+      flexDirection: "row",
+      gap: 10,
+
       paddingHorizontal: 15,
 
       backgroundColor: palette.neutral4,
@@ -43,8 +46,13 @@ function MyFabMenu({ palette }: MyPaletteProp) {
     menuItemLines: {
       height: 1,
     },
+    menuItemIcon: {
+      color: palette.neutral1,
+    },
     menuItemText: {
       color: palette.neutral1,
+
+      fontSize: 18,
     },
   });
   return (
@@ -62,6 +70,7 @@ function MyFabMenu({ palette }: MyPaletteProp) {
             style={style.menuItem}
             onPress={() => alert("Item 1 clicked")}
           >
+            <MyIcon name={MapPinCheckInside} color={style.menuItemIcon.color} />
             <Text
               style={style.menuItemText}
               numberOfLines={style.menuItemLines.height}
@@ -73,6 +82,7 @@ function MyFabMenu({ palette }: MyPaletteProp) {
             style={style.menuItem}
             onPress={() => alert("Item 2 clicked")}
           >
+            <MyIcon name={CalendarClock} color={style.menuItemIcon.color} />
             <Text
               style={style.menuItemText}
               numberOfLines={style.menuItemLines.height}
@@ -84,6 +94,7 @@ function MyFabMenu({ palette }: MyPaletteProp) {
             style={style.menuItem}
             onPress={() => alert("Item 3 clicked")}
           >
+            <MyIcon name={Phone} color={style.menuItemIcon.color} />
             <Text
               style={style.menuItemText}
               numberOfLines={style.menuItemLines.height}
