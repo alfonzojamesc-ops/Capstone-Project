@@ -23,10 +23,10 @@ const s = StyleSheet.create({
 function MyTouchableOpacity({
   style,
   children,
-  ...etc
+  ...props
 }: TouchableOpacityProps) {
   return (
-    <TouchableOpacity style={[s.base, style]} activeOpacity={0.7} {...etc}>
+    <TouchableOpacity style={[s.base, style]} activeOpacity={0.7} {...props}>
       {children ?? DEFAULT_CHILD}
     </TouchableOpacity>
   );

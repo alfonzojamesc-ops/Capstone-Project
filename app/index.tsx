@@ -3,26 +3,26 @@ import My3DMap from "@/my/component/home/my-3d-map";
 import MyFabMenu from "@/my/component/home/my-fab-menu";
 import MySearchBar from "@/my/component/home/my-search-bar";
 import MyTitleCard from "@/my/component/home/my-title-card";
-import MySafeArea from "@/my/component/util/my-safeareaview";
-import { useMyColorScheme } from "@/my/script/my-color-scheme-context";
+import MySafeArea from "@/my/component/util/my-safearea";
+import { useMyTheme } from "@/my/script/my-theme-context";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 export default function Index() {
-  const { myColorPalette } = useMyColorScheme();
+  const { palette } = useMyTheme();
   return (
     <MySafeArea>
-      <View style={myLayoutStyle.backgroundContainer}>
+      <MyView style={myLayoutStyle.backgroundContainer}>
         <My3DMap />
-      </View>
+      </MyView>
       <MyView style={myLayoutStyle.titleCardContainer}>
-        <MyTitleCard colorPalette={myColorPalette} />
+        <MyTitleCard palette={palette} />
       </MyView>
       <MyView style={myLayoutStyle.fabContainer}>
-        <MyFabMenu colorPalette={myColorPalette} />
+        <MyFabMenu palette={palette} />
       </MyView>
       <MyView style={myLayoutStyle.searchBarContainer}>
-        <MySearchBar colorPalette={myColorPalette} />
+        <MySearchBar palette={palette} />
       </MyView>
     </MySafeArea>
   );

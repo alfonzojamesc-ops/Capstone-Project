@@ -1,11 +1,11 @@
-import { MyColorPaletteProp } from "@/my/script/my-color-scheme-context";
+import { MyPaletteProp } from "@/my/script/my-theme-context";
 import { Cross } from "lucide-react";
 import { memo, useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import MyIcon from "../generic/my-icon";
 import MyView from "../generic/my-view";
 
-function MyTitleCard({ colorPalette }: MyColorPaletteProp) {
+function MyTitleCard({ palette }: MyPaletteProp) {
   const style = useMemo(
     () =>
       StyleSheet.create({
@@ -17,10 +17,10 @@ function MyTitleCard({ colorPalette }: MyColorPaletteProp) {
           gap: 10,
 
           borderRadius: 10,
-          backgroundColor: colorPalette.neutral4,
+          backgroundColor: palette.neutral4,
         },
         titleCardIcon: {
-          color: colorPalette.neutral1,
+          color: palette.neutral1,
           fontSize: 36,
         },
         titleCardTexts: {
@@ -32,24 +32,24 @@ function MyTitleCard({ colorPalette }: MyColorPaletteProp) {
           flex: 1,
           fontSize: 20,
           fontWeight: "500",
-          color: colorPalette.neutral1,
+          color: palette.neutral1,
         },
         subtitle: {
           fontSize: 16,
-          color: colorPalette.neutral2,
+          color: palette.neutral2,
         },
       }),
-    [colorPalette]
+    [palette]
   );
   return (
     <MyView id="title-card" style={style.titleCard}>
-      <View>
+      <MyView>
         <MyIcon
           name={Cross}
           size={style.titleCardIcon.fontSize}
           color={style.titleCardIcon.color}
         />
-      </View>
+      </MyView>
       <MyView style={style.titleCardTexts}>
         <Text style={style.title}>BRS3DNAV: San Jose Cemetery Park</Text>
         <Text style={style.subtitle}>

@@ -1,4 +1,4 @@
-import { MyColorPaletteProp } from "@/my/script/my-color-scheme-context";
+import { MyPaletteProp } from "@/my/script/my-theme-context";
 import { Plus } from "lucide-react";
 import { memo, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
@@ -6,7 +6,7 @@ import MyIcon from "../generic/my-icon";
 import MyTouchableOpacity from "../generic/my-touchableopacity";
 import MyView from "../generic/my-view";
 
-function MyFabMenu({ colorPalette }: MyColorPaletteProp) {
+function MyFabMenu({ palette }: MyPaletteProp) {
   const [menuVisible, setMenuVisible] = useState(false);
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -20,10 +20,10 @@ function MyFabMenu({ colorPalette }: MyColorPaletteProp) {
       alignItems: "center",
 
       borderRadius: 56 / 2,
-      backgroundColor: colorPalette.primary1LtoNeutral4D,
+      backgroundColor: palette.primary1LtoNeutral4D,
     },
     fabIcon: {
-      color: colorPalette.absneutral4,
+      color: palette.absneutral4,
       fontSize: 36,
     },
     menu: {
@@ -38,13 +38,13 @@ function MyFabMenu({ colorPalette }: MyColorPaletteProp) {
 
       paddingHorizontal: 15,
 
-      backgroundColor: colorPalette.neutral4,
+      backgroundColor: palette.neutral4,
     },
     menuItemLines: {
       height: 1,
     },
     menuItemText: {
-      color: colorPalette.neutral1,
+      color: palette.neutral1,
     },
   });
   return (

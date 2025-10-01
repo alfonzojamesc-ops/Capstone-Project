@@ -1,42 +1,47 @@
-import { useMyColorScheme } from "@/my/script/my-color-scheme-context";
+import { useMyTheme } from "@/my/script/my-theme-context";
 import { Stack } from "expo-router";
 import React, { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import MyView from "../generic/my-view";
 
-type ThemedStackProps = React.ComponentProps<typeof Stack>;
+const WITH_HEADER = false;
 
-function ThemedStack(props: ThemedStackProps) {
-  const { myColorPalette } = useMyColorScheme();
+type MyStackProps = React.ComponentProps<typeof Stack>;
+
+export default function MyStack(props: MyStackProps) {
+  if (!WITH_HEADER) {
+    return <Stack screenOptions={{ headerShown: false }} {...props} />;
+  }
+  return <WithHeader {...props} />;
+}
+
+function WithHeader(props: MyStackProps) {
+  const { palette } = useMyTheme();
 
   const styles = useMemo(
     () =>
       StyleSheet.create({
         header: {
-          backgroundColor: myColorPalette.neutral4,
+          backgroundColor: palette.neutral4,
         },
         headerBox: {
           flex: 1,
           borderBottomWidth: StyleSheet.hairlineWidth,
-          borderColor: myColorPalette.neutral3,
+          borderColor: palette.neutral3,
         },
       }),
-    [myColorPalette.neutral3, myColorPalette.neutral4]
+    [palette]
   );
-
-  const HeaderBackground = () => <MyView style={styles.headerBox} />;
 
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
         headerStyle: styles.header,
-        headerBackground: HeaderBackground,
-        headerTintColor: myColorPalette.neutral1,
+        headerBackground: () => <MyView style={styles.headerBox} />,
+        headerTintColor: palette.neutral1,
         headerShadowVisible: false,
       }}
       {...props}
     />
   );
 }
-export default ThemedStack;
