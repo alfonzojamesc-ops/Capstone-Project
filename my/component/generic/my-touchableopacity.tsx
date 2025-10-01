@@ -20,15 +20,15 @@ const s = StyleSheet.create({
   },
 });
 
-const MyTouchableOpacity = ({
+function MyTouchableOpacity({
   style,
   children,
   ...etc
-}: TouchableOpacityProps) => {
+}: TouchableOpacityProps) {
   return (
     <TouchableOpacity style={[s.base, style]} activeOpacity={0.7} {...etc}>
       {children ?? DEFAULT_CHILD}
     </TouchableOpacity>
   );
-};
+}
 export default memo(MyTouchableOpacity);

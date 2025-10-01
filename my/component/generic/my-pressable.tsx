@@ -30,7 +30,7 @@ const s = StyleSheet.create({
 
 const DEFAULT_CHILD = <Text>Lorem Ipsum</Text>;
 
-const MyPressable = ({ style, children, ...props }: MyPressableProps) => {
+function MyPressable({ style, children, ...props }: MyPressableProps) {
   return (
     <Pressable
       style={({ pressed }) => {
@@ -49,5 +49,5 @@ const MyPressable = ({ style, children, ...props }: MyPressableProps) => {
       {children ?? DEFAULT_CHILD}
     </Pressable>
   );
-};
+}
 export default memo(MyPressable);

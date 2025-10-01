@@ -15,13 +15,13 @@ const DEFAULT_PROPS = {
   strokeWidth: 2,
 };
 
-const MyIcon = ({
+function MyIcon({
   name: Icon,
   size = DEFAULT_PROPS.size,
   color = DEFAULT_PROPS.color,
   strokeWidth = DEFAULT_PROPS.strokeWidth,
-}: MyIconProps) => {
+}: MyIconProps) {
   if (!Icon) return null;
   return <Icon size={size} color={color} strokeWidth={strokeWidth} />;
-};
+}
 export default memo(MyIcon);

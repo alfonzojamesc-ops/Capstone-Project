@@ -6,7 +6,7 @@ import MyView from "../generic/my-view";
 
 type ThemedStackProps = React.ComponentProps<typeof Stack>;
 
-const ThemedStack = (props: ThemedStackProps) => {
+function ThemedStack(props: ThemedStackProps) {
   const { myColorPalette } = useMyColorScheme();
 
   const styles = useMemo(
@@ -38,5 +38,5 @@ const ThemedStack = (props: ThemedStackProps) => {
       {...props}
     />
   );
-};
+}
 export default ThemedStack;

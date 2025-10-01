@@ -24,7 +24,7 @@ const s = StyleSheet.create({
   },
 });
 
-const MyView = ({ style, children, ...etc }: ViewProps) => {
+function MyView({ style, children, ...etc }: ViewProps) {
   const debugStyle: ViewStyle = useMemo(
     () => ({
       borderColor: COLORS[Math.floor(Math.random() * COLORS.length)],
@@ -42,5 +42,5 @@ const MyView = ({ style, children, ...etc }: ViewProps) => {
       {children ?? DEFAULT_CHILD}
     </View>
   );
-};
+}
 export default memo(MyView);
