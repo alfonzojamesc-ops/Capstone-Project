@@ -1,26 +1,26 @@
-import { StyleSheet, Text, View } from 'react-native';
+import MyView from "@/my/component/generic/my-view";
+import { useMyTheme } from "@/my/script/my-theme-context";
+import React from "react";
+import { StyleSheet } from "react-native";
 
-export default function App() {
+export default function BurialPlots() {
+  const { palette } = useMyTheme();
   return (
-    <View style={styles.container}>
-      <Text style={styles.paragraph}>
-        Change code in the editor and watch it change on your phone! Save to get a shareable url.
-      </Text>
-    </View>
+    <MyView style={layout.background}>
+      <MyView style={layout.header}></MyView>
+      <MyView style={layout.listContainer}></MyView>
+    </MyView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
+const layout = StyleSheet.create({
+  background: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    padding: 8,
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  header: {
+    height: 60,
+  },
+  listContainer: {
+    flex: 1,
   },
 });

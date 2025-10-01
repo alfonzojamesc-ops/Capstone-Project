@@ -12,22 +12,22 @@ export default function Index() {
   const { palette } = useMyTheme();
   return (
     <MySafeArea>
-      <MyView style={myLayoutStyle.backgroundContainer}>
+      <MyView style={layout.backgroundContainer}>
         <My3DMap />
       </MyView>
-      <MyView style={myLayoutStyle.titleCardContainer}>
+      <MyView style={layout.titleCardContainer}>
         <MyTitleCard palette={palette} />
       </MyView>
-      <MyView style={myLayoutStyle.fabContainer}>
+      <MyView style={layout.fabContainer}>
         <MyFabMenu palette={palette} />
       </MyView>
-      <MyView style={myLayoutStyle.searchBarContainer}>
+      <MyView style={layout.searchBarContainer}>
         <MySearchBar palette={palette} />
       </MyView>
     </MySafeArea>
   );
 }
-const myLayoutStyle = StyleSheet.create({
+const layout = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
   },
