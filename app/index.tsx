@@ -1,8 +1,8 @@
 import MyView from "@/my/component/generic/my-view";
-import My3DMap from "@/my/component/home/my-3d-map";
-import MyFabMenu from "@/my/component/home/my-fab-menu";
-import MySearchBar from "@/my/component/home/my-search-bar";
-import MyTitleCard from "@/my/component/home/my-title-card";
+import My3DMap from "@/my/component/page/index/my-3d-map";
+import MyFabMenu from "@/my/component/page/index/my-fab-menu";
+import MySearchBar from "@/my/component/page/index/my-search-bar";
+import MyTitleCard from "@/my/component/page/index/my-title-card";
 import MySafeArea from "@/my/component/util/my-safearea";
 import { useMyTheme } from "@/my/script/my-theme-context";
 import React from "react";

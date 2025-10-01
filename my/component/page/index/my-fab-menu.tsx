@@ -1,11 +1,11 @@
+import MyIcon from "@/my/component/generic/my-icon";
+import MyTouchableOpacity from "@/my/component/generic/my-touchableopacity";
+import MyView from "@/my/component/generic/my-view";
 import { MyPaletteProp } from "@/my/script/my-theme-context";
 import { useRouter } from "expo-router";
 import { CalendarClock, MapPinCheckInside, Phone, Plus } from "lucide-react";
 import { memo, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
-import MyIcon from "../generic/my-icon";
-import MyTouchableOpacity from "../generic/my-touchableopacity";
-import MyView from "../generic/my-view";
 
 function MyFabMenu({ palette }: MyPaletteProp) {
   const [menuVisible, setMenuVisible] = useState(false);

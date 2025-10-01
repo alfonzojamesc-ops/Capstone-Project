@@ -1,9 +1,9 @@
+import MyIcon from "@/my/component/generic/my-icon";
+import MyView from "@/my/component/generic/my-view";
 import { MyPaletteProp } from "@/my/script/my-theme-context";
 import { Cross } from "lucide-react";
 import { memo, useMemo } from "react";
 import { StyleSheet, Text } from "react-native";
-import MyIcon from "../generic/my-icon";
-import MyView from "../generic/my-view";
 
 function MyTitleCard({ palette }: MyPaletteProp) {
   const style = useMemo(

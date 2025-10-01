@@ -20,9 +20,13 @@ const DEFAULT_CHILD = <Text>Lorem Ipsum</Text>;
 
 function MyView({ style, children, ...props }: ViewProps) {
   if (!DEBUG_LAYOUT) {
-    return <View style={style} children={children} {...props} />;
+    return (
+      <View style={style} {...props}>
+        {children}
+      </View>
+    );
   }
-  return <DebugView style={style} children={children} {...props} />;
+  return <DebugView style={style}>{children}</DebugView>;
 }
 export default memo(MyView);
 
