@@ -1,10 +1,8 @@
 import MyView from "@/my/component/generic/my-view";
-import { useMyTheme } from "@/my/script/my-theme-context";
 import React from "react";
 import { StyleSheet } from "react-native";
 
 export default function BurialPlots() {
-  const { palette } = useMyTheme();
   return (
     <MyView style={layout.background}>
       <MyView style={layout.header}></MyView>

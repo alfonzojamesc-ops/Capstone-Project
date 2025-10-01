@@ -1,10 +1,5 @@
-import WithHeader from "@/my/component/_layout/my-themed-stack";
-import { MyThemeProvider } from "@/my/script/my-theme-context";
+import MyStack from "@/my/component/_layout/my-stack";
 
 export default function RootLayout() {
-  return (
-    <MyThemeProvider>
-      <WithHeader />
-    </MyThemeProvider>
-  );
+  return <MyStack />;
 }

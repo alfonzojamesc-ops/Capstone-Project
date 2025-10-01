@@ -2,12 +2,16 @@
 import { LucideIcon } from "lucide-react";
 import { memo } from "react";
 
-type MyIconProps = {
-  name?: LucideIcon;
-  color?: string;
-  size?: number;
-  strokeWidth?: number;
+const MyIcon = ({
+  name: Icon,
+  size = DEFAULT_PROPS.size,
+  color = DEFAULT_PROPS.color,
+  strokeWidth = DEFAULT_PROPS.strokeWidth,
+}: MyIconProps) => {
+  if (!Icon) return null;
+  return <Icon size={size} color={color} strokeWidth={strokeWidth} />;
 };
+export default memo(MyIcon);
 
 const DEFAULT_PROPS = {
   size: 24,
@@ -15,13 +19,9 @@ const DEFAULT_PROPS = {
   strokeWidth: 2,
 };
 
-function MyIcon({
-  name: Icon,
-  size = DEFAULT_PROPS.size,
-  color = DEFAULT_PROPS.color,
-  strokeWidth = DEFAULT_PROPS.strokeWidth,
-}: MyIconProps) {
-  if (!Icon) return null;
-  return <Icon size={size} color={color} strokeWidth={strokeWidth} />;
-}
-export default memo(MyIcon);
+type MyIconProps = {
+  name?: LucideIcon;
+  color?: string;
+  size?: number;
+  strokeWidth?: number;
+};

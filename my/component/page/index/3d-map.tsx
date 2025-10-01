@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
-import { memo } from "react";
 
-function My3DMap() {
+const My3DMap = () => {
   // placeholder
   return (
     <Image
@@ -9,5 +8,5 @@ function My3DMap() {
       style={{ flex: 1 }}
     />
   );
-}
-export default memo(My3DMap);
+};
+export default My3DMap;

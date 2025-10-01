@@ -6,9 +6,20 @@ import {
   TouchableOpacityProps,
 } from "react-native";
 
-const DEFAULT_CHILD = <Text>Lorem Ipsum</Text>;
+const MyTouchableOpacity = ({
+  style,
+  children,
+  ...props
+}: TouchableOpacityProps) => {
+  return (
+    <TouchableOpacity style={[styles.base, style]} activeOpacity={0.7} {...props}>
+      {children ?? DEFAULT_CHILD}
+    </TouchableOpacity>
+  );
+};
+export default memo(MyTouchableOpacity);
 
-const s = StyleSheet.create({
+const styles = StyleSheet.create({
   base: {
     alignItems: "center",
     paddingHorizontal: 10,
@@ -20,15 +31,4 @@ const s = StyleSheet.create({
   },
 });
 
-function MyTouchableOpacity({
-  style,
-  children,
-  ...props
-}: TouchableOpacityProps) {
-  return (
-    <TouchableOpacity style={[s.base, style]} activeOpacity={0.7} {...props}>
-      {children ?? DEFAULT_CHILD}
-    </TouchableOpacity>
-  );
-}
-export default memo(MyTouchableOpacity);
+const DEFAULT_CHILD = <Text>Lorem Ipsum</Text>;

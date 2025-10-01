@@ -1,4 +1,4 @@
-const mySampleData = {
+const sampleData = {
   block: [
     {
       id: "a",
@@ -392,4 +392,4 @@ const mySampleData = {
     },
   ],
 };
-export default mySampleData;
+export default sampleData;
