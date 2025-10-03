@@ -1,5 +1,7 @@
 import MyView from "@/my/component/generic/my-view";
+import BlockList from "@/my/component/page/burial-plots/block_list";
 import MyHeader from "@/my/component/page/burial-plots/header";
+import { themeLight } from "@/my/const/theme";
 import React from "react";
 import { StyleSheet } from "react-native";
 
@@ -7,9 +9,11 @@ export default function BurialPlots() {
   return (
     <MyView style={layout.background}>
       <MyView style={layout.header}>
-        <MyHeader></MyHeader>
+        <MyHeader/>
       </MyView>
-      <MyView style={layout.listContainer}></MyView>
+      <MyView style={layout.listContainer}>
+        <BlockList/>
+      </MyView>
     </MyView>
   );
 }
@@ -23,5 +27,7 @@ const layout = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+
+    backgroundColor: themeLight.neutral6,
   },
 });

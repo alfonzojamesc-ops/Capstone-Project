@@ -1,7 +1,7 @@
 import React, { memo, useRef } from "react";
 import { Text, View, ViewProps, ViewStyle } from "react-native";
 
-const DEBUG_LAYOUT = true;
+const DEBUG_LAYOUT = false;
 
 const MyView = ({ style, children, ...props }: ViewProps) => {
   if (!DEBUG_LAYOUT) {

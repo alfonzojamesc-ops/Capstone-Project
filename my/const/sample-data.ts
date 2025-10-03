@@ -2,7 +2,6 @@ const sampleData = {
   block: [
     {
       id: "a",
-      status: "green",
       description: "lorem1 ipsum dolor sit amet",
       slot: [
         {
@@ -77,54 +76,6 @@ const sampleData = {
           lifespan: { from: 1988, to: 2071 },
           sex: "female",
         },
-        {
-          id: 12,
-          name: "Charles M. Lopez",
-          lifespan: { from: 1919, to: 1980 },
-          sex: "male",
-        },
-        {
-          id: 13,
-          name: "Amelia Gonzalez",
-          lifespan: { from: 1995, to: 2075 },
-          sex: "female",
-        },
-        {
-          id: 14,
-          name: "Thomas R. Wilson",
-          lifespan: { from: 1947, to: 2003 },
-          sex: "male",
-        },
-        {
-          id: 15,
-          name: "Charlotte Anderson",
-          lifespan: { from: 1971, to: 2035 },
-          sex: "female",
-        },
-        {
-          id: 16,
-          name: "Daniel S. Thomas",
-          lifespan: { from: 1960, to: 2021 },
-          sex: "male",
-        },
-        {
-          id: 17,
-          name: "Abigail J. Taylor",
-          lifespan: { from: 2000, to: 2085 },
-          sex: "female",
-        },
-        {
-          id: 18,
-          name: "Matthew Moore",
-          lifespan: { from: 1938, to: 1994 },
-          sex: "male",
-        },
-        {
-          id: 19,
-          name: "Ella R. Jackson",
-          lifespan: { from: 1993, to: 2063 },
-          sex: "female",
-        },
       ].map((person) => ({
         ...person,
         image: `https://avatar.iran.liara.run/public/${person.sex}`,
@@ -132,7 +83,6 @@ const sampleData = {
     },
     {
       id: "b",
-      status: "yellow",
       description: "lorem2 ipsum dolor sit amet",
       slot: [
         {
@@ -231,30 +181,6 @@ const sampleData = {
           lifespan: { from: 1979, to: 2042 },
           sex: "female",
         },
-        {
-          id: 16,
-          name: "Logan D. Wells",
-          lifespan: { from: 1966, to: 2025 },
-          sex: "male",
-        },
-        {
-          id: 17,
-          name: "Nora K. Black",
-          lifespan: { from: 2001, to: 2078 },
-          sex: "female",
-        },
-        {
-          id: 18,
-          name: "Elijah Greene",
-          lifespan: { from: 1952, to: 2010 },
-          sex: "male",
-        },
-        {
-          id: 19,
-          name: "Hazel Y. Stone",
-          lifespan: { from: 1992, to: 2062 },
-          sex: "female",
-        },
       ].map((person) => ({
         ...person,
         image: `https://avatar.iran.liara.run/public/${person.sex}`,
@@ -262,7 +188,6 @@ const sampleData = {
     },
     {
       id: "c",
-      status: "red",
       description: "lorem3 ipsum dolor sit amet",
       slot: [
         {
@@ -390,9 +315,9 @@ const sampleData = {
         image: `https://avatar.iran.liara.run/public/${person.sex}`,
       })),
     },
-  ].map((block) => ({
+  ].map((block, index) => ({
     ...block,
-    image: "https://picsum.photos/id/400/400?grayscale&blur=2",
+    image: `https://picsum.photos/300/300?random=${index}`,
   })),
 };
 export default sampleData;
