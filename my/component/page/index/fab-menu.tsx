@@ -88,10 +88,10 @@ const style = StyleSheet.create({
     backgroundColor: themeLight.primary1,
   },
   fabDark: {
-    backgroundColor: themeDark.neutral4,
+    backgroundColor: themeDark.primary2,
   },
   fabIcon: {
-    color: themeLight.neutral4,
+    color: themeLight.neutral6,
     fontSize: 36,
   },
   fabIconDark: {
@@ -108,10 +108,10 @@ const style = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     paddingHorizontal: 15,
-    backgroundColor: themeLight.neutral4,
+    backgroundColor: themeLight.neutral6,
   },
   menuItemDark: {
-    backgroundColor: themeDark.neutral4,
+    backgroundColor: themeDark.neutral6,
   },
   menuItemIcon: {
     color: themeLight.neutral1,

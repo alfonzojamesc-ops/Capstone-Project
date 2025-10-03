@@ -1,6 +1,6 @@
 import { useColorScheme } from "react-native";
 
-const FORCE_OPPOSITE_MODE = true;
+const FORCE_OPPOSITE_MODE = false;
 
 function useDark(): boolean {
   const scheme = useColorScheme();

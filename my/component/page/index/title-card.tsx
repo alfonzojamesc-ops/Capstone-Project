@@ -40,10 +40,10 @@ const style = StyleSheet.create({
     gap: 10,
 
     borderRadius: 10,
-    backgroundColor: themeLight.neutral4,
+    backgroundColor: themeLight.neutral6,
   },
   titleCardDark: {
-    backgroundColor: themeDark.neutral4,
+    backgroundColor: themeDark.neutral6,
   },
   titleCardIcon: {
     color: themeLight.neutral1,

@@ -57,12 +57,12 @@ const style = StyleSheet.create({
     flexDirection: "row",
     gap: 5,
     borderRadius: 200,
-    backgroundColor: themeLight.neutral4,
+    backgroundColor: themeLight.neutral6,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
   searchBarDark: {
-    backgroundColor: themeDark.neutral4,
+    backgroundColor: themeDark.neutral6,
   },
   searchBarTextInput: {
     flex: 1,
@@ -72,10 +72,10 @@ const style = StyleSheet.create({
     color: themeDark.neutral1,
   },
   searchBarPlaceholder: {
-    color: themeLight.neutral2,
+    color: themeLight.neutral3,
   },
   searchBarPlaceholderDark: {
-    color: themeDark.neutral2,
+    color: themeDark.neutral3,
   },
   searchBarIcon: {
     color: themeLight.neutral1,
