@@ -390,6 +390,9 @@ const sampleData = {
         image: `https://avatar.iran.liara.run/public/${person.sex}`,
       })),
     },
-  ],
+  ].map((block) => ({
+    ...block,
+    image: "https://picsum.photos/id/400/400?grayscale&blur=2",
+  })),
 };
 export default sampleData;
