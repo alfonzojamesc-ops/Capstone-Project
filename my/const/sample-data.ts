@@ -2,7 +2,8 @@ const sampleData = {
   block: [
     {
       id: "a",
-      description: "lorem1 ipsum dolor sit amet",
+      description:
+        "Tucked beneath a row of towering cypress trees, this quiet section is marked by aged stone and ivy-covered headstones. The sunlight filters softly through the leaves, casting shifting patterns over the mossy ground.",
       slot: [
         {
           id: 0,
@@ -83,7 +84,8 @@ const sampleData = {
     },
     {
       id: "b",
-      description: "lorem2 ipsum dolor sit amet",
+      description:
+        "This section lies along the eastern wall, where white marble monuments stand in crisp rows. A gentle breeze carries the scent of pine and earth, offering a serene atmosphere for reflection.",
       slot: [
         {
           id: 0,
@@ -188,7 +190,8 @@ const sampleData = {
     },
     {
       id: "c",
-      description: "lorem3 ipsum dolor sit amet",
+      description:
+        "Near the old chapel ruins, this part of the cemetery is dotted with weatherworn crosses and wildflowers pushing through cracked pathways. It's a peaceful, almost forgotten corner that whispers stories of generations past.",
       slot: [
         {
           id: 0,
