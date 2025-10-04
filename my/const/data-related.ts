@@ -1,1 +1,1 @@
-export const slotsPerBlock = 20;
+export const slotsPerBlock = 30;

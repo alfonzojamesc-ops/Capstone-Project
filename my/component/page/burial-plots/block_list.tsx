@@ -2,7 +2,14 @@ import { slotsPerBlock } from "@/my/const/data-related";
 import sampleData from "@/my/const/sample-data";
 import { themeLight } from "@/my/const/theme";
 import { Image } from "expo-image";
-import { FlatList, Pressable, StyleSheet, Text } from "react-native";
+import { memo, useMemo } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import MyView from "../../generic/my-view";
 
 const BlockList = () => {
@@ -19,9 +26,9 @@ const BlockList = () => {
 export default BlockList;
 
 type Block = (typeof sampleData.block)[number];
-const ListItem = ({ item }: { item: Block }) => {
+const ListItem = memo(({ item }: { item: Block }) => {
   return (
-    <Pressable style={styles.listItem}>
+    <TouchableOpacity style={styles.listItem}>
       <MyView style={styles.cardContainer}>
         <Image source={{ uri: item.image }} style={styles.image} />
         <MyView style={styles.textContainer}>
@@ -34,32 +41,38 @@ const ListItem = ({ item }: { item: Block }) => {
           <Text style={styles.cardSubText}>{item.description}</Text>
         </MyView>
       </MyView>
-    </Pressable>
+    </TouchableOpacity>
   );
-};
+});
 
 type StatusProp = {
   slotsOccupied: number;
 };
-const StatusRenderer = ({ slotsOccupied }: StatusProp) => {
-  const ratio = slotsOccupied / slotsPerBlock;
-  let barColor = styles.barGreen;
-  const parseWidth = () => (ratio * 100).toFixed(0) + "%";
+const StatusRenderer = memo(({ slotsOccupied }: StatusProp) => {
+  const ratio = useMemo(
+    () => slotsOccupied / slotsPerBlock,
+    [slotsOccupied]
+  );
+  const barLength = useMemo(
+    () =>
+      ({
+        width: (ratio * 100).toFixed(0) + "%",
+      } as ViewStyle),
+    [ratio]
+  );
 
-  if (slotsOccupied >= slotsPerBlock) {
-    barColor = styles.barRed;
-  } else if (slotsOccupied > slotsPerBlock * 0.7) {
-    barColor = styles.barYellow;
-  }
+  const barColor = useMemo(() => {
+    if (ratio >= 1) return styles.barRed;
+    if (ratio > 0.7) return styles.barYellow;
+    return styles.barGreen;
+  }, [ratio]);
+
   return (
     <MyView style={styles.statusRendererContainer}>
-      <MyView
-      // TODO 12345
-        style={[styles.statusBar, barColor, { maxWidth: "100%" }]}
-      ></MyView>
+      <MyView style={[styles.statusBar, barLength, barColor]}></MyView>
     </MyView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   listItem: {
@@ -94,7 +107,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
 
-    marginBottom: 20,
+    marginBottom: 15,
   },
   cardTitleText: {
     fontSize: 24,
@@ -111,10 +124,11 @@ const styles = StyleSheet.create({
 
     borderRadius: 10,
 
-    backgroundColor: themeLight.neutral3,
+    backgroundColor: themeLight.neutral2,
   },
   statusBar: {
-    width: "85%",
+    maxWidth: "85%",
+    minWidth: "20%",
     height: "65%",
 
     margin: 4,
