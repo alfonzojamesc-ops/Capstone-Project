@@ -27,13 +27,13 @@ export default function My3DMap() {
       <ambientLight intensity={0.8} />
       <directionalLight position={[50, 100, 50]} />
       <Suspense>
-        <Model scale={0.01} />
+        <Model />
       </Suspense>
       <OrbitControls
         enableDamping
         enableZoom
-        minDistance={20}
-        maxDistance={500}
+        minDistance={10}
+        maxDistance={200}
         zoomSpeed={0.5}
       />
     </Canvas>
