@@ -320,7 +320,7 @@ const sampleData = {
     },
   ].map((block, index) => ({
     ...block,
-    image: `https://picsum.photos/256/256?random=${index}`,
+    image: `https://picsum.photos/1920/1080?random=${index}`,
   })),
 };
 export default sampleData;
