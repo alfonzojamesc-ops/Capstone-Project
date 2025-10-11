@@ -1,3 +1,5 @@
+export const DEBUG_THEME = false;
+
 const theme = {
   light: {
     primary1: "#0073E6",
