@@ -1,10 +1,12 @@
-const sampleData = {
-  block: [
+export const slotsPerBlock = 30;
+
+export const sampleData = {
+  blocks: [
     {
       id: "a",
       description:
         "Tucked beneath a row of towering cypress trees, this quiet section is marked by aged stone and ivy-covered headstones.",
-      slot: [
+      slots: [
         {
           id: 0,
           name: "John L. Doe",
@@ -323,4 +325,3 @@ const sampleData = {
     image: `https://picsum.photos/1920/1080?random=${index}`,
   })),
 };
-export default sampleData;
