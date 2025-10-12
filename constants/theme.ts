@@ -17,6 +17,13 @@ const theme = {
     neutral4: "#989a98",
     neutral5: "#cbccc9",
     neutral6: "#fefefa",
+
+    absneutral1: "#000305",
+    absneutral2: "#333536",
+    absneutral3: "#666767",
+    absneutral4: "#989a98",
+    absneutral5: "#cbccc9",
+    absneutral6: "#fefefa",
   },
   dark: {
     primary1: "#0073E6",
@@ -34,6 +41,13 @@ const theme = {
     neutral4: "#666767",
     neutral5: "#333536",
     neutral6: "#000305",
+
+    absneutral1: "#000305",
+    absneutral2: "#333536",
+    absneutral3: "#666767",
+    absneutral4: "#989a98",
+    absneutral5: "#cbccc9",
+    absneutral6: "#fefefa",
   },
 };
 const { light, dark } = theme;

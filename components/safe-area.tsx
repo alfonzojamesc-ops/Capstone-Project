@@ -1,19 +1,26 @@
+import debugBorders from "@/constants/styles";
 import React from "react";
 import {
-  SafeAreaProvider,
   SafeAreaView,
   SafeAreaViewProps,
+  useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-function SafeArea({ ...props }: SafeAreaViewProps) {
+const SafeArea = ({ ...props }: SafeAreaViewProps) => {
+  const insets = useSafeAreaInsets();
   return (
-    <SafeAreaProvider>
-      <SafeAreaView
-        edges={["top", "bottom", "left", "right"]}
-        style={{ flex: 1 }}
-        {...props}
-      />
-    </SafeAreaProvider>
+    <SafeAreaView
+      edges={["top", "bottom", "left", "right"]}
+      style={{
+        flex: 1,
+        marginTop: insets.top,
+        marginBottom: insets.bottom,
+        marginLeft: insets.left,
+        marginRight: insets.right,
+        ...debugBorders(),
+      }}
+      {...props}
+    />
   );
-}
+};
 export default SafeArea;
