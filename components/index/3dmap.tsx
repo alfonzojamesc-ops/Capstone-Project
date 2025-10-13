@@ -1,4 +1,4 @@
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei/native";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Model } from "./3dmap-model";
