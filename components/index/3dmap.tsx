@@ -3,7 +3,7 @@ import { OrbitControls } from "@react-three/drei/native";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
-import { Model } from "./3dmap-model";
+import { Instances, Model } from "./3dmap-model";
 
 // Remember last camera + target globally
 const cameraMemory = {
@@ -91,7 +91,9 @@ const My3DMap = () => {
       />
       <fog attach="fog" args={["#aaffff", 40, 100]} />
       <Suspense>
-        <Model />
+        <Instances>
+          <Model />
+        </Instances>
       </Suspense>
       <ControlsWithMemoryAndClamp />
     </Canvas>
