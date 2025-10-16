@@ -11,7 +11,7 @@ import {
 
 const MySearchBar = () => {
   const [value, setValue] = useState("");
-  const theme = useColorScheme() == "dark" ? themeDark : themeLight;
+  const theme = useColorScheme() === "dark" ? themeDark : themeLight;
 
   return (
     <View style={[styles.bar, { backgroundColor: theme.neutral6 }]}>

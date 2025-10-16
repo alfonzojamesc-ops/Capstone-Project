@@ -1,5 +1,5 @@
-import My3DMap from "@/components/index/my-3dmap-view";
 import MyFabMenu from "@/components/index/fab-menu";
+import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
 import SafeArea from "@/components/safe-area";
@@ -37,7 +37,7 @@ export default function Index() {
       show.remove();
       hide.remove();
     };
-  }, []);
+  }, [keyboardOffset]);
 
   return (
     <SafeArea>

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 const TitleCard = () => {
-  const theme = useColorScheme() == "dark" ? themeDark : themeLight;
+  const theme = useColorScheme() === "dark" ? themeDark : themeLight;
   return (
     <View
       style={[

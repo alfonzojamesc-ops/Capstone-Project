@@ -56,20 +56,24 @@ const My3DMap = () => {
       setIsActive(s === "active")
     );
 
-    if (orbitRef.current && cameraPos && cameraPov) {
-      orbitRef.current.object.position.fromArray(cameraPos);
-      orbitRef.current.target.fromArray(cameraPov);
-      orbitRef.current.update();
+    const currentOrbit = orbitRef.current;
+
+    if (currentOrbit && cameraPos && cameraPov) {
+      currentOrbit.object.position.fromArray(cameraPos);
+      currentOrbit.target.fromArray(cameraPov);
+      currentOrbit.update();
     }
 
     return () => {
       sub.remove();
-      if (orbitRef.current) {
-        cameraPos = orbitRef.current.object.position.toArray();
-        cameraPov = orbitRef.current.target.toArray();
+      if (currentOrbit) {
+        // 👈 use the copied ref
+        cameraPos = currentOrbit.object.position.toArray();
+        cameraPov = currentOrbit.target.toArray();
       }
     };
   }, []);
+
   return (
     <Canvas {...SCENE_CONFIG.canvas}>
       {isFocused && isActive && (

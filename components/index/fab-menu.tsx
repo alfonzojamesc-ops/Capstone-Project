@@ -36,7 +36,7 @@ const items: {
 
 const MyFabMenu = () => {
   const [open, setOpen] = useState(false);
-  const theme = useColorScheme() == "dark" ? themeDark : themeLight;
+  const theme = useColorScheme() === "dark" ? themeDark : themeLight;
 
   return (
     <>

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useMemo } from "react";
 
 const context = createContext();
 export function Instances({ children, ...props }) {
+  // eslint-disable-next-line
   const { nodes } = useGLTF(require("@/assets/models/my-3dmap.glb"));
   const instances = useMemo(
     () => ({
@@ -29,7 +30,7 @@ export function Instances({ children, ...props }) {
   return (
     <Merged meshes={instances} {...props}>
       {(instances) => (
-        <context.Provider value={instances} children={children} />
+        <context.Provider value={instances}>{children}</context.Provider>
       )}
     </Merged>
   );
@@ -38,7 +39,9 @@ export function Instances({ children, ...props }) {
 export function Model(props) {
   const instances = useContext(context);
   return (
+    // eslint-disable-next-line react/no-unknown-property
     <group {...props} dispose={null}>
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <group position={[-154.216, -3.22, -117.324]} scale={0.019}>
         <instances.Mesh />
         <instances.Mesh1 />
@@ -60,5 +63,5 @@ export function Model(props) {
     </group>
   );
 }
-
+// eslint-disable-next-line
 useGLTF.preload(require("@/assets/models/my-3dmap.glb"));
