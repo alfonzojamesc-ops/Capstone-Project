@@ -1,29 +1,27 @@
 // @ts-nocheck
-
-import { Merged, useGLTF } from "@react-three/drei";
-import React, { createContext, useContext, useMemo } from "react";
+import { useGLTF } from "@react-three/drei";
+import React from "react";
 import * as THREE from "three";
 import { GLTF } from "three-stdlib";
 
 type GLTFResult = GLTF & {
   nodes: {
-    ChapelData001: THREE.Mesh;
-    ChapelData001_1: THREE.Mesh;
-    ChapelData001_2: THREE.Mesh;
-    ChapelData001_3: THREE.Mesh;
-    ChapelData001_4: THREE.Mesh;
-    ChapelData001_5: THREE.Mesh;
-    ChapelData001_6: THREE.Mesh;
-    ChapelData001_7: THREE.Mesh;
-    ChapelData001_8: THREE.Mesh;
-    ChapelData001_9: THREE.Mesh;
-    ChapelData001_10: THREE.Mesh;
-    ChapelData001_11: THREE.Mesh;
-    ChapelData001_12: THREE.Mesh;
-    ChapelData001_13: THREE.Mesh;
-    ChapelData001_14: THREE.Mesh;
-    ChapelData001_15: THREE.Mesh;
-    ChapelData001_16: THREE.Mesh;
+    mesh_0: THREE.Mesh;
+    mesh_0_1: THREE.Mesh;
+    mesh_0_2: THREE.Mesh;
+    mesh_0_3: THREE.Mesh;
+    mesh_0_4: THREE.Mesh;
+    mesh_0_5: THREE.Mesh;
+    mesh_0_6: THREE.Mesh;
+    mesh_0_7: THREE.Mesh;
+    mesh_0_8: THREE.Mesh;
+    mesh_0_9: THREE.Mesh;
+    mesh_0_10: THREE.Mesh;
+    mesh_0_11: THREE.Mesh;
+    mesh_0_12: THREE.Mesh;
+    mesh_0_13: THREE.Mesh;
+    mesh_0_14: THREE.Mesh;
+    mesh_0_15: THREE.Mesh;
   };
   materials: {
     ChapelRoofMaterial: THREE.MeshStandardMaterial;
@@ -35,7 +33,6 @@ type GLTFResult = GLTF & {
     GraveMaterial: THREE.MeshStandardMaterial;
     FenceMaterial: THREE.MeshStandardMaterial;
     ["GraveRoofMaterial.006"]: THREE.MeshStandardMaterial;
-    CoffinMaterial: THREE.MeshStandardMaterial;
     ["GraveMaterial.001"]: THREE.MeshStandardMaterial;
     ["GraveRoofMaterial.005"]: THREE.MeshStandardMaterial;
     ["GraveRoofMaterial.003"]: THREE.MeshStandardMaterial;
@@ -46,65 +43,112 @@ type GLTFResult = GLTF & {
   };
 };
 
-const context = createContext();
-export function Instances({ children, ...props }) {
-  const { nodes } = useGLTF(
-    require("@/assets/models/my-3dmap.glb")
-  ) as GLTFResult;
-  const instances = useMemo(
-    () => ({
-      ChapelData: nodes.ChapelData001,
-      ChapelData1: nodes.ChapelData001_1,
-      ChapelData2: nodes.ChapelData001_2,
-      ChapelData3: nodes.ChapelData001_3,
-      ChapelData4: nodes.ChapelData001_4,
-      ChapelData5: nodes.ChapelData001_5,
-      ChapelData6: nodes.ChapelData001_6,
-      ChapelData7: nodes.ChapelData001_7,
-      ChapelData8: nodes.ChapelData001_8,
-      ChapelData9: nodes.ChapelData001_9,
-      ChapelData10: nodes.ChapelData001_10,
-      ChapelData11: nodes.ChapelData001_11,
-      ChapelData12: nodes.ChapelData001_12,
-      ChapelData13: nodes.ChapelData001_13,
-      ChapelData14: nodes.ChapelData001_14,
-      ChapelData15: nodes.ChapelData001_15,
-      ChapelData16: nodes.ChapelData001_16,
-    }),
-    [nodes]
-  );
-  return (
-    <Merged meshes={instances} {...props}>
-      {(instances) => (
-        <context.Provider value={instances} children={children} />
-      )}
-    </Merged>
-  );
-}
-
 export function Model(props: JSX.IntrinsicElements["group"]) {
-  const instances = useContext(context);
+  const { nodes, materials } = useGLTF(
+    require("@/assets/models/my-3dmap-transformed-native.glb")
+  ) as GLTFResult;
   return (
     <group {...props} dispose={null}>
-      <instances.ChapelData />
-      <instances.ChapelData1 />
-      <instances.ChapelData2 />
-      <instances.ChapelData3 />
-      <instances.ChapelData4 />
-      <instances.ChapelData5 />
-      <instances.ChapelData6 />
-      <instances.ChapelData7 />
-      <instances.ChapelData8 />
-      <instances.ChapelData9 />
-      <instances.ChapelData10 />
-      <instances.ChapelData11 />
-      <instances.ChapelData12 />
-      <instances.ChapelData13 />
-      <instances.ChapelData14 />
-      <instances.ChapelData15 />
-      <instances.ChapelData16 />
+      <group position={[-154.216, -3.22, -117.324]} scale={0.019}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0.geometry}
+          material={materials.ChapelRoofMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_1.geometry}
+          material={materials.ChapelWallMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_2.geometry}
+          material={materials.LeafMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_3.geometry}
+          material={materials.TrunkMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_4.geometry}
+          material={materials.GrassMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_5.geometry}
+          material={materials.RoadMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_6.geometry}
+          material={materials.GraveMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_7.geometry}
+          material={materials.FenceMaterial}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_8.geometry}
+          material={materials["GraveRoofMaterial.006"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_9.geometry}
+          material={materials["GraveMaterial.001"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_10.geometry}
+          material={materials["GraveRoofMaterial.005"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_11.geometry}
+          material={materials["GraveRoofMaterial.003"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_12.geometry}
+          material={materials["GraveRoofMaterial.004"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_13.geometry}
+          material={materials["GraveRoofMaterial.002"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_14.geometry}
+          material={materials["GraveRoofMaterial.001"]}
+        />
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.mesh_0_15.geometry}
+          material={materials.GraveFloorMaterial}
+        />
+      </group>
     </group>
   );
 }
 
-useGLTF.preload(require("@/assets/models/my-3dmap.glb"));
+useGLTF.preload(require("@/assets/models/my-3dmap-transformed-native.glb"));
