@@ -1,56 +1,129 @@
 import { useIsFocused } from "@react-navigation/native";
 import { OrbitControls } from "@react-three/drei/native";
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useState } from "react";
+import { Canvas, useFrame, Vector3 } from "@react-three/fiber";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
+import * as THREE from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
-const renderDistance = 100;
-const fogStartDistance = 40;
-const maxCameraZoom = 10;
-const minCameraZoom = 125;
-const enableZoom = true;
-const zoomSpeed = 0.5;
+const SCENE_CONFIG = {
+  enableCameraMemory: true,
+  canvas: {
+    camera: { position: [-44.33, 9.71, 43.54] as Vector3, far: 100 }, // refers to render max distance, 'near:' for min render dist
+    style: { backgroundColor: "#aaffff" },
+  },
+  enableFog: true,
+  fog: {
+    attach: "fog",
+    args: ["#aaffff", 40, 100] as ConstructorParameters<typeof THREE.Fog>,
+  },
+  enableAmbientLight: true,
+  enableBackLight: true,
+  lights: {
+    ambient: { color: "#ffffff" },
+    directional1: {
+      position: [200, 300, 200] as Vector3,
+      intensity: Math.PI / 2,
+    },
+    directional2: {
+      position: [-200, -300, -200] as Vector3,
+      intensity: Math.PI / 20,
+    },
+  },
+  enableOrbitControls: true,
+  orbitControls: {
+    target: [-29.46, 3.16, 37.05] as Vector3,
+    enableDamping: true,
+    enableZoom: true,
+    zoomSpeed: 0.5,
+    minDistance: 10,
+    maxDistance: 125,
+  },
+  enableCameraLogging: false,
+};
+
+let cameraPos: number[] | null = null;
+let cameraPov: number[] | null = null;
 
 const My3DMap = () => {
   const isFocused = useIsFocused();
   const [isActive, setIsActive] = useState(true);
+  // @ts-ignore
+  const orbitRef = useRef<any>(null!);
 
   useEffect(() => {
-    const sub = AppState.addEventListener("change", (state) => {
-      setIsActive(state === "active");
-    });
-    return () => sub.remove();
+    const sub = AppState.addEventListener("change", (s) =>
+      setIsActive(s === "active")
+    );
+
+    if (orbitRef.current && cameraPos && cameraPov) {
+      orbitRef.current.object.position.fromArray(cameraPos);
+      orbitRef.current.target.fromArray(cameraPov);
+      orbitRef.current.update();
+    }
+
+    return () => {
+      sub.remove();
+      if (orbitRef.current) {
+        cameraPos = orbitRef.current.object.position.toArray();
+        cameraPov = orbitRef.current.target.toArray();
+      }
+    };
   }, []);
-
-  if (!isFocused || !isActive) return null;
-
   return (
-    <Canvas
-      camera={{ far: renderDistance }}
-      style={{ backgroundColor: "#aaffff" }}
-    >
-      <ambientLight color="#ffffff" />
-      <directionalLight position={[200, 300, 200]} intensity={Math.PI / 2} />
-      <directionalLight
-        position={[-200, -300, -200]}
-        intensity={Math.PI / 20}
-      />
-      <fog attach="fog" args={["#aaffff", fogStartDistance, renderDistance]} />
-      <Suspense>
-        <Instances>
-          <Model />
-        </Instances>
-      </Suspense>
-      <OrbitControls
-        enableDamping
-        enableZoom={enableZoom}
-        minDistance={maxCameraZoom}
-        maxDistance={minCameraZoom}
-        zoomSpeed={zoomSpeed}
-      />
+    <Canvas {...SCENE_CONFIG.canvas}>
+      {isFocused && isActive && (
+        <>
+          {SCENE_CONFIG.enableAmbientLight && (
+            <ambientLight {...SCENE_CONFIG.lights.ambient} />
+          )}
+
+          <directionalLight {...SCENE_CONFIG.lights.directional1} />
+
+          {SCENE_CONFIG.enableBackLight && (
+            <directionalLight {...SCENE_CONFIG.lights.directional2} />
+          )}
+
+          {SCENE_CONFIG.enableFog && <fog {...SCENE_CONFIG.fog} />}
+
+          <Suspense>
+            <Instances>
+              <Model />
+            </Instances>
+          </Suspense>
+
+          {SCENE_CONFIG.enableOrbitControls && (
+            <OrbitControls
+              ref={SCENE_CONFIG.enableCameraMemory ? orbitRef : null}
+              {...SCENE_CONFIG.orbitControls}
+            />
+          )}
+
+          {SCENE_CONFIG.enableCameraLogging && (
+            <CameraLogger orbitRef={orbitRef} />
+          )}
+        </>
+      )}
     </Canvas>
   );
 };
 
+My3DMap.displayName = "My3DMap";
+
 export default My3DMap;
+
+function CameraLogger({ orbitRef }: any) {
+  useFrame(({ clock }) => {
+    if (orbitRef.current && clock.elapsedTime % 2 < 0.02) {
+      const cam = orbitRef.current.object.position.toArray();
+      const target = orbitRef.current.target.toArray();
+      console.log(
+        "Camera:",
+        cam.map((n: any) => n.toFixed(4)),
+        "Target:",
+        target.map((n: any) => n.toFixed(4))
+      );
+    }
+  });
+  return null;
+}
