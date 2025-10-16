@@ -4,7 +4,7 @@ import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
 import SafeArea from "@/components/safe-area";
 import debugBorders from "@/constants/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
 
 export default function Index() {
@@ -78,13 +78,10 @@ const layout = StyleSheet.create({
   titleCardContainer: {
     position: "absolute",
     top: 4,
-
     width: "100%",
     pointerEvents: "box-none",
-
     paddingHorizontal: 15,
     alignItems: "center",
-
     ...debugBorders(),
   },
   fabContainer: {
