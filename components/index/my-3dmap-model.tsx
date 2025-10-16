@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useGLTF } from "@react-three/drei";
-import React from "react";
+import { Merged, useGLTF } from "@react-three/drei";
+import React, { createContext, useContext, useMemo } from "react";
 import * as THREE from "three";
 import { GLTF } from "three-stdlib";
 
@@ -43,109 +43,62 @@ type GLTFResult = GLTF & {
   };
 };
 
-export function Model(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF(
+const context = createContext();
+export function Instances({ children, ...props }) {
+  const { nodes } = useGLTF(
     require("@/assets/models/my-3dmap-transformed-native.glb")
   ) as GLTFResult;
+  const instances = useMemo(
+    () => ({
+      Mesh: nodes.mesh_0,
+      Mesh1: nodes.mesh_0_1,
+      Mesh2: nodes.mesh_0_2,
+      Mesh3: nodes.mesh_0_3,
+      Mesh4: nodes.mesh_0_4,
+      Mesh5: nodes.mesh_0_5,
+      Mesh6: nodes.mesh_0_6,
+      Mesh7: nodes.mesh_0_7,
+      Mesh8: nodes.mesh_0_8,
+      Mesh9: nodes.mesh_0_9,
+      Mesh10: nodes.mesh_0_10,
+      Mesh11: nodes.mesh_0_11,
+      Mesh12: nodes.mesh_0_12,
+      Mesh13: nodes.mesh_0_13,
+      Mesh14: nodes.mesh_0_14,
+      Mesh15: nodes.mesh_0_15,
+    }),
+    [nodes]
+  );
+  return (
+    <Merged meshes={instances} {...props}>
+      {(instances) => (
+        <context.Provider value={instances} children={children} />
+      )}
+    </Merged>
+  );
+}
+
+export function Model(props: JSX.IntrinsicElements["group"]) {
+  const instances = useContext(context);
   return (
     <group {...props} dispose={null}>
       <group position={[-154.216, -3.22, -117.324]} scale={0.019}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0.geometry}
-          material={materials.ChapelRoofMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_1.geometry}
-          material={materials.ChapelWallMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_2.geometry}
-          material={materials.LeafMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_3.geometry}
-          material={materials.TrunkMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_4.geometry}
-          material={materials.GrassMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_5.geometry}
-          material={materials.RoadMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_6.geometry}
-          material={materials.GraveMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_7.geometry}
-          material={materials.FenceMaterial}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_8.geometry}
-          material={materials["GraveRoofMaterial.006"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_9.geometry}
-          material={materials["GraveMaterial.001"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_10.geometry}
-          material={materials["GraveRoofMaterial.005"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_11.geometry}
-          material={materials["GraveRoofMaterial.003"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_12.geometry}
-          material={materials["GraveRoofMaterial.004"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_13.geometry}
-          material={materials["GraveRoofMaterial.002"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_14.geometry}
-          material={materials["GraveRoofMaterial.001"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.mesh_0_15.geometry}
-          material={materials.GraveFloorMaterial}
-        />
+        <instances.Mesh />
+        <instances.Mesh1 />
+        <instances.Mesh2 />
+        <instances.Mesh3 />
+        <instances.Mesh4 />
+        <instances.Mesh5 />
+        <instances.Mesh6 />
+        <instances.Mesh7 />
+        <instances.Mesh8 />
+        <instances.Mesh9 />
+        <instances.Mesh10 />
+        <instances.Mesh11 />
+        <instances.Mesh12 />
+        <instances.Mesh13 />
+        <instances.Mesh14 />
+        <instances.Mesh15 />
       </group>
     </group>
   );
