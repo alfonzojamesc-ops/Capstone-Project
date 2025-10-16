@@ -4,7 +4,6 @@ import { createContext, useContext, useMemo } from "react";
 
 const context = createContext();
 export const Instances = ({ children, ...props }) => {
-  // eslint-disable-next-line
   const { nodes } = useGLTF(require("@/assets/models/my-3dmap.glb"));
   const instances = useMemo(
     () => ({
@@ -68,5 +67,4 @@ export const Model = (props) => {
 
 Model.displayName = "Model3D";
 
-// eslint-disable-next-line
 useGLTF.preload(require("@/assets/models/my-3dmap.glb"));
