@@ -3,7 +3,7 @@ import { OrbitControls } from "@react-three/drei/native";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
-import { Instances, Model } from "./my-3dmap-model";
+import { Model } from "./my-3dmap-model";
 
 const cameraMemory = {
   position: [5, 5, 5] as [number, number, number],
@@ -76,7 +76,6 @@ const My3DMap = () => {
 
   return (
     <Canvas
-      dpr={[1, 2]}
       camera={{ far: 95, fov: 45, position: cameraMemory.position }}
       style={{ backgroundColor: "#aaffff" }}
     >
@@ -85,9 +84,7 @@ const My3DMap = () => {
       <directionalLight position={[-200, -300, -200]} intensity={0.2} />
       <fog attach="fog" args={["#aaffff", 40, 100]} />
       <Suspense>
-        <Instances>
-          <Model />
-        </Instances>
+        <Model />
       </Suspense>
       <ControlsWithMemoryAndClamp />
     </Canvas>
