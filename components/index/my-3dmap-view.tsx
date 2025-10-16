@@ -3,9 +3,8 @@ import { OrbitControls } from "@react-three/drei/native";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
-import { Model } from "./3dmap-model";
+import { Instances, Model } from "./my-3dmap-model";
 
-// Remember last camera + target globally
 const cameraMemory = {
   position: [5, 5, 5] as [number, number, number],
   target: [0, 0, 0] as [number, number, number],
@@ -73,7 +72,6 @@ const My3DMap = () => {
     return () => sub.remove();
   }, []);
 
-  // Unmount when screen not focused OR app minimized
   if (!isFocused || !isActive) return null;
 
   return (
@@ -83,15 +81,13 @@ const My3DMap = () => {
       style={{ backgroundColor: "#aaffff" }}
     >
       <ambientLight color="#ffffff" />
-      <directionalLight color="#feffe6" position={[200, 300, 200]} />
-      <directionalLight
-        position={[-200, -300, -200]}
-        intensity={0.33}
-        color="#03fce7"
-      />
+      <directionalLight position={[200, 300, 200]} intensity={2} />
+      <directionalLight position={[-200, -300, -200]} intensity={0.2} />
       <fog attach="fog" args={["#aaffff", 40, 100]} />
       <Suspense>
-        <Model />
+        <Instances>
+          <Model />
+        </Instances>
       </Suspense>
       <ControlsWithMemoryAndClamp />
     </Canvas>

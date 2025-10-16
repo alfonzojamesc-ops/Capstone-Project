@@ -1,4 +1,4 @@
-import My3DMap from "@/components/index/3dmap";
+import My3DMap from "@/components/index/my-3dmap-view";
 import MyFabMenu from "@/components/index/fab-menu";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
