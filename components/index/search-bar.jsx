@@ -32,6 +32,8 @@ const MySearchBar = () => {
   );
 };
 
+MySearchBar.displayName = "MySearchBar";
+
 export default MySearchBar;
 
 const styles = StyleSheet.create({

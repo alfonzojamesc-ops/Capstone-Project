@@ -130,3 +130,5 @@ function CameraLogger({ orbitRef }) {
   });
   return null;
 }
+
+CameraLogger.displayName = "CameraLogger";

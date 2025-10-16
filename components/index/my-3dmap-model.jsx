@@ -1,9 +1,9 @@
 // @ts-nocheck
 import { Merged, useGLTF } from "@react-three/drei";
-import React, { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 
 const context = createContext();
-export function Instances({ children, ...props }) {
+export const Instances = ({ children, ...props }) => {
   // eslint-disable-next-line
   const { nodes } = useGLTF(require("@/assets/models/my-3dmap.glb"));
   const instances = useMemo(
@@ -34,9 +34,11 @@ export function Instances({ children, ...props }) {
       )}
     </Merged>
   );
-}
+};
 
-export function Model(props) {
+Instances.displayName = "Instances3D";
+
+export const Model = (props) => {
   const instances = useContext(context);
   return (
     // eslint-disable-next-line react/no-unknown-property
@@ -62,6 +64,9 @@ export function Model(props) {
       </group>
     </group>
   );
-}
+};
+
+Model.displayName = "Model3D";
+
 // eslint-disable-next-line
 useGLTF.preload(require("@/assets/models/my-3dmap.glb"));

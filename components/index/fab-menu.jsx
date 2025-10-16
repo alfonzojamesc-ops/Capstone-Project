@@ -2,7 +2,7 @@ import debugBorders from "@/constants/styles";
 import { themeDark, themeLight } from "@/constants/theme";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { ComponentProps, useState } from "react";
+import { useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -12,13 +12,7 @@ import {
   View,
 } from "react-native";
 
-type IconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
-const items: {
-  key: string;
-  label: string;
-  icon: IconName;
-  onPress: () => void;
-}[] = [
+const items = [
   {
     key: "reserve",
     label: "Reserve a Slot",
@@ -73,6 +67,8 @@ const MyFabMenu = () => {
     </>
   );
 };
+
+MyFabMenu.displayName = "MyFabMenu";
 
 export default MyFabMenu;
 

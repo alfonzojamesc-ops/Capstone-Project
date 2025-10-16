@@ -1,12 +1,10 @@
 import debugBorders from "@/constants/styles";
-import React from "react";
 import {
   SafeAreaView,
-  SafeAreaViewProps,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-const SafeArea = ({ ...props }: SafeAreaViewProps) => {
+const SafeArea = ({ ...props }) => {
   const insets = useSafeAreaInsets();
   return (
     <SafeAreaView
@@ -23,4 +21,7 @@ const SafeArea = ({ ...props }: SafeAreaViewProps) => {
     />
   );
 };
+
+SafeArea.displayName = "SafeArea";
+
 export default SafeArea;

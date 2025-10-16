@@ -52,6 +52,8 @@ const TitleCard = () => {
   );
 };
 
+TitleCard.displayName = "TitleCard";
+
 export default TitleCard;
 
 const styles = StyleSheet.create({
