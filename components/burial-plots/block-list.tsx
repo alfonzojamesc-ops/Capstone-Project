@@ -59,7 +59,7 @@ const StatusRenderer = memo(({ slotsOccupied }: StatusProp) => {
 
   const barColor = useMemo(() => {
     if (ratio >= 1) return styles.barRed;
-    if (ratio > 0.7) return styles.barYellow;
+    if (ratio >= 0.6) return styles.barYellow;
     return styles.barGreen;
   }, [ratio]);
 

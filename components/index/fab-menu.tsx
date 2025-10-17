@@ -2,6 +2,7 @@ import debugBorders from "@/constants/styles";
 import { themeDark, themeLight } from "@/constants/theme";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { router } from "expo-router";
 import { ComponentProps, useState } from "react";
 import {
   Pressable,
@@ -23,7 +24,7 @@ const items: {
     key: "reserve",
     label: "Reserve a Slot",
     icon: "map-marker-star",
-    onPress: () => {},
+    onPress: () => router.push("./burial-plots"),
   },
   {
     key: "appointment",

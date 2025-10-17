@@ -1,4 +1,4 @@
-export const slotsPerBlock = 30;
+export const slotsPerBlock = 20;
 
 export const sampleData = {
   blocks: [
