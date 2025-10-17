@@ -70,7 +70,10 @@ export const sampleData = {
           email: "david.jean-baptiste@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/28.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "b",
@@ -190,7 +193,10 @@ export const sampleData = {
           email: "amelia.clarke@example.com",
           picture: "https://randomuser.me/api/portraits/med/women/51.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "c",
@@ -358,7 +364,10 @@ export const sampleData = {
           email: "avery.adams@example.com",
           picture: "https://randomuser.me/api/portraits/med/women/52.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "d",
@@ -446,7 +455,10 @@ export const sampleData = {
           email: "susan.snyder@example.com",
           picture: "https://randomuser.me/api/portraits/med/women/24.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "e",
@@ -582,7 +594,10 @@ export const sampleData = {
           email: "debra.fernandez@example.com",
           picture: "https://randomuser.me/api/portraits/med/women/15.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "f",
@@ -686,7 +701,10 @@ export const sampleData = {
           email: "same.willis@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/93.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "g",
@@ -838,7 +856,10 @@ export const sampleData = {
           email: "nathan.liu@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/45.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "h",
@@ -918,7 +939,10 @@ export const sampleData = {
           email: "art.owens@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/26.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "i",
@@ -1086,7 +1110,10 @@ export const sampleData = {
           email: "melvin.rice@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/21.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "j",
@@ -1150,7 +1177,10 @@ export const sampleData = {
           email: "zachary.pelletier@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/80.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "k",
@@ -1246,7 +1276,10 @@ export const sampleData = {
           email: "chloe.grewal@example.com",
           picture: "https://randomuser.me/api/portraits/med/women/90.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "l",
@@ -1358,7 +1391,10 @@ export const sampleData = {
           email: "rosie.olson@example.com",
           picture: "https://randomuser.me/api/portraits/med/women/47.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
     {
       id: "m",
@@ -1486,13 +1522,24 @@ export const sampleData = {
           email: "adrian.hughes@example.com",
           picture: "https://randomuser.me/api/portraits/med/men/25.jpg",
         },
-      ],
+      ].map((person) => ({
+        ...person,
+        deathDate: randomDate(),
+      })),
     },
   ].map((block, index) => ({
     ...block,
     image: `https://picsum.photos/1920/1080?random=${index}`,
   })),
 };
+
+function randomDate() {
+  const start = new Date(1970, 0, 1);
+  const end = new Date(2020, 11, 31);
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
 
 /* const baseBlocks = [
   {
