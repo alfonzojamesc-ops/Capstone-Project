@@ -3,7 +3,6 @@ import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
 import SafeArea from "@/components/safe-area";
-import debugBorders from "@/constants/styles";
 import React, { useEffect, useState } from "react";
 import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
 
@@ -51,21 +50,19 @@ export default function Index() {
             <TitleCard />
           </View>
 
-          <Animated.View
-            style={[
-              layout.bottomWrapper,
-              { marginBottom: Animated.add(15, keyboardOffset) },
-            ]}
-            pointerEvents="box-none"
-          >
-            <View
-              style={{ flexDirection: "column", justifyContent: "flex-end" }}
-              pointerEvents="box-none"
+          <View style={layout.bottomWrapper} pointerEvents="box-none">
+            <Animated.View
+              style={[{ bottom: Animated.add(45, keyboardOffset) }]}
             >
               <MyFabMenu />
-              <View style={{ height: 10 }} /> <MySearchBar />
-            </View>
-          </Animated.View>
+            </Animated.View>
+
+            <Animated.View
+              style={[{ bottom: Animated.add(25, keyboardOffset) }]}
+            >
+              <MySearchBar />
+            </Animated.View>
+          </View>
         </View>
       </View>
     </SafeArea>
@@ -92,7 +89,5 @@ const layout = StyleSheet.create({
     alignSelf: "flex-end",
     width: "70%",
     maxWidth: 350,
-
-    ...debugBorders(),
   },
 });

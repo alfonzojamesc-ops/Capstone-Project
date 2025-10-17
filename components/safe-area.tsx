@@ -17,7 +17,6 @@ const SafeArea = ({ ...props }: SafeAreaViewProps) => {
         // marginBottom: insets.bottom,
         // marginLeft: insets.left,
         // marginRight: insets.right,
-        // ...debugBorders(),
       }}
       {...props}
     />

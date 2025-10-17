@@ -37,7 +37,7 @@ const TitleCard = () => {
             },
           ]}
         >
-          BRS3DNAV: San Jose Cemetery Park
+          BRS3DNAV: San Jose Cemetery Parkadasd
         </Text>
         <Text
           style={[

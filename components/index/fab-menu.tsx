@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     right: 0,
     gap: 5,
     pointerEvents: "box-none",
-    ...debugBorders(),
   },
   item: {
     alignSelf: "flex-end",
