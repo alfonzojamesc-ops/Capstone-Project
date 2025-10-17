@@ -1,19 +1,22 @@
 import BlockList from "@/components/burial-plots/block-list";
 import Header from "@/components/burial-plots/header";
+import SafeArea from "@/components/safe-area";
 import { themeLight } from "@/constants/theme";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function BurialPlots() {
   return (
-    <View style={layout.background}>
-      <View style={layout.header}>
-        <Header />
+    <SafeArea>
+      <View style={layout.background}>
+        <View style={layout.header}>
+          <Header />
+        </View>
+        <View style={layout.listContainer}>
+          <BlockList />
+        </View>
       </View>
-      <View style={layout.listContainer}>
-        <BlockList />
-      </View>
-    </View>
+    </SafeArea>
   );
 }
 

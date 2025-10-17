@@ -1,3 +1,4 @@
+import SafeArea from "@/components/safe-area";
 import SlotList from "@/components/slots/slot-list";
 import { sampleData } from "@/constants/sample-data";
 import { useLocalSearchParams } from "expo-router";
@@ -7,5 +8,9 @@ export default function Slot() {
 
   const blockData = sampleData.blocks.find((b) => b.id === block);
 
-  return <SlotList block={blockData} />;
+  return (
+    <SafeArea>
+      <SlotList block={blockData} />
+    </SafeArea>
+  );
 }

@@ -13,11 +13,11 @@ const SafeArea = ({ ...props }: SafeAreaViewProps) => {
       edges={["top", "bottom", "left", "right"]}
       style={{
         flex: 1,
-        marginTop: insets.top,
-        marginBottom: insets.bottom,
-        marginLeft: insets.left,
-        marginRight: insets.right,
-        ...debugBorders(),
+        // marginTop: insets.top,
+        // marginBottom: insets.bottom,
+        // marginLeft: insets.left,
+        // marginRight: insets.right,
+        // ...debugBorders(),
       }}
       {...props}
     />

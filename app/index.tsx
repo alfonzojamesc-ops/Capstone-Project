@@ -41,60 +41,58 @@ export default function Index() {
 
   return (
     <SafeArea>
-      <View style={layout.backgroundContainer}>
-        <My3DMap />
+      <View style={layout.container}>
+        <View style={layout.mapWrapper}>
+          <My3DMap />
+        </View>
+
+        <View style={layout.overlayWrapper} pointerEvents="box-none">
+          <View style={layout.titleWrapper}>
+            <TitleCard />
+          </View>
+
+          <Animated.View
+            style={[
+              layout.bottomWrapper,
+              { marginBottom: Animated.add(15, keyboardOffset) },
+            ]}
+            pointerEvents="box-none"
+          >
+            <View
+              style={{ flexDirection: "column", justifyContent: "flex-end" }}
+              pointerEvents="box-none"
+            >
+              <MyFabMenu />
+              <View style={{ height: 10 }} /> <MySearchBar />
+            </View>
+          </Animated.View>
+        </View>
       </View>
-
-      <View style={layout.titleCardContainer}>
-        <TitleCard />
-      </View>
-
-      <Animated.View
-        style={[
-          layout.fabContainer,
-          { bottom: Animated.add(85, keyboardOffset) },
-        ]}
-      >
-        <MyFabMenu />
-      </Animated.View>
-
-      <Animated.View
-        style={[
-          layout.searchBarContainer,
-          { bottom: Animated.add(25, keyboardOffset) },
-        ]}
-      >
-        <MySearchBar />
-      </Animated.View>
     </SafeArea>
   );
 }
 
 const layout = StyleSheet.create({
-  backgroundContainer: {
-    // ...debugBorders(),
+  container: {
     flex: 1,
   },
-  titleCardContainer: {
-    position: "absolute",
-    top: 4,
-
-    width: "100%",
-    pointerEvents: "box-none",
-
-    paddingHorizontal: 15,
+  mapWrapper: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  overlayWrapper: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "space-between",
+  },
+  titleWrapper: {
+    margin: 15,
     alignItems: "center",
-
-    ...debugBorders(),
   },
-  fabContainer: {
-    position: "absolute",
-    right: 15,
-  },
-  searchBarContainer: {
-    position: "absolute",
-    right: 15,
+  bottomWrapper: {
+    margin: 15,
+    alignSelf: "flex-end",
     width: "70%",
     maxWidth: 350,
+
+    ...debugBorders(),
   },
 });
