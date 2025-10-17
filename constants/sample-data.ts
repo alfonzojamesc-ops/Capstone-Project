@@ -72,7 +72,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -195,7 +195,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -366,7 +366,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -457,7 +457,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -596,7 +596,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -703,7 +703,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -858,7 +858,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -941,7 +941,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -1112,7 +1112,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -1179,7 +1179,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -1278,7 +1278,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -1393,7 +1393,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
     {
@@ -1524,7 +1524,7 @@ export const sampleData = {
         },
       ].map((person) => ({
         ...person,
-        deathDate: randomDate(),
+        deathDate: randomDate(person.age),
       })),
     },
   ].map((block, index) => ({
@@ -1533,12 +1533,11 @@ export const sampleData = {
   })),
 };
 
-function randomDate() {
-  const start = new Date(1970, 0, 1);
-  const end = new Date(2020, 11, 31);
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
+function randomDate(age) {
+  const year = 1925 + age;
+  const month = Math.floor(Math.random() * 12); // 0–11
+  const day = Math.floor(Math.random() * 31) + 1; // 1–31
+  return new Date(year, month, day);
 }
 
 /* const baseBlocks = [
