@@ -26,7 +26,6 @@ const layout = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-
     backgroundColor: themeLight.neutral6,
   },
 });

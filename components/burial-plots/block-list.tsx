@@ -15,7 +15,7 @@ import {
 const BlockList = () => {
   const { width } = useWindowDimensions();
 
-  const itemWidth = 500 + 60;
+  const itemWidth = 450 + 20;
   const numColumns = Math.max(1, Math.floor(width / itemWidth));
 
   return (
@@ -79,15 +79,15 @@ const StatusRenderer = memo(({ slotsOccupied, maxSlots }: StatusProp) => {
 
 const styles = StyleSheet.create({
   listContainer: {
-    justifyContent: "center",
-    paddingVertical: 20,
+    alignItems: "center",
+    paddingVertical: 10,
   },
   listItem: {
     maxHeight: 500,
-    maxWidth: 500,
+    maxWidth: 450,
     flex: 1,
-    marginHorizontal: 30,
-    marginVertical: 20,
+    marginHorizontal: 15,
+    marginVertical: 10,
     borderRadius: 12,
     backgroundColor: themeLight.neutral6,
     shadowColor: "gray",
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: { flex: 1 },
   image: {
-    height: 300,
+    height: 250,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },

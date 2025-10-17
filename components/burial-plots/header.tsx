@@ -16,6 +16,7 @@ const MyHeader = () => {
       <View style={[styles.buttonContainer]}>
         <Pressable onPress={backButtonHandler}>
           <Entypo
+            size={24}
             name="arrow-bold-left"
             color={isDark ? styles.buttonDark.color : styles.button.color}
           />
@@ -34,9 +35,9 @@ export default MyHeader;
 
 function backButtonHandler() {
   if (router.canGoBack()) {
-    router.dismissTo("/");
+    router.dismissTo("./");
   } else {
-    router.replace("/");
+    router.replace("./");
   }
 }
 
