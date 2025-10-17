@@ -33,7 +33,11 @@ const MyHeader = () => {
 export default MyHeader;
 
 function backButtonHandler() {
-  router.back();
+  if (router.canGoBack()) {
+    router.dismissTo("/");
+  } else {
+    router.replace("/");
+  }
 }
 
 const styles = StyleSheet.create({

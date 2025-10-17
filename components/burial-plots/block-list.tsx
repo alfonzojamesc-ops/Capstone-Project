@@ -1,7 +1,7 @@
-import { sampleData, slotsPerBlock } from "@/constants/sample-data";
+import { sampleData } from "@/constants/sample-data";
 import { themeLight } from "@/constants/theme";
 import { Image } from "expo-image";
-import { memo, useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -9,19 +9,28 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from "react-native";
 
 const BlockList = () => {
+  const { width } = useWindowDimensions();
+
+  const itemWidth = 500 + 60;
+  const numColumns = Math.max(1, Math.floor(width / itemWidth));
+
   return (
-    <>
-      <FlatList
-        data={sampleData.blocks}
-        keyExtractor={(block) => block.id}
-        renderItem={({ item }) => <ListItem item={item} />}
-      />
-    </>
+    <FlatList
+      key={numColumns}
+      data={sampleData.blocks}
+      keyExtractor={(block) => block.id}
+      renderItem={({ item }) => <ListItem item={item} />}
+      numColumns={numColumns}
+      contentContainerStyle={styles.listContainer}
+      style={[StyleSheet.absoluteFill]}
+    />
   );
 };
+
 export default BlockList;
 
 type Block = (typeof sampleData.blocks)[number];
@@ -35,7 +44,10 @@ const ListItem = memo(({ item }: { item: Block }) => {
             <Text style={styles.cardTitleText}>
               Block {item.id.toUpperCase()}
             </Text>
-            <StatusRenderer slotsOccupied={item.slots.length} />
+            <StatusRenderer
+              slotsOccupied={item.slots.length}
+              maxSlots={item.maxSlots}
+            />
           </View>
           <Text style={styles.cardSubText}>{item.description}</Text>
         </View>
@@ -44,16 +56,11 @@ const ListItem = memo(({ item }: { item: Block }) => {
   );
 });
 
-type StatusProp = {
-  slotsOccupied: number;
-};
-const StatusRenderer = memo(({ slotsOccupied }: StatusProp) => {
-  const ratio = useMemo(() => slotsOccupied / slotsPerBlock, [slotsOccupied]);
+type StatusProp = { slotsOccupied: number; maxSlots };
+const StatusRenderer = memo(({ slotsOccupied, maxSlots }: StatusProp) => {
+  const ratio = useMemo(() => slotsOccupied / maxSlots, [slotsOccupied]);
   const barLength = useMemo(
-    () =>
-      ({
-        width: (ratio * 100).toFixed(0) + "%",
-      } as ViewStyle),
+    () => ({ width: (ratio * 100).toFixed(0) + "%" } as ViewStyle),
     [ratio]
   );
 
@@ -71,76 +78,56 @@ const StatusRenderer = memo(({ slotsOccupied }: StatusProp) => {
 });
 
 const styles = StyleSheet.create({
+  listContainer: {
+    justifyContent: "center",
+    paddingVertical: 20,
+  },
   listItem: {
-    height: 500,
-
+    maxHeight: 500,
+    maxWidth: 500,
+    flex: 1,
     marginHorizontal: 30,
     marginVertical: 20,
-
     borderRadius: 12,
-
     backgroundColor: themeLight.neutral6,
-
     shadowColor: "gray",
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 10,
     elevation: 6,
   },
-  cardContainer: {
-    flex: 1,
-  },
+  cardContainer: { flex: 1 },
   image: {
     height: 300,
-
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
-  textContainer: {
-    margin: 20,
-  },
+  textContainer: { margin: 20 },
   cardTitleAndStatusContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-
     marginBottom: 15,
   },
-  cardTitleText: {
-    fontSize: 24,
-    fontWeight: "500",
-  },
+  cardTitleText: { fontSize: 24, fontWeight: "500" },
   statusRendererContainer: {
     flex: 1,
     maxWidth: 60,
     height: 20,
-
     alignItems: "flex-start",
     justifyContent: "center",
     overflow: "hidden",
-
     borderRadius: 10,
-
     backgroundColor: themeLight.neutral2,
   },
   statusBar: {
     maxWidth: "85%",
     minWidth: "20%",
     height: "65%",
-
     margin: 4,
-
     borderRadius: 10,
   },
-  barGreen: {
-    backgroundColor: themeLight.success,
-  },
-  barYellow: {
-    backgroundColor: themeLight.warning,
-  },
-  barRed: {
-    backgroundColor: themeLight.error,
-  },
-  cardSubText: {
-    fontSize: 18,
-  },
+  barGreen: { backgroundColor: themeLight.success },
+  barYellow: { backgroundColor: themeLight.warning },
+  barRed: { backgroundColor: themeLight.error },
+  cardSubText: { fontSize: 18 },
 });
