@@ -1,6 +1,7 @@
 import { sampleData } from "@/constants/sample-data";
 import { themeLight } from "@/constants/theme";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import React, { memo, useMemo } from "react";
 import {
   FlatList,
@@ -36,7 +37,12 @@ export default BlockList;
 type Block = (typeof sampleData.blocks)[number];
 const ListItem = memo(({ item }: { item: Block }) => {
   return (
-    <TouchableOpacity style={styles.listItem}>
+    <TouchableOpacity
+      style={styles.listItem}
+      onPress={() => {
+        router.push({ pathname: "./slots", params: { block: item.id } });
+      }}
+    >
       <View style={styles.cardContainer}>
         <Image source={{ uri: item.image }} style={styles.image} />
         <View style={styles.textContainer}>
