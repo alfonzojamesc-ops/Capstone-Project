@@ -49,36 +49,6 @@ export const sampleData = {
           lifespan: { from: 1950, to: 2010 },
           sex: "male",
         },
-        {
-          id: 7,
-          name: "Olivia R. Miller",
-          lifespan: { from: 1990, to: 2065 },
-          sex: "female",
-        },
-        {
-          id: 8,
-          name: "William H. Davis",
-          lifespan: { from: 1925, to: 1985 },
-          sex: "male",
-        },
-        {
-          id: 9,
-          name: "Isabella C. Rodriguez",
-          lifespan: { from: 1965, to: 2022 },
-          sex: "female",
-        },
-        {
-          id: 10,
-          name: "James Martinez",
-          lifespan: { from: 1955, to: 2011 },
-          sex: "male",
-        },
-        {
-          id: 11,
-          name: "Mia Hernandez",
-          lifespan: { from: 1988, to: 2071 },
-          sex: "female",
-        },
       ].map((person) => ({
         ...person,
         image: `https://avatar.iran.liara.run/public/${person.sex}`,
@@ -88,7 +58,7 @@ export const sampleData = {
       id: "b",
       description:
         "This section lies along the eastern wall, where white marble monuments stand in crisp rows.",
-      slot: [
+      slots: [
         {
           id: 0,
           name: "Liam J. Walker",
@@ -173,18 +143,6 @@ export const sampleData = {
           lifespan: { from: 1997, to: 2081 },
           sex: "female",
         },
-        {
-          id: 14,
-          name: "Jack T. Chavez",
-          lifespan: { from: 1930, to: 1990 },
-          sex: "male",
-        },
-        {
-          id: 15,
-          name: "Avery Harper",
-          lifespan: { from: 1979, to: 2042 },
-          sex: "female",
-        },
       ].map((person) => ({
         ...person,
         image: `https://avatar.iran.liara.run/public/${person.sex}`,
@@ -194,7 +152,7 @@ export const sampleData = {
       id: "c",
       description:
         "Near the old chapel ruins, this part of the cemetery is dotted with weatherworn crosses and wildflowers pushing through cracked pathways.",
-      slot: [
+      slots: [
         {
           id: 0,
           name: "Samuel B. Hayes",
