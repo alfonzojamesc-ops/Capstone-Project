@@ -3,10 +3,21 @@ import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
 import SafeArea from "@/components/safe-area";
+import { addData, addMoreData, readData } from "@/scripts/firestore-example";
 import React, { useEffect, useState } from "react";
 import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
 
 export default function Index() {
+  // (() => {
+  //   (async () => {
+  //     let result = await addData();
+  //     console.log(result);
+  //     result = await addMoreData();
+  //     console.log(result);
+  //     await readData();
+  //   })();
+  // })();
+  // //
   const [keyboardOffset] = useState(new Animated.Value(0));
 
   useEffect(() => {
