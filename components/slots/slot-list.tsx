@@ -2,13 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { PersonCardOverlay } from "./person-card";
+import SlotListHeader from "./slots-header";
 
 export default function SlotList({ block }) {
   const [open, setOpen] = React.useState(false);
   const [personId, setPersonId] = React.useState("");
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
+      <SlotListHeader blockId={block.id}/>
       <FlatList
         style={{
           flex: 1,
@@ -58,6 +60,6 @@ export default function SlotList({ block }) {
         onClose={() => setOpen(false)}
         personId={personId}
       />
-    </>
+    </View>
   );
 }

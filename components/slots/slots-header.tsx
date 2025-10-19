@@ -9,12 +9,12 @@ import {
   View,
 } from "react-native";
 
-const MyHeader = () => {
+const SlotListHeader = ({ blockId }) => {
   const isDark = useColorScheme() === "dark";
   return (
     <View style={[styles.header, isDark && styles.headerDark]}>
       <View style={[styles.buttonContainer]}>
-        <Pressable onPress={() => back("./")}>
+        <Pressable onPress={() => back("./burial-plots")}>
           <Entypo
             size={24}
             name="arrow-bold-left"
@@ -25,23 +25,23 @@ const MyHeader = () => {
 
       <View style={[styles.textContainer]}>
         <Text style={[styles.text, isDark && styles.textDark]}>
-          Burial Plots
+          Block {blockId.toUpperCase()} Slots
         </Text>
       </View>
     </View>
   );
 };
-export default MyHeader;
+export default SlotListHeader;
 
 const styles = StyleSheet.create({
   header: {
-    height: 60,
-
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
 
     backgroundColor: themeLight.primary1,
+
+    height: 60,
   },
   headerDark: {
     backgroundColor: themeDark.primary2,
