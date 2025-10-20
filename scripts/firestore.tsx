@@ -110,3 +110,5 @@ export async function dbDelete(
     console.error("[DBMS Delete] Failed:", path, err);
   }
 }
+// TODO: caching system for offline functionality
+// TODO: conflict resolution logic
