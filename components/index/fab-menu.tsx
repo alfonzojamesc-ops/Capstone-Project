@@ -1,6 +1,6 @@
 import { themeDark, themeLight } from "@/constants/theme";
-import { dbDelete } from "@/scripts/firestore/delete";
-import { dbWrite } from "@/scripts/firestore/write";
+import { dbDelete } from "@/scripts/firestore/db-delete";
+import { dbWrite } from "@/scripts/firestore/db-write";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
