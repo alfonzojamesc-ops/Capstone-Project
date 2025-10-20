@@ -1,4 +1,9 @@
-import { dbDeleteDoc, dbDeleteField } from "@/scripts/firestore/db-delete";
+import {
+  dbDelete,
+  dbDeleteCollection,
+  dbDeleteDoc,
+  dbDeleteField,
+} from "@/scripts/firestore/db-delete";
 import { dbWrite } from "@/scripts/firestore/db-write";
 import { Button, View } from "react-native";
 
@@ -33,7 +38,7 @@ export default function Test() {
         }}
       />
       <Button
-        title="dbDeleteField"
+        title="Delete Field"
         onPress={() => {
           dbDeleteField(
             "collection/document/subcollection/subdocument/subsubcollection/subsubdocument/subsubfield1"
@@ -41,11 +46,45 @@ export default function Test() {
         }}
       />
       <Button
-        title="dbDeleteDoc"
+        title="Delete Doc"
         onPress={() => {
           dbDeleteDoc(
-            "collection/document/subcollection/subdocument/subsubcollection/test"
+            "collection/document/subcollection/subdocument/subsubcollection/subsubdocument"
           );
+        }}
+      />
+      <Button
+        title="Delete Subollection"
+        onPress={() => {
+          dbDeleteCollection("subcollection", ["subsubcollection"]);
+        }}
+      />
+      <Button
+        title="Delete Generic SubSub Field1"
+        onPress={() => {
+          dbDelete(
+            "collection/document/subcollection/subdocument/subsubcollection/subsubdocument/subsubfield1"
+          );
+        }}
+      />
+      <Button
+        title="Delete Generic Sub Collection"
+        onPress={() => {
+          dbDelete("collection/document/subcollection", ["subsubcollection"]);
+        }}
+      />
+      <Button
+        title="Delete Generic SubSub Document"
+        onPress={() => {
+          dbDelete("collection/document/subcollection/subdocument", [
+            "subsubcollection",
+          ]);
+        }}
+      />
+      <Button
+        title="Delete Generic Root Collection"
+        onPress={() => {
+          dbDelete("collection", ["subcollection", "subsubcollection"]);
         }}
       />
     </View>
