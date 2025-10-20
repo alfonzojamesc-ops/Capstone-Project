@@ -8,27 +8,19 @@ import React, { useEffect, useState } from "react";
 import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
 
 export default function Index() {
-  dbWrite((data) => {
-    data.blocks = {
-      ...data.blocks,
-      c: {
-        slots: {
-          1: {
-            id: "c1",
-            name: "kassandra",
+  dbWrite({
+    qwer: {
+      asdf: {
+        id: "asdf",
+        zxcv: [1, 2, 3, 4],
+        broom: {
+          roomba: {
+            name: "troy",
+            id: "asdf",
           },
         },
       },
-      d: {
-        slots: {
-          1: {
-            id: "d1",
-            name: "torio",
-          },
-        },
-      },
-    };
-    data.blocks.e.slots.e0.name = "poly";
+    },
   });
 
   const [keyboardOffset] = useState(new Animated.Value(0));
