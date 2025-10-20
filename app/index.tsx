@@ -3,26 +3,10 @@ import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
 import SafeArea from "@/components/safe-area";
-import { dbWrite } from "@/scripts/firestore/write";
 import React, { useEffect, useState } from "react";
 import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
 
 export default function Index() {
-  dbWrite({
-    qwer: {
-      asdf: {
-        id: "asdf",
-        zxcv: [1, 2, 3, 4],
-        broom: {
-          roomba: {
-            name: "troy",
-            id: "asdf",
-          },
-        },
-      },
-    },
-  });
-
   const [keyboardOffset] = useState(new Animated.Value(0));
 
   useEffect(() => {

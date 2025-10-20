@@ -1,5 +1,6 @@
-import debugBorders from "@/constants/styles";
 import { themeDark, themeLight } from "@/constants/theme";
+import { dbDelete } from "@/scripts/firestore/delete";
+import { dbWrite } from "@/scripts/firestore/write";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
@@ -30,9 +31,25 @@ const items: {
     key: "appointment",
     label: "Book an Appointment",
     icon: "calendar-clock-outline",
-    onPress: () => {},
+    onPress: () => {
+      dbWrite({
+        drone: {
+          asdf: {
+            id: "asdaf",
+            zxcv: [1, 2, 3, 4],
+          },
+        },
+      });
+    },
   },
-  { key: "contact", label: "Contact Us", icon: "phone", onPress: () => {} },
+  {
+    key: "contact",
+    label: "Contact Us",
+    icon: "phone",
+    onPress: () => {
+      dbDelete("drone");
+    },
+  },
 ];
 
 const MyFabMenu = () => {

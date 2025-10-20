@@ -28,9 +28,9 @@ export const dbWrite = (data, merge = true) => {
 
     try {
       await writeRecursively([], data);
-      console.log("write success");
-    } catch (err) {
-      console.error("write failed: ", err);
+      console.log("write succeed");
+    } catch (error) {
+      console.error("write failed: ", error);
     }
   })();
 };
