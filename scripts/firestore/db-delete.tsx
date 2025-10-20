@@ -1,42 +1,56 @@
 import { db } from "@/firebaseConfig";
-import {
-  collection,
-  deleteDoc,
-  deleteField,
-  doc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+import { deleteDoc, deleteField, doc, updateDoc } from "firebase/firestore";
 
-export const dbDelete = (path: string) => {
-  if (typeof path !== "string" || !path.trim()) {
-    console.error("dbDelete: invalid path", path);
-    return;
-  }
-
-  const [collectionName, documentId, fieldName] = path
-    .split("/")
-    .filter(Boolean);
-
+export function dbDeleteDoc(path: string) {
   (async () => {
     try {
-      if (collectionName && !documentId) {
-        const snapshot = await getDocs(collection(db, collectionName));
-        await Promise.all(snapshot.docs.map((d) => deleteDoc(d.ref)));
-        console.log("collection deleted");
-      } else if (collectionName && documentId && !fieldName) {
-        await deleteDoc(doc(db, collectionName, documentId));
-        console.log("document deleted");
-      } else if (collectionName && documentId && fieldName) {
-        await updateDoc(doc(db, collectionName, documentId), {
-          [fieldName]: deleteField(),
-        });
-        console.log("field deleted");
-      } else {
-        console.error("invalid path:", path);
+      if (typeof path !== "string" || !path.trim()) {
+        console.error("[Delete Document] Invalid path:", path);
+        return;
       }
-    } catch (err) {
-      console.error("delete failed:", err);
+
+      const parts = path.split("/").filter(Boolean);
+      if (parts.length % 2 !== 0) {
+        console.error(
+          "[Delete Document] Path does not resolve to a document:",
+          path
+        );
+        return;
+      }
+
+      // @ts-expect-error
+      const docRef = doc(db, ...parts);
+      await deleteDoc(docRef);
+
+      console.log(`[Delete Document] Deleted document: ${path}`);
+    } catch (error) {
+      console.error(`[Delete Document] Failed to delete "${path}":`, error);
     }
   })();
-};
+}
+
+export function dbDeleteField(path: string) {
+  (async () => {
+    try {
+      const parts = path.split("/");
+      if (parts.length < 3 || parts.length % 2 === 0) {
+        throw new Error(`[Delete Field] Invalid path: ${path}`);
+      }
+
+      const fieldName = parts.pop()!;
+      const docPath = parts.join("/");
+
+      const docRef = doc(db, docPath);
+      await updateDoc(docRef, { [fieldName]: deleteField() });
+
+      console.log(
+        `[Delete Field] Deleted field '${fieldName}' from '${docPath}'`
+      );
+    } catch (error) {
+      console.error(
+        `[Delete Field] Failed to delete field at '${path}':`,
+        error
+      );
+    }
+  })();
+}

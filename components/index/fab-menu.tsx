@@ -1,6 +1,4 @@
 import { themeDark, themeLight } from "@/constants/theme";
-import { dbDelete } from "@/scripts/firestore/db-delete";
-import { dbWrite } from "@/scripts/firestore/db-write";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
@@ -31,24 +29,13 @@ const items: {
     key: "appointment",
     label: "Book an Appointment",
     icon: "calendar-clock-outline",
-    onPress: () => {
-      dbWrite({
-        drone: {
-          asdf: {
-            id: "asdaf",
-            zxcv: [1, 2, 3, 4],
-          },
-        },
-      });
-    },
+    onPress: () => {},
   },
   {
     key: "contact",
     label: "Contact Us",
     icon: "phone",
-    onPress: () => {
-      dbDelete("drone");
-    },
+    onPress: () => {},
   },
 ];
 
