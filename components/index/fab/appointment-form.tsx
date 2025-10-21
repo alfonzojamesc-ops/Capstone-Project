@@ -326,6 +326,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "70%",
     minWidth: 260,
+    margin: 20,
   },
   title: {
     fontSize: 20,

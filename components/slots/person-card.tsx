@@ -8,6 +8,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  View,
 } from "react-native";
 
 type PersonCardOverlayProps = {
@@ -55,8 +56,16 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
       onRequestClose={onClose}
     >
       {/* Outer Pressable closes overlay when tapping outside */}
-      <Pressable style={styles.overlay} onPress={onClose}>
-        {/* Animated card */}
+      <Pressable style={styles.overlay} onPress={onClose} />
+      {/* Animated card */}
+      <View
+        style={{
+          ...StyleSheet.absoluteFillObject,
+          justifyContent: "flex-end",
+          borderWidth: 2,
+        }}
+        pointerEvents="box-none"
+      >
         <Animated.View
           style={[styles.card, { transform: [{ translateY: slideAnim }] }]}
         >
@@ -86,17 +95,20 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
             </>
           )}
         </Animated.View>
-      </Pressable>
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   overlay: {
+    ...StyleSheet.absoluteFillObject,
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.6)",
     justifyContent: "flex-end", // align card to bottom
     padding: 20,
+    cursor: "pointer",
+    borderWidth: 2,
   },
   card: {
     backgroundColor: "#fff",
@@ -104,6 +116,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     elevation: 5,
+    margin: 10,
   },
   image: {
     width: 100,
