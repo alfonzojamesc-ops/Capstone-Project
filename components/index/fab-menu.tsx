@@ -11,14 +11,17 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import { AppointmentFormOverlay } from "./fab/appointment-form";
 
 type IconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
-const items: {
+type Item = {
   key: string;
   label: string;
   icon: IconName;
   onPress: () => void;
-}[] = [
+};
+
+export const createItems = (param1: () => void, param2: () => void): Item[] => [
   {
     key: "reserve",
     label: "Reserve a Slot",
@@ -29,30 +32,37 @@ const items: {
     key: "appointment",
     label: "Book an Appointment",
     icon: "calendar-clock-outline",
-    onPress: () => {},
+    onPress: param1,
   },
   {
     key: "contact",
     label: "Contact Us",
     icon: "phone",
-    onPress: () => {},
+    onPress: param2,
   },
 ];
 
 const MyFabMenu = () => {
-  const [open, setOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
   const theme = useColorScheme() === "dark" ? themeDark : themeLight;
+  const items = createItems(
+    () => {
+      setOpenForm(true);
+    },
+    () => {}
+  );
 
   return (
     <>
       <Pressable
         style={[styles.fab, { backgroundColor: theme.primary1 }]}
-        onPress={() => setOpen(!open)}
+        onPress={() => setOpenMenu(!openMenu)}
       >
         <Feather name="plus" size={42} color={theme.absneutral6} />
       </Pressable>
 
-      {open && (
+      {openMenu && (
         <View style={styles.menu}>
           {items.map(({ key, label, icon, onPress }) => (
             <TouchableOpacity
@@ -75,6 +85,11 @@ const MyFabMenu = () => {
           ))}
         </View>
       )}
+      <AppointmentFormOverlay
+        visible={openForm}
+        onClose={() => setOpenForm(false)}
+        onSubmit={(data) => console.log("Submitted:", data)}
+      />
     </>
   );
 };
