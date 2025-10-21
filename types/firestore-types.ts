@@ -12,6 +12,7 @@ export interface Deceased {
   plot_id: string; // references Plot.id
   burial_type?: "casket" | "vault" | "mausoleum";
   funeral_home?: string;
+  image?: string; // url
   notes?: string;
 }
 
