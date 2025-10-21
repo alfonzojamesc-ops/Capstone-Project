@@ -31,7 +31,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
     phone: "",
     email: "",
     message: "",
-    date_specified: new Date(),
+    date_specified: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
   });
 
   const [isChanged, setChanged] = useState({
@@ -78,10 +78,35 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
       return;
     }
 
+    if (form.address.trim().length < 14) {
+      alert("Please enter a valid address.");
+      setChanged((f) => ({ ...f, address: true }));
+      return;
+    }
+
+    const phoneDigits = form.phone.replace(/\D/g, "");
+    if (
+      !/^09\d{9}$/.test(form.phone) && // starts with 09 + 9 digits
+      !/^\+639\d{9}$/.test(form.phone) // starts with +639 + 9 digits
+    ) {
+      alert(
+        "Please enter a valid phone number (11 digits, starts with 09 or +63)."
+      );
+      setChanged((f) => ({ ...f, phone: true }));
+      return;
+    }
+
     const minDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
     if (form.date_specified < minDate) {
       alert("Date must be at least 2 days from now.");
       setChanged((f) => ({ ...f, date_specified: true }));
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      alert("Please enter a valid email address.");
+      setChanged((f) => ({ ...f, email: true }));
       return;
     }
 
@@ -117,16 +142,9 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
         <Animated.View
           style={[styles.card, { transform: [{ translateY: slideAnim }] }]}
         >
-          <Text style={styles.title}>Write Appointment</Text>
+          <Text style={styles.title}>Write an Appointment</Text>
 
-          {[
-            "first_name",
-            "middle_name",
-            "last_name",
-            "address",
-            "phone",
-            "email",
-          ].map((field) => (
+          {["first_name", "middle_name", "last_name"].map((field) => (
             <TextInput
               key={field}
               placeholder={field.replace("_", " ")}
@@ -147,6 +165,69 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
             />
           ))}
 
+          <TextInput
+            key="address"
+            placeholder="Address"
+            placeholderTextColor="gray"
+            style={[
+              styles.input,
+              isChanged.address &&
+                (form.address.trim() === "" ||
+                  form.address.trim().length < 14) && {
+                  borderColor: "red",
+                },
+            ]}
+            value={form.address}
+            onChangeText={(v) => {
+              handleChange("address", v);
+              setChanged((fields) => ({
+                ...fields,
+                address: true,
+              }));
+            }}
+          />
+
+          <TextInput
+            key="phone"
+            placeholder="phone"
+            placeholderTextColor="gray"
+            style={[
+              styles.input,
+              isChanged.phone &&
+                !/^09\d{9}$/.test(form.phone) &&
+                !/^\+639\d{9}$/.test(form.phone) && {
+                  borderColor: "red",
+                },
+            ]}
+            value={form.phone}
+            onChangeText={(v) => {
+              handleChange("phone", v);
+              setChanged((fields) => ({
+                ...fields,
+                phone: true,
+              }));
+            }}
+          />
+
+          <TextInput
+            key="email"
+            placeholder="email"
+            placeholderTextColor="gray"
+            style={[
+              styles.input,
+              isChanged.email &&
+                (!form.email ||
+                  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) && {
+                  borderColor: "red",
+                },
+            ]}
+            value={form.email}
+            onChangeText={(v) => {
+              handleChange("email", v);
+              setChanged((fields) => ({ ...fields, email: true }));
+            }}
+          />
+
           <input
             type="date"
             value={form.date_specified.toISOString().split("T")[0]}
@@ -156,6 +237,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
             style={{
               ...StyleSheet.flatten(styles.input),
               color: "#000",
+              fontSize: 14,
               ...(isChanged.date_specified &&
                 form.date_specified <
                   new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) && {
