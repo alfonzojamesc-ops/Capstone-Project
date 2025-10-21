@@ -51,9 +51,45 @@ export interface PlotOwner {
   notes?: string;
 }
 
-export interface Admin {
+export interface UserAdmin {
   // Firestore document ID
   username: string;
   password_hash: string;
   last_login?: Timestamp;
+}
+
+export interface Task {
+  title: string;
+  description?: string;
+  date_created: Timestamp;
+  last_modified: Timestamp;
+  date_due?: Timestamp;
+  author: string; // references username
+}
+
+export interface TaskReservation {
+  date_sent: Timestamp;
+  author: {
+    first_name: string;
+    middle_name?: string;
+    last_name: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+  }; // input name
+  target_plot: string;
+}
+
+export interface TaskAppointment {
+  date_sent: Timestamp;
+  author: {
+    first_name: string;
+    middle_name?: string;
+    last_name: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+  }; // input name
+  date_specified: Timestamp;
+  message: string;
 }
