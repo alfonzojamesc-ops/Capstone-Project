@@ -1,4 +1,4 @@
-import { dbDelete, dbReadCol, dbReadDoc, dbWrite } from "@/scripts/firestore";
+import { dbDelete, dbRead, dbWrite } from "@/scripts/firestore";
 import React from "react";
 import { Button, View, ViewStyle } from "react-native";
 
@@ -33,14 +33,16 @@ export default function Test() {
         <Button
           title="Read User1"
           onPress={async () => {
-            const data = await dbReadDoc("users/user1");
+            const data = await dbRead("users/user1");
             console.log("User1 document:", data);
+            console.log("Test document read:", data?.name);
+            console.log("Test document read:", data?.profile.city);
           }}
         />
         <Button
           title="Read User1 Post1"
           onPress={async () => {
-            const data = await dbReadDoc("users/user1/posts/post1");
+            const data = await dbRead("users/user1/posts/post1");
             console.log("Post1 document:", data);
           }}
         />
@@ -51,14 +53,16 @@ export default function Test() {
         <Button
           title="Read Users Collection"
           onPress={async () => {
-            const docs = await dbReadCol("users");
+            const docs = await dbRead("users");
             console.log("Users collection:", docs);
+            console.log("Test Collection Read:", docs?.user1.age);
+            console.log("Test Collection Read:", docs?.user1.profile);
           }}
         />
         <Button
           title="Read User1 Posts Collection"
           onPress={async () => {
-            const docs = await dbReadCol("users/user1/posts");
+            const docs = await dbRead("users/user1/posts");
             console.log("User1 posts collection:", docs);
           }}
         />
