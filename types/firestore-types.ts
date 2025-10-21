@@ -18,7 +18,7 @@ export interface Deceased {
 
 export interface Plot {
   map_coordinates?: GeoPoint;
-  grid_coordinates?: Vector2 | number[][];
+  grid_coordinates?: Vector2 | number[][]; // ordered pairs only
   status: "available" | "reserved" | "occupied";
   owner_id?: string;
   maintenance_status?: "good" | "needs_care" | "under_maintenance";
