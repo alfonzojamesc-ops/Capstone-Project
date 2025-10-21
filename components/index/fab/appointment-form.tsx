@@ -117,7 +117,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
         <Animated.View
           style={[styles.card, { transform: [{ translateY: slideAnim }] }]}
         >
-          <Text style={styles.title}>New Appointment</Text>
+          <Text style={styles.title}>Write Appointment</Text>
 
           {[
             "first_name",
@@ -150,6 +150,9 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
           <input
             type="date"
             value={form.date_specified.toISOString().split("T")[0]}
+            onChange={(e) =>
+              handleChange("date_specified", new Date(e.target.value))
+            }
             style={{
               ...StyleSheet.flatten(styles.input),
               color: "#000",
