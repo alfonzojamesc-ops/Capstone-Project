@@ -58,7 +58,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
 
   if (!visible) return null;
 
-  const handleChange = (key: string, value: string) =>
+  const handleChange = (key: string, value: any) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = () => {
@@ -75,6 +75,13 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
 
     if (empty.length > 0) {
       alert(`Please fill out: ${empty.join(", ").replaceAll("_", " ")}`);
+      return;
+    }
+
+    const minDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
+    if (form.date_specified < minDate) {
+      alert("Date must be at least 2 days from now.");
+      setChanged((f) => ({ ...f, date_specified: true }));
       return;
     }
 
@@ -140,21 +147,19 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
             />
           ))}
 
-          <TextInput
-            placeholder="Date (YYYY-MM-DD)"
-            placeholderTextColor="gray"
-            style={[
-              styles.input,
-              isChanged.date_specified &&
-                form.date_specified.toString() === "" && { borderColor: "red" },
-            ]}
-            value={form.date_specified.toString()}
-            onChangeText={(v) => {
-              handleChange("date_specified", v);
-              setChanged((fields) => ({ ...fields, date_specified: true }));
+          <input
+            type="date"
+            value={form.date_specified.toISOString().split("T")[0]}
+            style={{
+              ...StyleSheet.flatten(styles.input),
+              color: "#000",
+              ...(isChanged.date_specified &&
+                form.date_specified <
+                  new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) && {
+                  borderColor: "red",
+                }),
             }}
           />
-
           <TextInput
             placeholder="Message"
             multiline
@@ -227,6 +232,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)",
     justifyContent: "flex-end",
     padding: 20,
+    cursor: "pointer",
   },
   card: {
     backgroundColor: "#fff",
