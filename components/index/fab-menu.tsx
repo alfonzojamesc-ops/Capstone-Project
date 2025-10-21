@@ -21,7 +21,7 @@ type Item = {
   onPress: () => void;
 };
 
-export const createItems = (param1: () => void, param2: () => void): Item[] => [
+export const createItems = (param1: () => void): Item[] => [
   {
     key: "reserve",
     label: "Reserve a Slot",
@@ -38,7 +38,9 @@ export const createItems = (param1: () => void, param2: () => void): Item[] => [
     key: "contact",
     label: "Contact Us",
     icon: "phone",
-    onPress: param2,
+    onPress: () => {
+      window.location.href = "tel:+639123456789";
+    },
   },
 ];
 
@@ -46,12 +48,9 @@ const MyFabMenu = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const theme = useColorScheme() === "dark" ? themeDark : themeLight;
-  const items = createItems(
-    () => {
-      setOpenForm(true);
-    },
-    () => {}
-  );
+  const items = createItems(() => {
+    setOpenForm(true);
+  });
 
   return (
     <>
