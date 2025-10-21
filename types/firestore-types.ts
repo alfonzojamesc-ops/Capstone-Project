@@ -20,7 +20,7 @@ export interface Plot {
   block: string;
   lot: string;
   id: string; // phase + block + lot
-  map_coordinates?: GeoPoint; // optional for mapping
+  map_coordinates?: GeoPoint;
   grid_coordinates?: number[][] | Vector2;
   status: "available" | "reserved" | "occupied";
   owner_id?: string; // references PlotOwner.id
@@ -35,7 +35,7 @@ export interface PlotOwner {
   address?: string;
   phone?: string;
   email?: string;
-  purchase_date: Timestamp; // ISO format
+  purchase_date: Timestamp; 
   deed_number?: string;
   notes?: string;
 }
@@ -44,5 +44,5 @@ export interface Admin {
   id: string; // Firestore document ID
   username: string;
   password_hash: string;
-  last_login?: Timestamp; // ISO datetime string
+  last_login?: Timestamp;
 }
