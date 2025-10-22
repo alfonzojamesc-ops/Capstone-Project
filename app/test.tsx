@@ -1,5 +1,5 @@
 import { db } from "@/firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -16,7 +16,7 @@ export default function Test() {
           borderRadius: 10,
         }}
         onPress={async () => {
-          await uploadDeceasedData().catch(console.error);
+          await uploadPlotOwners().catch(console.error);
         }}
       >
         <Text style={{ color: hover ? "black" : "white" }}>Hello World</Text>
@@ -25,479 +25,460 @@ export default function Test() {
   );
 }
 
-async function generateDeceasedMockData() {
-  const NUM_OF_BLOCKS = 16;
-  const NUM_OF_PLOTS = 16;
-  const NUM_RECORDS = 30; // 🔧 Number of deceased records to generate
-
-  const firstNames = {
-    male: ["Juan", "Jose", "Carlos", "Pedro", "Antonio"],
-    female: ["Maria", "Ana", "Lucia", "Isabella", "Carmen"],
-  };
-  const middleNames = ["de la Cruz", "Reyes", "Santos", "Lopez", "Gomez"];
-  const lastNames = ["Cruz", "Garcia", "Fernandez", "Torres", "Ramirez"];
-
-  const burialTypes = ["casket", "vault", "mausoleum"] as const;
-  const funeralHomes = [
-    "St. Peter Chapel",
-    "Heaven's Gate Mortuary",
-    "Peaceful Rest",
-    "Final Journey Inc.",
-  ];
-
-  const deceasedList: {
-    first_name: string;
-    middle_name?: string;
-    last_name: string;
-    date_of_birth: string;
-    date_of_death: string;
-    date_of_interment: string;
-    plot: string;
-    burial_type?: "casket" | "vault" | "mausoleum";
-    funeral_home?: string;
-    image: string;
-    notes?: string;
-  }[] = [];
-
-  const plotChoices = ["nph", "ph1", "ph2"];
-
-  function randomPlotId(): string {
-    const phase = plotChoices[Math.floor(Math.random() * plotChoices.length)];
-    const block = `blk${Math.ceil(Math.random() * NUM_OF_BLOCKS)}`;
-    const plot = `plot_${Math.ceil(Math.random() * NUM_OF_PLOTS)}`;
-    return `${phase}_${block}_${plot}`;
-  }
-
-  function randomDateString(start: Date, end: Date): string {
-    const date = new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-    return date.toISOString().split("T")[0]; // "YYYY-MM-DD"
-  }
-
-  for (let i = 0; i < NUM_RECORDS; i++) {
-    const gender = Math.random() > 0.5 ? "male" : "female";
-    const first_name =
-      firstNames[gender][Math.floor(Math.random() * firstNames[gender].length)];
-    const middle_name =
-      Math.random() > 0.5
-        ? middleNames[Math.floor(Math.random() * middleNames.length)]
-        : undefined;
-    const last_name = lastNames[Math.floor(Math.random() * lastNames.length)];
-
-    const date_of_birth = randomDateString(
-      new Date(1925, 0, 1), // ⬅️ Clamped to 1925
-      new Date(2000, 0, 1)
-    );
-    const date_of_death = randomDateString(
-      new Date(2000, 0, 2),
-      new Date(2024, 11, 31)
-    );
-
-    // Interment: 0–7 days after death
-    const intermentMin = new Date(date_of_death);
-    const intermentMax = new Date(intermentMin.getTime() + 7 * 86400000);
-    const date_of_interment = randomDateString(intermentMin, intermentMax);
-
-    const plot = randomPlotId();
-    const burial_type =
-      Math.random() > 0.2
-        ? burialTypes[Math.floor(Math.random() * burialTypes.length)]
-        : undefined;
-    const funeral_home =
-      Math.random() > 0.3
-        ? funeralHomes[Math.floor(Math.random() * funeralHomes.length)]
-        : undefined;
-
-    const randomImageIndex = Math.floor(Math.random() * 100); // 0–99
-    const image = `https://randomuser.me/api/portraits/med/${gender}/${randomImageIndex}.jpg`;
-
-    const notes = Math.random() > 0.5 ? "No additional notes." : undefined;
-
-    deceasedList.push({
-      first_name,
-      middle_name,
-      last_name,
-      date_of_birth,
-      date_of_death,
-      date_of_interment,
-      plot,
-      burial_type,
-      funeral_home,
-      image,
-      notes,
-    });
-  }
-
-  console.log(
-    "✅ Deceased mock data:\n",
-    JSON.stringify(deceasedList, null, 2)
-  );
+async function fetchPlots() {
+  const snapshot = await getDocs(collection(db, "deceaseds"));
+  const plots = snapshot.docs.map((doc) => doc.data().plot);
+  console.log(plots);
 }
 
-async function uploadDeceasedData() {
-  const deceasedRef = collection(db, "deceaseds");
+const plots = [
+  "ph1_blk4_plot_16",
+  "ph2_blk15_plot_3",
+  "ph2_blk6_plot_13",
+  "ph2_blk15_plot_10",
+  "ph2_blk7_plot_6",
+  "nph_blk11_plot_9",
+  "ph2_blk3_plot_6",
+  "nph_blk2_plot_6",
+  "ph1_blk1_plot_15",
+  "ph1_blk7_plot_4",
+  "ph1_blk2_plot_11",
+  "nph_blk6_plot_11",
+  "nph_blk13_plot_9",
+  "ph1_blk4_plot_3",
+  "ph1_blk7_plot_9",
+  "ph1_blk10_plot_3",
+  "ph1_blk8_plot_8",
+  "ph1_blk13_plot_5",
+  "nph_blk14_plot_15",
+  "ph1_blk11_plot_4",
+  "ph1_blk3_plot_16",
+  "ph1_blk3_plot_16",
+  "nph_blk14_plot_4",
+  "nph_blk9_plot_12",
+  "ph2_blk11_plot_15",
+  "ph1_blk13_plot_1",
+  "ph1_blk9_plot_1",
+  "nph_blk2_plot_1",
+  "ph2_blk6_plot_2",
+  "ph1_blk13_plot_6",
+];
 
-  for (const deceased of deceasedList) {
-    try {
-      await addDoc(deceasedRef, deceased);
-      console.log(`✅ Added: ${deceased.first_name} ${deceased.last_name}`);
-    } catch (error) {
-      console.error(
-        `❌ Failed to add ${deceased.first_name} ${deceased.last_name}:`,
-        error
-      );
+const firstNames = [
+  "Juan",
+  "Maria",
+  "Jose",
+  "Ana",
+  "Luis",
+  "Carmen",
+  "Pedro",
+  "Lucia",
+];
+const lastNames = [
+  "Santos",
+  "Reyes",
+  "Cruz",
+  "Bautista",
+  "Gomez",
+  "Torres",
+  "Ramos",
+  "Flores",
+];
+
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomDate() {
+  const date = new Date(Date.now() - Math.random() * 3.15e10); // random past year
+  return date.toISOString().split("T")[0]; // "YYYY-MM-DD"
+}
+
+const owners = plots.map((plot) => ({
+  plot,
+  first_name: randomFrom(firstNames),
+  middle_name: String.fromCharCode(65 + Math.floor(Math.random() * 26)) + ".",
+  last_name: randomFrom(lastNames),
+  address: `${Math.floor(Math.random() * 200) + 1} Sample St.`,
+  phone: `+639${Math.floor(100000000 + Math.random() * 899999999)}`,
+  email: `${Math.random().toString(36).substring(2, 7)}@mail.com`,
+  purchase_date: randomDate(),
+  deed_number: `DN-${Math.floor(10000 + Math.random() * 90000)}`,
+  notes: "No additional notes.",
+}));
+
+export async function uploadPlotOwners() {
+  const colRef = collection(db, "plot_owners");
+
+  try {
+    for (const owner of plotOwners) {
+      await addDoc(colRef, owner);
     }
+    console.log("✅ All plot owners uploaded successfully!");
+  } catch (err) {
+    console.error("❌ Error uploading plot owners:", err);
   }
-
-  console.log("🚀 Upload complete.");
 }
 
-const deceasedList = [
+const plotOwners = [
   {
-    first_name: "Juan",
-    middle_name: "Gomez",
-    last_name: "Fernandez",
-    date_of_birth: "1946-07-21",
-    date_of_death: "2002-07-25",
-    date_of_interment: "2002-07-27",
-    plot: "ph1_blk3_plot_16",
-    burial_type: "mausoleum",
-    funeral_home: "Final Journey Inc.",
-    image: "https://randomuser.me/api/portraits/med/male/43.jpg",
-  },
-  {
-    first_name: "Antonio",
-    last_name: "Ramirez",
-    date_of_birth: "1977-05-15",
-    date_of_death: "2014-03-06",
-    date_of_interment: "2014-03-12",
-    plot: "nph_blk13_plot_9",
-    burial_type: "casket",
-    funeral_home: "Final Journey Inc.",
-    image: "https://randomuser.me/api/portraits/med/male/75.jpg",
-  },
-  {
-    first_name: "Juan",
-    last_name: "Torres",
-    date_of_birth: "1934-03-17",
-    date_of_death: "2009-01-28",
-    date_of_interment: "2009-02-02",
-    plot: "nph_blk11_plot_9",
-    burial_type: "vault",
-    funeral_home: "Peaceful Rest",
-    image: "https://randomuser.me/api/portraits/med/male/36.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Juan",
-    last_name: "Cruz",
-    date_of_birth: "1981-07-28",
-    date_of_death: "2024-04-01",
-    date_of_interment: "2024-04-07",
-    plot: "ph2_blk11_plot_15",
-    burial_type: "mausoleum",
-    funeral_home: "Heaven's Gate Mortuary",
-    image: "https://randomuser.me/api/portraits/med/male/50.jpg",
-  },
-  {
-    first_name: "Isabella",
-    middle_name: "Santos",
-    last_name: "Cruz",
-    date_of_birth: "1988-04-29",
-    date_of_death: "2012-11-23",
-    date_of_interment: "2012-11-26",
-    plot: "ph2_blk6_plot_13",
-    funeral_home: "Heaven's Gate Mortuary",
-    image: "https://randomuser.me/api/portraits/med/female/66.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Carmen",
-    middle_name: "Lopez",
-    last_name: "Ramirez",
-    date_of_birth: "1961-09-10",
-    date_of_death: "2017-11-18",
-    date_of_interment: "2017-11-24",
-    plot: "ph1_blk11_plot_4",
-    burial_type: "vault",
-    funeral_home: "St. Peter Chapel",
-    image: "https://randomuser.me/api/portraits/med/female/14.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Jose",
-    middle_name: "Lopez",
-    last_name: "Cruz",
-    date_of_birth: "1991-07-26",
-    date_of_death: "2019-10-30",
-    date_of_interment: "2019-11-01",
-    plot: "ph1_blk9_plot_1",
-    burial_type: "mausoleum",
-    funeral_home: "Peaceful Rest",
-    image: "https://randomuser.me/api/portraits/med/male/0.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Jose",
-    middle_name: "Santos",
-    last_name: "Ramirez",
-    date_of_birth: "1983-07-18",
-    date_of_death: "2014-07-27",
-    date_of_interment: "2014-07-29",
-    plot: "ph1_blk7_plot_9",
-    funeral_home: "Heaven's Gate Mortuary",
-    image: "https://randomuser.me/api/portraits/med/male/88.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Ana",
-    middle_name: "Santos",
-    last_name: "Cruz",
-    date_of_birth: "1969-05-06",
-    date_of_death: "2010-09-08",
-    date_of_interment: "2010-09-14",
-    plot: "ph1_blk13_plot_6",
-    burial_type: "casket",
-    funeral_home: "Final Journey Inc.",
-    image: "https://randomuser.me/api/portraits/med/female/92.jpg",
-  },
-  {
-    first_name: "Lucia",
-    last_name: "Fernandez",
-    date_of_birth: "1959-11-17",
-    date_of_death: "2004-11-08",
-    date_of_interment: "2004-11-13",
-    plot: "ph2_blk3_plot_6",
-    burial_type: "vault",
-    image: "https://randomuser.me/api/portraits/med/female/75.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Antonio",
-    last_name: "Torres",
-    date_of_birth: "1966-01-14",
-    date_of_death: "2013-04-14",
-    date_of_interment: "2013-04-16",
-    plot: "ph1_blk8_plot_8",
-    burial_type: "vault",
-    funeral_home: "St. Peter Chapel",
-    image: "https://randomuser.me/api/portraits/med/male/68.jpg",
-  },
-  {
-    first_name: "Carlos",
-    last_name: "Fernandez",
-    date_of_birth: "1948-02-14",
-    date_of_death: "2020-04-05",
-    date_of_interment: "2020-04-06",
-    plot: "nph_blk9_plot_12",
-    burial_type: "mausoleum",
-    funeral_home: "Peaceful Rest",
-    image: "https://randomuser.me/api/portraits/med/male/28.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Carlos",
-    last_name: "Torres",
-    date_of_birth: "1987-09-20",
-    date_of_death: "2002-02-09",
-    date_of_interment: "2002-02-12",
-    plot: "nph_blk14_plot_4",
-    burial_type: "mausoleum",
-    image: "https://randomuser.me/api/portraits/med/male/87.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Ana",
-    last_name: "Cruz",
-    date_of_birth: "1943-06-12",
-    date_of_death: "2003-08-21",
-    date_of_interment: "2003-08-25",
-    plot: "nph_blk2_plot_1",
-    funeral_home: "Final Journey Inc.",
-    image: "https://randomuser.me/api/portraits/med/female/65.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Maria",
-    last_name: "Cruz",
-    date_of_birth: "1957-10-18",
-    date_of_death: "2000-07-26",
-    date_of_interment: "2000-07-27",
-    plot: "nph_blk2_plot_6",
-    burial_type: "mausoleum",
-    funeral_home: "Heaven's Gate Mortuary",
-    image: "https://randomuser.me/api/portraits/med/female/87.jpg",
-  },
-  {
-    first_name: "Carmen",
-    last_name: "Fernandez",
-    date_of_birth: "1925-09-29",
-    date_of_death: "2001-06-23",
-    date_of_interment: "2001-06-29",
-    plot: "ph2_blk6_plot_2",
-    funeral_home: "St. Peter Chapel",
-    image: "https://randomuser.me/api/portraits/med/female/59.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Ana",
-    middle_name: "Santos",
-    last_name: "Fernandez",
-    date_of_birth: "1947-07-21",
-    date_of_death: "2009-01-03",
-    date_of_interment: "2009-01-08",
     plot: "ph1_blk4_plot_16",
-    image: "https://randomuser.me/api/portraits/med/female/74.jpg",
+    first_name: "Jose",
+    middle_name: "N.",
+    last_name: "Reyes",
+    address: "102 Sample St.",
+    phone: "+639202242129",
+    email: "azmkv@mail.com",
+    purchase_date: "2025-01-08",
+    deed_number: "DN-74126",
+    notes: "No additional notes.",
   },
   {
-    first_name: "Juan",
-    middle_name: "Reyes",
-    last_name: "Fernandez",
-    date_of_birth: "1932-06-12",
-    date_of_death: "2018-03-01",
-    date_of_interment: "2018-03-06",
     plot: "ph2_blk15_plot_3",
-    burial_type: "vault",
-    funeral_home: "Final Journey Inc.",
-    image: "https://randomuser.me/api/portraits/med/male/69.jpg",
-  },
-  {
-    first_name: "Jose",
-    middle_name: "de la Cruz",
-    last_name: "Ramirez",
-    date_of_birth: "1946-12-04",
-    date_of_death: "2013-12-05",
-    date_of_interment: "2013-12-06",
-    plot: "ph1_blk4_plot_3",
-    burial_type: "vault",
-    funeral_home: "Final Journey Inc.",
-    image: "https://randomuser.me/api/portraits/med/male/5.jpg",
-  },
-  {
-    first_name: "Jose",
-    last_name: "Cruz",
-    date_of_birth: "1941-12-05",
-    date_of_death: "2000-08-30",
-    date_of_interment: "2000-09-01",
-    plot: "ph1_blk7_plot_4",
-    burial_type: "mausoleum",
-    image: "https://randomuser.me/api/portraits/med/male/36.jpg",
+    first_name: "Luis",
+    middle_name: "M.",
+    last_name: "Santos",
+    address: "66 Sample St.",
+    phone: "+639429306185",
+    email: "i0q2d@mail.com",
+    purchase_date: "2025-10-20",
+    deed_number: "DN-35178",
     notes: "No additional notes.",
   },
   {
-    first_name: "Carlos",
-    middle_name: "de la Cruz",
-    last_name: "Garcia",
-    date_of_birth: "1948-10-22",
-    date_of_death: "2008-02-29",
-    date_of_interment: "2008-03-04",
-    plot: "ph1_blk1_plot_15",
-    burial_type: "mausoleum",
-    image: "https://randomuser.me/api/portraits/med/male/31.jpg",
+    plot: "ph2_blk6_plot_13",
+    first_name: "Pedro",
+    middle_name: "J.",
+    last_name: "Santos",
+    address: "163 Sample St.",
+    phone: "+639929689450",
+    email: "tul0x@mail.com",
+    purchase_date: "2025-05-17",
+    deed_number: "DN-29360",
+    notes: "No additional notes.",
   },
   {
-    first_name: "Lucia",
-    middle_name: "Lopez",
-    last_name: "Garcia",
-    date_of_birth: "1969-03-31",
-    date_of_death: "2010-04-24",
-    date_of_interment: "2010-04-28",
     plot: "ph2_blk15_plot_10",
-    burial_type: "casket",
-    funeral_home: "Heaven's Gate Mortuary",
-    image: "https://randomuser.me/api/portraits/med/female/73.jpg",
-    notes: "No additional notes.",
-  },
-  {
     first_name: "Lucia",
-    last_name: "Ramirez",
-    date_of_birth: "1939-09-28",
-    date_of_death: "2023-09-18",
-    date_of_interment: "2023-09-22",
-    plot: "ph1_blk13_plot_5",
-    funeral_home: "St. Peter Chapel",
-    image: "https://randomuser.me/api/portraits/med/female/30.jpg",
+    middle_name: "N.",
+    last_name: "Gomez",
+    address: "179 Sample St.",
+    phone: "+639454310048",
+    email: "z1miu@mail.com",
+    purchase_date: "2025-07-10",
+    deed_number: "DN-50168",
+    notes: "No additional notes.",
   },
   {
-    first_name: "Juan",
-    middle_name: "de la Cruz",
-    last_name: "Fernandez",
-    date_of_birth: "1949-10-22",
-    date_of_death: "2009-06-21",
-    date_of_interment: "2009-06-23",
     plot: "ph2_blk7_plot_6",
-    burial_type: "casket",
-    image: "https://randomuser.me/api/portraits/med/male/84.jpg",
+    first_name: "Maria",
+    middle_name: "Q.",
+    last_name: "Bautista",
+    address: "183 Sample St.",
+    phone: "+639383708271",
+    email: "36k8z@mail.com",
+    purchase_date: "2025-07-25",
+    deed_number: "DN-53943",
     notes: "No additional notes.",
   },
   {
-    first_name: "Carlos",
-    last_name: "Fernandez",
-    date_of_birth: "1941-08-08",
-    date_of_death: "2000-09-07",
-    date_of_interment: "2000-09-07",
-    plot: "nph_blk6_plot_11",
-    burial_type: "mausoleum",
-    image: "https://randomuser.me/api/portraits/med/male/23.jpg",
+    plot: "nph_blk11_plot_9",
+    first_name: "Lucia",
+    middle_name: "R.",
+    last_name: "Santos",
+    address: "116 Sample St.",
+    phone: "+639586972432",
+    email: "biiac@mail.com",
+    purchase_date: "2025-04-06",
+    deed_number: "DN-93475",
     notes: "No additional notes.",
   },
   {
-    first_name: "Antonio",
-    last_name: "Torres",
-    date_of_birth: "1948-08-17",
-    date_of_death: "2001-05-19",
-    date_of_interment: "2001-05-24",
+    plot: "ph2_blk3_plot_6",
+    first_name: "Lucia",
+    middle_name: "A.",
+    last_name: "Gomez",
+    address: "69 Sample St.",
+    phone: "+639190243335",
+    email: "spywh@mail.com",
+    purchase_date: "2024-12-19",
+    deed_number: "DN-47313",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "nph_blk2_plot_6",
+    first_name: "Lucia",
+    middle_name: "O.",
+    last_name: "Cruz",
+    address: "137 Sample St.",
+    phone: "+639617831608",
+    email: "gy9ee@mail.com",
+    purchase_date: "2025-01-07",
+    deed_number: "DN-91240",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk1_plot_15",
+    first_name: "Ana",
+    middle_name: "V.",
+    last_name: "Santos",
+    address: "88 Sample St.",
+    phone: "+639577453790",
+    email: "iwacv@mail.com",
+    purchase_date: "2025-10-18",
+    deed_number: "DN-68304",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk7_plot_4",
+    first_name: "Ana",
+    middle_name: "N.",
+    last_name: "Cruz",
+    address: "57 Sample St.",
+    phone: "+639150856089",
+    email: "9xl0a@mail.com",
+    purchase_date: "2025-03-28",
+    deed_number: "DN-83801",
+    notes: "No additional notes.",
+  },
+  {
     plot: "ph1_blk2_plot_11",
-    burial_type: "mausoleum",
-    funeral_home: "Peaceful Rest",
-    image: "https://randomuser.me/api/portraits/med/male/4.jpg",
+    first_name: "Luis",
+    middle_name: "U.",
+    last_name: "Bautista",
+    address: "191 Sample St.",
+    phone: "+639928106121",
+    email: "sbeyo@mail.com",
+    purchase_date: "2025-06-05",
+    deed_number: "DN-41268",
     notes: "No additional notes.",
   },
   {
-    first_name: "Pedro",
-    last_name: "Cruz",
-    date_of_birth: "1977-03-22",
-    date_of_death: "2007-06-02",
-    date_of_interment: "2007-06-03",
-    plot: "nph_blk14_plot_15",
-    burial_type: "mausoleum",
-    funeral_home: "Peaceful Rest",
-    image: "https://randomuser.me/api/portraits/med/male/52.jpg",
+    plot: "nph_blk6_plot_11",
+    first_name: "Lucia",
+    middle_name: "P.",
+    last_name: "Bautista",
+    address: "131 Sample St.",
+    phone: "+639262846665",
+    email: "z5zvu@mail.com",
+    purchase_date: "2025-09-01",
+    deed_number: "DN-87979",
+    notes: "No additional notes.",
   },
   {
+    plot: "nph_blk13_plot_9",
+    first_name: "Jose",
+    middle_name: "R.",
+    last_name: "Torres",
+    address: "107 Sample St.",
+    phone: "+639916457641",
+    email: "i9egb@mail.com",
+    purchase_date: "2025-09-17",
+    deed_number: "DN-75091",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk4_plot_3",
+    first_name: "Jose",
+    middle_name: "O.",
+    last_name: "Reyes",
+    address: "194 Sample St.",
+    phone: "+639247692083",
+    email: "osnm3@mail.com",
+    purchase_date: "2025-01-09",
+    deed_number: "DN-55239",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk7_plot_9",
     first_name: "Juan",
-    last_name: "Cruz",
-    date_of_birth: "1947-05-25",
-    date_of_death: "2003-02-01",
-    date_of_interment: "2003-02-05",
-    plot: "ph1_blk3_plot_16",
-    burial_type: "casket",
-    image: "https://randomuser.me/api/portraits/med/male/21.jpg",
+    middle_name: "I.",
+    last_name: "Flores",
+    address: "148 Sample St.",
+    phone: "+639460369387",
+    email: "6smly@mail.com",
+    purchase_date: "2025-07-20",
+    deed_number: "DN-51013",
     notes: "No additional notes.",
   },
   {
-    first_name: "Pedro",
-    middle_name: "Lopez",
-    last_name: "Ramirez",
-    date_of_birth: "1946-02-16",
-    date_of_death: "2010-12-26",
-    date_of_interment: "2010-12-28",
-    plot: "ph1_blk13_plot_1",
-    funeral_home: "Peaceful Rest",
-    image: "https://randomuser.me/api/portraits/med/male/72.jpg",
-    notes: "No additional notes.",
-  },
-  {
-    first_name: "Pedro",
-    middle_name: "Santos",
-    last_name: "Ramirez",
-    date_of_birth: "1971-05-29",
-    date_of_death: "2024-09-27",
-    date_of_interment: "2024-09-29",
     plot: "ph1_blk10_plot_3",
-    burial_type: "casket",
-    image: "https://randomuser.me/api/portraits/med/male/24.jpg",
+    first_name: "Carmen",
+    middle_name: "P.",
+    last_name: "Bautista",
+    address: "33 Sample St.",
+    phone: "+639316737337",
+    email: "1cnoe@mail.com",
+    purchase_date: "2025-01-01",
+    deed_number: "DN-58698",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk8_plot_8",
+    first_name: "Pedro",
+    middle_name: "E.",
+    last_name: "Bautista",
+    address: "102 Sample St.",
+    phone: "+639957537627",
+    email: "450ow@mail.com",
+    purchase_date: "2025-02-07",
+    deed_number: "DN-39579",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk13_plot_5",
+    first_name: "Carmen",
+    middle_name: "O.",
+    last_name: "Gomez",
+    address: "101 Sample St.",
+    phone: "+639934475124",
+    email: "93tlf@mail.com",
+    purchase_date: "2025-07-09",
+    deed_number: "DN-58433",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "nph_blk14_plot_15",
+    first_name: "Ana",
+    middle_name: "C.",
+    last_name: "Cruz",
+    address: "191 Sample St.",
+    phone: "+639860375614",
+    email: "t0ewm@mail.com",
+    purchase_date: "2025-06-10",
+    deed_number: "DN-10414",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk11_plot_4",
+    first_name: "Lucia",
+    middle_name: "V.",
+    last_name: "Ramos",
+    address: "58 Sample St.",
+    phone: "+639321100247",
+    email: "3t5v6@mail.com",
+    purchase_date: "2024-12-26",
+    deed_number: "DN-95513",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk3_plot_16",
+    first_name: "Jose",
+    middle_name: "P.",
+    last_name: "Santos",
+    address: "24 Sample St.",
+    phone: "+639998108388",
+    email: "1jo8k@mail.com",
+    purchase_date: "2025-04-24",
+    deed_number: "DN-18422",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk3_plot_16",
+    first_name: "Maria",
+    middle_name: "P.",
+    last_name: "Torres",
+    address: "37 Sample St.",
+    phone: "+639436139133",
+    email: "tygdx@mail.com",
+    purchase_date: "2025-08-16",
+    deed_number: "DN-79157",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "nph_blk14_plot_4",
+    first_name: "Carmen",
+    middle_name: "O.",
+    last_name: "Flores",
+    address: "187 Sample St.",
+    phone: "+639931423626",
+    email: "3hwiu@mail.com",
+    purchase_date: "2024-12-10",
+    deed_number: "DN-14403",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "nph_blk9_plot_12",
+    first_name: "Juan",
+    middle_name: "C.",
+    last_name: "Flores",
+    address: "44 Sample St.",
+    phone: "+639570671598",
+    email: "sfz9x@mail.com",
+    purchase_date: "2024-12-21",
+    deed_number: "DN-62138",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph2_blk11_plot_15",
+    first_name: "Jose",
+    middle_name: "T.",
+    last_name: "Flores",
+    address: "81 Sample St.",
+    phone: "+639242425259",
+    email: "63p0e@mail.com",
+    purchase_date: "2024-11-24",
+    deed_number: "DN-62438",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk13_plot_1",
+    first_name: "Carmen",
+    middle_name: "J.",
+    last_name: "Flores",
+    address: "98 Sample St.",
+    phone: "+639307048908",
+    email: "w5y6q@mail.com",
+    purchase_date: "2024-12-01",
+    deed_number: "DN-46338",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk9_plot_1",
+    first_name: "Juan",
+    middle_name: "T.",
+    last_name: "Reyes",
+    address: "121 Sample St.",
+    phone: "+639614753584",
+    email: "x222p@mail.com",
+    purchase_date: "2025-09-30",
+    deed_number: "DN-38008",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "nph_blk2_plot_1",
+    first_name: "Pedro",
+    middle_name: "P.",
+    last_name: "Flores",
+    address: "95 Sample St.",
+    phone: "+639994480806",
+    email: "unjh5@mail.com",
+    purchase_date: "2025-04-26",
+    deed_number: "DN-18122",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph2_blk6_plot_2",
+    first_name: "Lucia",
+    middle_name: "M.",
+    last_name: "Cruz",
+    address: "155 Sample St.",
+    phone: "+639447310007",
+    email: "tra10@mail.com",
+    purchase_date: "2025-04-08",
+    deed_number: "DN-58751",
+    notes: "No additional notes.",
+  },
+  {
+    plot: "ph1_blk13_plot_6",
+    first_name: "Pedro",
+    middle_name: "E.",
+    last_name: "Santos",
+    address: "128 Sample St.",
+    phone: "+639701850807",
+    email: "y2dgt@mail.com",
+    purchase_date: "2025-06-27",
+    deed_number: "DN-65535",
     notes: "No additional notes.",
   },
 ];
