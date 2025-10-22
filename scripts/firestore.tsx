@@ -1,6 +1,5 @@
 import { db } from "@/firebaseConfig";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -69,42 +68,6 @@ export async function dbWrite(path: string, data: Record<string, any>) {
   try {
     await setDoc(ref, data, { merge: true });
     console.log(`${processName} Succeed:`, path, data);
-  } catch (err) {
-    console.error(`${processName} Failed:`, path, err);
-  }
-}
-//////////////////////////////////////////////////////////////////////////////////
-// DBMS Add ///////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////
-
-export async function dbAdd(
-  path: string,
-  data: Record<string, any> | Record<string, any>[]
-) {
-  const processName = "[DBMS Add]";
-  const parts = parsePath(path, processName);
-
-  if (parts.length % 2 === 0) {
-    console.error(
-      `${processName} Invalid path for addDoc (must be a collection path with odd segments): ${path}`
-    );
-    return;
-  }
-
-  const items = Array.isArray(data) ? data : [data];
-
-  try {
-    // @ts-expect-error
-    const colRef = collection(db, ...parts);
-    const ids: string[] = [];
-
-    for (const item of items) {
-      const docRef = await addDoc(colRef, item);
-      console.log(`${processName} Succeed:`, docRef.id, item);
-      ids.push(docRef.id);
-    }
-
-    return ids.length === 1 ? ids[0] : ids; // return single ID or array of IDs
   } catch (err) {
     console.error(`${processName} Failed:`, path, err);
   }
