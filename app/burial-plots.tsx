@@ -1,6 +1,6 @@
 import BlockList from "@/components/burial-plots/block-list";
 import Header from "@/components/burial-plots/header";
-import {SafeArea} from "@/components/safe-area";
+import { SafeArea } from "@/components/safe-area";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
