@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 16,
     padding: 20,
     alignItems: "center",
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 14,
-    color: "#666",
+    color: "grey",
     marginBottom: 10,
     textAlign: "center",
   },
@@ -142,19 +142,19 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#333",
+    color: "black",
     marginBottom: 10,
     textAlign: "center",
   },
   closeButton: {
     marginTop: 16,
-    backgroundColor: "#007bff",
+    backgroundColor: "dodgerblue",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   closeButtonText: {
-    color: "#fff",
+    color: "white",
     fontSize: 16,
     fontWeight: "500",
   },

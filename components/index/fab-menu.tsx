@@ -1,4 +1,3 @@
-import { themeDark, themeLight } from "@/constants/theme";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
@@ -8,7 +7,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from "react-native";
 import { AppointmentFormOverlay } from "./fab/appointment-form";
@@ -47,7 +45,6 @@ export const createItems = (param1: () => void): Item[] => [
 const MyFabMenu = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [openForm, setOpenForm] = useState(false);
-  const theme = useColorScheme() === "dark" ? themeDark : themeLight;
   const items = createItems(() => {
     setOpenForm(true);
   });
@@ -55,10 +52,10 @@ const MyFabMenu = () => {
   return (
     <>
       <Pressable
-        style={[styles.fab, { backgroundColor: theme.primary1 }]}
+        style={[styles.fab, { backgroundColor: "dodgerblue" }]}
         onPress={() => setOpenMenu(!openMenu)}
       >
-        <Feather name="plus" size={42} color={theme.absneutral6} />
+        <Feather name="plus" size={42} color="white" />
       </Pressable>
 
       {openMenu && (
@@ -66,18 +63,11 @@ const MyFabMenu = () => {
           {items.map(({ key, label, icon, onPress }) => (
             <TouchableOpacity
               key={key}
-              style={[styles.item, { backgroundColor: theme.neutral6 }]}
+              style={[styles.item, { backgroundColor: "white" }]}
               onPress={onPress}
             >
-              <MaterialCommunityIcons
-                name={icon}
-                color={theme.neutral1}
-                size={24}
-              />
-              <Text
-                style={[styles.text, { color: theme.neutral1 }]}
-                numberOfLines={1}
-              >
+              <MaterialCommunityIcons name={icon} color="black" size={24} />
+              <Text style={[styles.text, { color: "black" }]} numberOfLines={1}>
                 {label}
               </Text>
             </TouchableOpacity>

@@ -2,7 +2,7 @@ import MyFabMenu from "@/components/index/fab-menu";
 import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
-import SafeArea from "@/components/safe-area";
+import { SafeArea } from "@/components/safe-area";
 import React, { useEffect, useState } from "react";
 import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
 

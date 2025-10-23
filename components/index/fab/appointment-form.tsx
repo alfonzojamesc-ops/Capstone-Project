@@ -111,7 +111,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
     }
 
     const payload: TaskAppointment = {
-      date_sent: Timestamp.now(),
+      date_sent: Timestamp.now().toDate().toDateString(),
       author: {
         first_name: form.first_name,
         middle_name: form.middle_name || undefined,
@@ -120,7 +120,9 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
         phone: form.phone || undefined,
         email: form.email || undefined,
       },
-      date_specified: Timestamp.fromDate(new Date(form.date_specified)),
+      date_specified: Timestamp.fromDate(new Date(form.date_specified))
+        .toDate()
+        .toDateString(),
       message: form.message,
     };
     onSubmit(payload);
@@ -148,7 +150,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
             <TextInput
               key={field}
               placeholder={field.replace("_", " ")}
-              placeholderTextColor="gray"
+              placeholderTextColor="grey"
               style={[
                 styles.input,
                 isChanged[field] &&
@@ -168,7 +170,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
           <TextInput
             key="address"
             placeholder="Address"
-            placeholderTextColor="gray"
+            placeholderTextColor="grey"
             style={[
               styles.input,
               isChanged.address &&
@@ -190,7 +192,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
           <TextInput
             key="phone"
             placeholder="phone"
-            placeholderTextColor="gray"
+            placeholderTextColor="grey"
             style={[
               styles.input,
               isChanged.phone &&
@@ -212,7 +214,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
           <TextInput
             key="email"
             placeholder="email"
-            placeholderTextColor="gray"
+            placeholderTextColor="grey"
             style={[
               styles.input,
               isChanged.email &&
@@ -248,7 +250,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
           <TextInput
             placeholder="Message"
             multiline
-            placeholderTextColor="gray"
+            placeholderTextColor="grey"
             style={[
               styles.input,
               { height: 80 },

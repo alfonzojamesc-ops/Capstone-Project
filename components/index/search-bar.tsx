@@ -1,31 +1,23 @@
-import { themeDark, themeLight } from "@/constants/theme";
 import Feather from "@expo/vector-icons/Feather";
 import { useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  TextInput,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 const MySearchBar = () => {
   const [value, setValue] = useState("");
-  const theme = useColorScheme() === "dark" ? themeDark : themeLight;
 
   return (
-    <View style={[styles.bar, { backgroundColor: theme.neutral6 }]}>
-      <Feather name="search" color={theme.neutral1} size={20} />
+    <View style={[styles.bar, { backgroundColor: "white" }]}>
+      <Feather name="search" color={"black"} size={20} />
       <TextInput
-        style={[styles.input, { color: theme.neutral1 }]}
+        style={[styles.input, { color: "black" }]}
         placeholder="Search location"
-        placeholderTextColor={theme.neutral3}
+        placeholderTextColor={"grey"}
         value={value}
         onChangeText={setValue}
       />
       {value ? (
         <Pressable onPress={() => setValue("")} hitSlop={8}>
-          <Feather name="x" color={theme.neutral1} size={20} />
+          <Feather name="x" color={"black"} size={20} />
         </Pressable>
       ) : null}
     </View>

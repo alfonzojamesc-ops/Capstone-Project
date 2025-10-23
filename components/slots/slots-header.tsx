@@ -1,4 +1,3 @@
-import { themeDark, themeLight } from "@/constants/theme";
 import { back } from "@/scripts/back";
 import Entypo from "@expo/vector-icons/Entypo";
 import {
@@ -18,15 +17,13 @@ const SlotListHeader = ({ blockId }) => {
           <Entypo
             size={24}
             name="arrow-bold-left"
-            color={isDark ? styles.buttonDark.color : styles.button.color}
+            color={styles.button.color}
           />
         </Pressable>
       </View>
 
       <View style={[styles.textContainer]}>
-        <Text style={[styles.text, isDark && styles.textDark]}>
-          Block {blockId.toUpperCase()} Slots
-        </Text>
+        <Text style={styles.text}>Block {blockId.toUpperCase()} Slots</Text>
       </View>
     </View>
   );
@@ -39,29 +36,23 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
 
-    backgroundColor: themeLight.primary1,
+    backgroundColor: "dodgerblue",
 
     height: 60,
   },
   headerDark: {
-    backgroundColor: themeDark.primary2,
+    backgroundColor: "dodgerblue",
   },
   buttonContainer: {
     marginHorizontal: 10,
   },
   textContainer: {},
   text: {
-    color: themeLight.neutral1,
+    color: "black",
     fontSize: 18,
     fontWeight: "500",
   },
-  textDark: {
-    color: themeDark.neutral1,
-  },
   button: {
-    color: themeLight.neutral1,
-  },
-  buttonDark: {
-    color: themeDark.neutral1,
+    color: "black",
   },
 });

@@ -11,7 +11,7 @@ export default function Test() {
         onHoverIn={() => setHover(true)}
         onHoverOut={() => setHover(false)}
         style={{
-          backgroundColor: hover ? "gray" : "black",
+          backgroundColor: hover ? "grey" : "black",
           padding: 20,
           borderRadius: 10,
         }}

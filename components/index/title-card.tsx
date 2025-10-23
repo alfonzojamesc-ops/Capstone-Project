@@ -1,21 +1,13 @@
-import { themeDark, themeLight } from "@/constants/theme";
 import useFontSize from "@/hooks/use-fontsize";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import {
-  StyleSheet,
-  Text,
-  useColorScheme,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 const TitleCard = () => {
-  const theme = useColorScheme() === "dark" ? themeDark : themeLight;
   return (
     <View
       style={[
         styles.card,
-        { backgroundColor: theme.neutral6 },
+        { backgroundColor: "white" },
         useWindowDimensions().width < 260 && {
           flexWrap: "wrap",
           flexDirection: "row",
@@ -25,14 +17,14 @@ const TitleCard = () => {
       <FontAwesome5
         name="cross"
         size={useFontSize(30, 34, 2)}
-        color={theme.neutral1}
+        color={"black"}
       />
       <View style={styles.texts}>
         <Text
           style={[
             styles.title,
             {
-              color: theme.neutral1,
+              color: "black",
               fontSize: useFontSize(16, 24, 2),
             },
           ]}
@@ -42,7 +34,7 @@ const TitleCard = () => {
         <Text
           style={[
             styles.subtitle,
-            { color: theme.neutral2, fontSize: useFontSize(14, 18) },
+            { color: "grey", fontSize: useFontSize(14, 18) },
           ]}
         >
           Burial Reservation System with 3D Navigation

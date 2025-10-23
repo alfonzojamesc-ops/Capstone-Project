@@ -1,7 +1,6 @@
 import BlockList from "@/components/burial-plots/block-list";
 import Header from "@/components/burial-plots/header";
-import SafeArea from "@/components/safe-area";
-import { themeLight } from "@/constants/theme";
+import {SafeArea} from "@/components/safe-area";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -29,6 +28,5 @@ const layout = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    backgroundColor: themeLight.neutral6,
   },
 });

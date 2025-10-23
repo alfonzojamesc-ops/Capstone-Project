@@ -1,5 +1,4 @@
 import { sampleData } from "@/constants/sample-data";
-import { themeLight } from "@/constants/theme";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { memo, useMemo } from "react";
@@ -95,8 +94,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginVertical: 10,
     borderRadius: 12,
-    backgroundColor: themeLight.neutral6,
-    shadowColor: "gray",
+    shadowColor: "grey",
     shadowOffset: { width: 0, height: 5 },
     shadowRadius: 10,
     elevation: 6,
@@ -123,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
     borderRadius: 10,
-    backgroundColor: themeLight.neutral2,
+    backgroundColor: "grey",
   },
   statusBar: {
     maxWidth: "85%",
@@ -132,8 +130,8 @@ const styles = StyleSheet.create({
     margin: 4,
     borderRadius: 10,
   },
-  barGreen: { backgroundColor: themeLight.success },
-  barYellow: { backgroundColor: themeLight.warning },
-  barRed: { backgroundColor: themeLight.error },
+  barGreen: { backgroundColor: "limegreen" },
+  barYellow: { backgroundColor: "orange" },
+  barRed: { backgroundColor: "crimson" },
   cardSubText: { fontSize: 18 },
 });
