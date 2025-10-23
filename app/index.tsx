@@ -3,76 +3,31 @@ import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchBar from "@/components/index/search-bar";
 import TitleCard from "@/components/index/title-card";
 import { SafeArea } from "@/components/safe-area";
-import React, { useEffect, useState } from "react";
-import { Animated, Keyboard, Platform, StyleSheet, View } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 export default function Index() {
-  const [keyboardOffset] = useState(new Animated.Value(0));
-
-  useEffect(() => {
-    const show = Keyboard.addListener(
-      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
-      (e) => {
-        Animated.timing(keyboardOffset, {
-          toValue: e.endCoordinates.height,
-          duration: 250,
-          useNativeDriver: false,
-        }).start();
-      }
-    );
-
-    const hide = Keyboard.addListener(
-      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
-      () => {
-        Animated.timing(keyboardOffset, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: false,
-        }).start();
-      }
-    );
-
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, [keyboardOffset]);
-
   return (
     <SafeArea>
-      <View style={layout.container}>
-        <View style={layout.mapWrapper}>
-          <My3DMap />
+      <View style={styles.mapWrapper}>
+        <My3DMap />
+      </View>
+      <View style={styles.overlayWrapper} pointerEvents="box-none">
+        <View style={styles.titleWrapper}>
+          <TitleCard />
         </View>
-
-        <View style={layout.overlayWrapper} pointerEvents="box-none">
-          <View style={layout.titleWrapper}>
-            <TitleCard />
-          </View>
-
-          <View style={layout.bottomWrapper} pointerEvents="box-none">
-            <Animated.View
-              style={[{ bottom: Animated.add(45, keyboardOffset) }]}
-            >
-              <MyFabMenu />
-            </Animated.View>
-
-            <Animated.View
-              style={[{ bottom: Animated.add(25, keyboardOffset) }]}
-            >
-              <MySearchBar />
-            </Animated.View>
-          </View>
+        <View style={styles.fabWrapper}>
+          <MyFabMenu />
+        </View>
+        <View style={styles.searchBarWrapper}>
+          <MySearchBar />
         </View>
       </View>
     </SafeArea>
   );
 }
 
-const layout = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+const styles = StyleSheet.create({
   mapWrapper: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -84,9 +39,15 @@ const layout = StyleSheet.create({
     margin: 15,
     alignItems: "center",
   },
-  bottomWrapper: {
-    margin: 15,
-    alignSelf: "flex-end",
+  fabWrapper: {
+    position: "absolute",
+    bottom: 65,
+    right: 15,
+  },
+  searchBarWrapper: {
+    position: "absolute",
+    bottom: 15,
+    right: 15,
     width: "70%",
     maxWidth: 350,
   },
