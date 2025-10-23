@@ -29,22 +29,13 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
   const slideAnim = useRef(new Animated.Value(300)).current; // start offscreen
 
   useEffect(() => {
-    if (visible) {
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(slideAnim, {
-        toValue: 300,
-        duration: 300,
-        easing: Easing.in(Easing.ease),
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [visible]);
+    Animated.timing(slideAnim, {
+      toValue: visible ? 0 : 300,
+      duration: 300,
+      easing: visible ? Easing.out(Easing.ease) : Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [visible, slideAnim]);
 
   if (!visible) return null; // don't render modal if not visible
 
@@ -59,11 +50,7 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
       <Pressable style={styles.overlay} onPress={onClose} />
       {/* Animated card */}
       <View
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          justifyContent: "flex-end",
-          borderWidth: 2,
-        }}
+        style={[StyleSheet.absoluteFillObject, styles.container]}
         pointerEvents="box-none"
       >
         <Animated.View
@@ -78,16 +65,19 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
             </>
           ) : (
             <>
-              <Image source={{ uri: person.picture }} style={styles.image} />
+              {person.picture && (
+                <Image source={{ uri: person.picture }} style={styles.image} />
+              )}
               <Text style={styles.name}>{person.name}</Text>
-              {/* <Text style={styles.email}>{person.email}</Text> */}
               <Text style={styles.detail}>Age: {person.age}</Text>
               <Text style={styles.detail}>Sex: {person.gender}</Text>
               <Text style={styles.detail}>
                 Freed from their mortal coil at:
               </Text>
               <Text style={styles.detail}>
-                {person.deathDate.toDateString()}
+                {person.deathDate instanceof Date
+                  ? person.deathDate.toDateString()
+                  : "Unknown"}
               </Text>
               <Pressable onPress={onClose} style={styles.closeButton}>
                 <Text style={styles.closeButtonText}>Close</Text>
@@ -103,12 +93,11 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1,
     backgroundColor: "rgba(0,0,0,0.6)",
-    justifyContent: "flex-end", // align card to bottom
+  },
+  container: {
+    justifyContent: "flex-end",
     padding: 20,
-    cursor: "pointer",
-    borderWidth: 2,
   },
   card: {
     backgroundColor: "white",
@@ -128,12 +117,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 4,
-  },
-  email: {
-    fontSize: 14,
-    color: "grey",
-    marginBottom: 10,
-    textAlign: "center",
   },
   detail: {
     fontSize: 16,

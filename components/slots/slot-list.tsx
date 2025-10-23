@@ -10,11 +10,25 @@ import {
 } from "react-native";
 import { PersonCardOverlay } from "./person-card";
 
-export default function SlotList({ block }) {
+type Slot = {
+  slot: string;
+  picture: string;
+  name: string;
+};
+
+type Block = {
+  slots: Slot[];
+};
+
+type SlotListProps = {
+  block: Block;
+};
+
+const SlotList: React.FC<SlotListProps> = ({ block }) => {
   const [open, setOpen] = useState(false);
   const [personId, setPersonId] = useState("");
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: Slot }) => (
     <TouchableOpacity
       style={styles.item}
       onPress={() => {
@@ -24,15 +38,17 @@ export default function SlotList({ block }) {
     >
       <Image source={{ uri: item.picture }} style={styles.image} />
       <View style={styles.textContainer}>
-        <Text style={styles.name}>{item.slot}</Text>
-        <Text style={[styles.name, { flex: 1 }]}>{item.name}</Text>
+        <Text style={styles.slotText}>{item.slot}</Text>
+        <Text style={styles.nameText} numberOfLines={1} ellipsizeMode="tail">
+          {item.name}
+        </Text>
       </View>
       <Ionicons name="chevron-forward" size={20} color="#999" />
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <FlatList
         data={block.slots}
         keyExtractor={(item) => item.slot}
@@ -45,9 +61,14 @@ export default function SlotList({ block }) {
       />
     </View>
   );
-}
+};
+
+export default SlotList;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   item: {
     flexDirection: "row",
     alignItems: "center",
@@ -67,8 +88,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  name: {
+  slotText: {
     width: 50,
+    fontWeight: "600",
+    color: "black",
+    marginRight: 8,
+  },
+  nameText: {
+    flex: 1,
     fontWeight: "600",
     color: "black",
   },

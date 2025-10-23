@@ -1,33 +1,26 @@
 import { back } from "@/scripts/back";
 import Entypo from "@expo/vector-icons/Entypo";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const SlotListHeader = ({ blockId }) => {
-  const isDark = useColorScheme() === "dark";
+  const iconColor = styles.button.color;
+
   return (
-    <View style={[styles.header, isDark && styles.headerDark]}>
-      <View style={[styles.buttonContainer]}>
+    <View style={styles.header}>
+      <View style={styles.buttonContainer}>
         <Pressable onPress={() => back("./burial-plots")}>
-          <Entypo
-            size={24}
-            name="arrow-bold-left"
-            color={styles.button.color}
-          />
+          <Entypo size={24} name="arrow-bold-left" color={iconColor} />
         </Pressable>
       </View>
 
-      <View style={[styles.textContainer]}>
+      <View>
         <Text style={styles.text}>Block {blockId.toUpperCase()} Slots</Text>
       </View>
     </View>
   );
 };
+
 export default SlotListHeader;
 
 const styles = StyleSheet.create({
@@ -35,18 +28,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-
     backgroundColor: "dodgerblue",
-
     height: 60,
-  },
-  headerDark: {
-    backgroundColor: "dodgerblue",
+    paddingHorizontal: 10,
   },
   buttonContainer: {
-    marginHorizontal: 10,
+    marginRight: 10,
   },
-  textContainer: {},
   text: {
     color: "black",
     fontSize: 18,
