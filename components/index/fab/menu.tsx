@@ -2,7 +2,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { memo, useCallback, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { AppointmentFormOverlay } from "../fab_menu_items/appointment_form/appointment-form";
+import { AppointmentFormOverlay } from "../fab_menu_items/appointment_form/AppointmentFormOverlay";
 
 type Item = {
   key: string;
