@@ -2,7 +2,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { memo, useCallback, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { AppointmentFormOverlay } from "../fab_menu_items/appointment_form/AppointmentFormOverlay";
+import { FormOverlay } from "../fab_menu_items/appointment_form/form-overlay";
 
 type Item = {
   key: string;
@@ -57,7 +57,7 @@ export const ListFabMenu = memo(({ visible }: { visible: boolean }) => {
         ))}
       </View>
 
-      <AppointmentFormOverlay
+      <FormOverlay
         visible={openForm}
         onClose={handleCloseForm}
         onSubmit={(data) => console.log("Submitted:", data)}

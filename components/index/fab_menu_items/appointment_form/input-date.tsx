@@ -7,18 +7,18 @@ type Props = {
   onDateChange: (date: Date) => void;
   minDate?: Date;
   error?: boolean;
+  errorText?: string;
 };
 
-export const DatePickerField: React.FC<Props> = ({
+export const InputDate: React.FC<Props> = ({
   date,
   onDateChange,
   minDate,
   error,
+  errorText,
 }) => {
   const formattedDate = date.toISOString().split("T")[0];
-  const formattedMinDate = minDate
-    ? minDate.toISOString().split("T")[0]
-    : undefined;
+  const formattedMinDate = minDate?.toISOString().split("T")[0];
 
   return (
     <View style={styles.container}>
@@ -33,9 +33,7 @@ export const DatePickerField: React.FC<Props> = ({
           min={formattedMinDate}
           onChange={(e) => {
             const newDate = new Date(e.target.value);
-            if (!isNaN(newDate.getTime())) {
-              onDateChange(newDate);
-            }
+            if (!isNaN(newDate.getTime())) onDateChange(newDate);
           }}
           style={styles.webInput as React.CSSProperties}
         />
@@ -50,11 +48,7 @@ export const DatePickerField: React.FC<Props> = ({
         />
       )}
 
-      {error && (
-        <Text style={styles.errorText}>
-          Date must be at least 2 days from now.
-        </Text>
-      )}
+      {error && errorText && <Text style={styles.errorText}>{errorText}</Text>}
     </View>
   );
 };

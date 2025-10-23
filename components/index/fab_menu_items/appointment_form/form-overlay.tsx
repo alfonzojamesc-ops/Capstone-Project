@@ -1,4 +1,3 @@
-// src/components/AppointmentFormOverlay.tsx
 import { TaskAppointment } from "@/types/firestore-types";
 import { Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -11,12 +10,13 @@ import {
   Text,
   View,
 } from "react-native";
-import { DatePickerField } from "./datepickerfield";
-import { FormFields, TextFieldsInput } from "./input_fields/TextfieldInput";
+import { InputDate } from "./input-date";
 import {
+  formValidate,
+  getFieldError,
   MIN_DATE,
-  validateAppointmentForm,
-} from "./input_fields/validateAppointmentForm";
+} from "./input_fields/form-validate";
+import { InputFields, InputTexts } from "./input_fields/input-texts";
 
 type AppointmentFormOverlayProps = {
   visible: boolean;
@@ -24,8 +24,7 @@ type AppointmentFormOverlayProps = {
   onSubmit: (data: TaskAppointment) => void;
 };
 
-// ---------- Defaults ----------
-const defaultForm: FormFields = {
+const defaultForm: InputFields = {
   first_name: "",
   middle_name: "",
   last_name: "",
@@ -38,16 +37,15 @@ const defaultForm: FormFields = {
 
 const defaultTouched = Object.keys(defaultForm).reduce(
   (acc, key) => ({ ...acc, [key]: false }),
-  {} as Record<keyof FormFields, boolean>
+  {} as Record<keyof InputFields, boolean>
 );
 
-// ---------- Component ----------
-export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
+export const FormOverlay: React.FC<AppointmentFormOverlayProps> = ({
   visible,
   onClose,
   onSubmit,
 }) => {
-  const [form, setForm] = useState<FormFields>(defaultForm);
+  const [form, setForm] = useState<InputFields>(defaultForm);
   const [touched, setTouched] = useState(defaultTouched);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -63,9 +61,8 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
     }).start();
   }, [visible]);
 
-  // ---------- Handlers ----------
   const setField = useCallback(
-    <K extends keyof FormFields>(key: K, value: FormFields[K]) => {
+    <K extends keyof InputFields>(key: K, value: InputFields[K]) => {
       setForm((prev) => ({ ...prev, [key]: value }));
       setTouched((prev) => ({ ...prev, [key]: true }));
     },
@@ -80,11 +77,8 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
   }, [onClose]);
 
   const handleSubmit = useCallback(async () => {
-    const error = validateAppointmentForm(form);
-    if (error) {
-      setErrorMessage(error);
-      return;
-    }
+    const error = formValidate(form);
+    if (error) return setErrorMessage(error);
 
     setSubmitting(true);
     onSubmit({
@@ -108,7 +102,10 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
 
   if (!visible) return null;
 
-  // ---------- UI ----------
+  const dateError =
+    touched.date_specified &&
+    getFieldError("date_specified", form.date_specified);
+
   return (
     <Modal visible transparent animationType="none" onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose} />
@@ -120,13 +117,14 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
 
           {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
-          <TextFieldsInput form={form} touched={touched} setField={setField} />
+          <InputTexts form={form} touched={touched} setField={setField} />
 
-          <DatePickerField
+          <InputDate
             date={form.date_specified}
             onDateChange={(date) => setField("date_specified", date)}
-            error={touched.date_specified && form.date_specified < MIN_DATE}
             minDate={MIN_DATE}
+            error={!!dateError}
+            errorText={dateError ? dateError : undefined}
           />
 
           <Pressable
@@ -186,9 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 8,
   },
-  disabledButton: {
-    opacity: 0.6,
-  },
+  disabledButton: { opacity: 0.6 },
   submitButtonText: {
     color: "#fff",
     textAlign: "center",
@@ -201,9 +197,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
-  closeButtonText: {
-    textAlign: "center",
-    color: "#333",
-  },
+  closeButtonText: { textAlign: "center", color: "#333" },
 });
-export { FormFields };
+
+export { InputFields as FormFields };
