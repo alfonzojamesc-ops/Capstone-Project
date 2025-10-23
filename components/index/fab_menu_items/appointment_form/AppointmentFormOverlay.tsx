@@ -12,23 +12,11 @@ import {
   View,
 } from "react-native";
 import { DatePickerField } from "./datepickerfield";
-import { TextFieldsInput } from "./input_fields/TextfieldInput";
+import { FormFields, TextFieldsInput } from "./input_fields/TextfieldInput";
 import {
   MIN_DATE,
   validateAppointmentForm,
 } from "./input_fields/validateAppointmentForm";
-
-// ---------- Types ----------
-export type FormFields = {
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  address: string;
-  phone: string;
-  email: string;
-  message: string;
-  date_specified: Date;
-};
 
 type AppointmentFormOverlayProps = {
   visible: boolean;
@@ -218,3 +206,4 @@ const styles = StyleSheet.create({
     color: "#333",
   },
 });
+export { FormFields };

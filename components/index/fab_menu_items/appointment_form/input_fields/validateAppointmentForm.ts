@@ -1,6 +1,6 @@
 // src/utils/validateAppointmentForm.ts
 
-import { FormFields } from "../AppointmentFormOverlay";
+import { FormFields } from "./TextfieldInput";
 
 const REQUIRED_FIELDS: (keyof FormFields)[] = [
   "first_name",

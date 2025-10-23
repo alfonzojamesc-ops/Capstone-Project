@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-type FormFields = {
+// ---------- Types ----------
+export type FormFields = {
   first_name: string;
   middle_name: string;
   last_name: string;
@@ -9,6 +10,7 @@ type FormFields = {
   phone: string;
   email: string;
   message: string;
+  date_specified: Date;
 };
 
 type TextFieldsInputProps = {
@@ -36,7 +38,7 @@ export const TextFieldsInput: React.FC<TextFieldsInputProps> = ({
 }) => {
   // Internal validation for each field, return error message or undefined
   const getFieldError = (field: keyof FormFields): string | undefined => {
-    const value = form[field].trim();
+    const value = form[field].toString().trim();
 
     if (!touched[field]) return undefined;
 
