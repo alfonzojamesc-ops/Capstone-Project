@@ -1,13 +1,11 @@
-import { Timestamp } from "firebase/firestore";
-
 export interface Deceased {
   // Firestore document ID
   first_name: string;
   middle_name?: string;
   last_name: string;
-  date_of_birth: Timestamp; // ISO format (YYYY-MM-DD)
-  date_of_death: Timestamp;
-  date_of_interment: Timestamp;
+  date_of_birth: string; // ISO format (YYYY-MM-DD)
+  date_of_death: string;
+  date_of_interment: string;
   plot: string; // references Plot.id
   burial_type?: "casket" | "vault" | "mausoleum";
   funeral_home?: string;
@@ -44,7 +42,7 @@ export interface PlotOwner {
   address?: string;
   phone?: string;
   email?: string;
-  purchase_date: Timestamp;
+  purchase_date: string;
   deed_number?: string;
   notes?: string;
 }
@@ -53,20 +51,20 @@ export interface UserAdmin {
   // Firestore document ID
   username: string;
   password_hash: string;
-  last_login?: Timestamp;
+  last_login?: string;
 }
 
 export interface Task {
   title: string;
   description?: string;
-  date_created: Timestamp;
-  last_modified: Timestamp;
-  date_due?: Timestamp;
+  date_created: string;
+  last_modified: string;
+  date_due?: string;
   author: string; // references username
 }
 
 export interface TaskReservation {
-  date_sent: Timestamp;
+  date_sent: string;
   author: {
     first_name: string;
     middle_name?: string;
@@ -79,7 +77,7 @@ export interface TaskReservation {
 }
 
 export interface TaskAppointment {
-  date_sent: Timestamp;
+  date_sent: string;
   author: {
     first_name: string;
     middle_name?: string;
@@ -88,6 +86,6 @@ export interface TaskAppointment {
     phone?: string;
     email?: string;
   }; // input name
-  date_specified: Timestamp;
+  date_specified: string;
   message: string;
 }
