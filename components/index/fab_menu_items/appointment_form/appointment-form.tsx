@@ -8,10 +8,10 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { DatePickerField } from "./datepickerfield";
+import { TextFieldsInput } from "./input_fields/textfieldsinput";
 
 type FormFields = {
   first_name: string;
@@ -38,6 +38,7 @@ const REQUIRED_FIELDS: (keyof FormFields)[] = [
   "phone",
   "email",
 ];
+
 const MIN_ADDRESS_LENGTH = 14;
 const MIN_DATE_OFFSET_DAYS = 2;
 const MIN_DATE = new Date(Date.now() + MIN_DATE_OFFSET_DAYS * 86400000);
@@ -144,16 +145,6 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
     onClose();
   };
 
-  const textFields: (keyof FormFields)[] = [
-    "first_name",
-    "middle_name",
-    "last_name",
-    "address",
-    "phone",
-    "email",
-    "message",
-  ];
-
   return (
     <Modal visible transparent animationType="none" onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose} />
@@ -164,22 +155,7 @@ export const AppointmentFormOverlay: React.FC<AppointmentFormOverlayProps> = ({
         >
           <Text style={styles.title}>Write an Appointment</Text>
 
-          {textFields.map((field) => (
-            <TextInput
-              key={field}
-              placeholder={field.replace("_", " ")}
-              placeholderTextColor="grey"
-              style={[
-                styles.input,
-                touched[field] &&
-                  !form[field].toString().trim() && { borderColor: "red" },
-                field === "message" && { height: 80 },
-              ]}
-              value={form[field].toString()}
-              onChangeText={(v) => setField(field, v)}
-              multiline={field === "message"}
-            />
-          ))}
+          <TextFieldsInput form={form} touched={touched} setField={setField} />
 
           <DatePickerField
             date={form.date_specified}
@@ -226,13 +202,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 12,
     textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 8,
   },
   submitButton: {
     backgroundColor: "#007bff",
