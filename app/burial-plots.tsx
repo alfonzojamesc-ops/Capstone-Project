@@ -1,5 +1,5 @@
-import BlockList from "@/components/burial-plots/block-list";
-import Header from "@/components/burial-plots/header";
+import Header from "@/components/burial_plots/header";
+import ListBlock from "@/components/burial_plots/list_block/list-block";
 import { SafeArea } from "@/components/safe-area";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -12,7 +12,7 @@ export default function BurialPlots() {
           <Header />
         </View>
         <View style={layout.listContainer}>
-          <BlockList />
+          <ListBlock />
         </View>
       </View>
     </SafeArea>
