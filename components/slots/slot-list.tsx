@@ -9,7 +9,6 @@ import {
   View,
 } from "react-native";
 import { PersonCardOverlay } from "./person-card";
-import SlotListHeader from "./slots-header";
 
 export default function SlotList({ block }) {
   const [open, setOpen] = useState(false);
@@ -34,7 +33,6 @@ export default function SlotList({ block }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <SlotListHeader blockId={block.id} />
       <FlatList
         data={block.slots}
         keyExtractor={(item) => item.slot}
