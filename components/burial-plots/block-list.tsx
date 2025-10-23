@@ -14,9 +14,11 @@ import {
 
 const BlockList = () => {
   const { width } = useWindowDimensions();
-
   const itemWidth = 450 + 20;
-  const numColumns = Math.max(1, Math.floor(width / itemWidth));
+  const numColumns = useMemo(
+    () => Math.max(1, Math.floor(width / itemWidth)),
+    [width, itemWidth]
+  );
 
   return (
     <FlatList
@@ -26,7 +28,7 @@ const BlockList = () => {
       renderItem={({ item }) => <ListItem item={item} />}
       numColumns={numColumns}
       contentContainerStyle={styles.listContainer}
-      style={[StyleSheet.absoluteFill]}
+      style={styles.list}
     />
   );
 };
@@ -35,6 +37,20 @@ export default BlockList;
 
 type Block = (typeof sampleData.blocks)[number];
 const ListItem = memo(({ item }: { item: Block }) => {
+  const ratio = useMemo(
+    () => item.slots.length / item.maxSlots,
+    [item.slots.length, item.maxSlots]
+  );
+  const barLength = useMemo(
+    () => ({ width: `${(ratio * 100).toFixed(0)}%` } as ViewStyle),
+    [ratio]
+  );
+  const barColor = useMemo(() => {
+    if (ratio >= 1) return styles.barRed;
+    if (ratio >= 0.6) return styles.barYellow;
+    return styles.barGreen;
+  }, [ratio]);
+
   return (
     <TouchableOpacity
       style={styles.listItem}
@@ -49,10 +65,9 @@ const ListItem = memo(({ item }: { item: Block }) => {
             <Text style={styles.cardTitleText}>
               Block {item.id.toUpperCase()}
             </Text>
-            <StatusRenderer
-              slotsOccupied={item.slots.length}
-              maxSlots={item.maxSlots}
-            />
+            <View style={styles.statusBarContainer}>
+              <View style={[styles.statusBar, barLength, barColor]}></View>
+            </View>
           </View>
           <Text style={styles.cardSubText}>{item.description}</Text>
         </View>
@@ -61,31 +76,13 @@ const ListItem = memo(({ item }: { item: Block }) => {
   );
 });
 
-type StatusProp = { slotsOccupied: number; maxSlots };
-const StatusRenderer = memo(({ slotsOccupied, maxSlots }: StatusProp) => {
-  const ratio = useMemo(() => slotsOccupied / maxSlots, [slotsOccupied]);
-  const barLength = useMemo(
-    () => ({ width: (ratio * 100).toFixed(0) + "%" } as ViewStyle),
-    [ratio]
-  );
-
-  const barColor = useMemo(() => {
-    if (ratio >= 1) return styles.barRed;
-    if (ratio >= 0.6) return styles.barYellow;
-    return styles.barGreen;
-  }, [ratio]);
-
-  return (
-    <View style={styles.statusRendererContainer}>
-      <View style={[styles.statusBar, barLength, barColor]}></View>
-    </View>
-  );
-});
-
 const styles = StyleSheet.create({
   listContainer: {
     alignItems: "center",
     paddingVertical: 10,
+  },
+  list: {
+    flex: 1,
   },
   listItem: {
     maxHeight: 500,
@@ -113,7 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   cardTitleText: { fontSize: 24, fontWeight: "500" },
-  statusRendererContainer: {
+  statusBarContainer: {
     flex: 1,
     maxWidth: 60,
     height: 20,
@@ -132,6 +129,6 @@ const styles = StyleSheet.create({
   },
   barGreen: { backgroundColor: "limegreen" },
   barYellow: { backgroundColor: "orange" },
-  barRed: { backgroundColor: "crimson" },
+  barRed: { backgroundColor: "firebrick" },
   cardSubText: { fontSize: 18 },
 });
