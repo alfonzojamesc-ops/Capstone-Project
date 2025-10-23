@@ -5,11 +5,14 @@ import { sampleData } from "@/constants/sample-data";
 import { useLocalSearchParams } from "expo-router";
 
 export default function Slot() {
-  const { block } = useLocalSearchParams(); // "block" comes from the URL param
+  const { block } = useLocalSearchParams();
   const blockData = sampleData.blocks.find((b) => b.id === block);
+
+  if (!blockData) return null;
+
   return (
     <SafeArea>
-      <SlotListHeader blockId={blockData?.id} />
+      <SlotListHeader blockId={blockData.id} />
       <SlotList block={blockData} />
     </SafeArea>
   );
