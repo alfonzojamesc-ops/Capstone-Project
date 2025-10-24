@@ -1,5 +1,5 @@
 import { db } from "@/firebaseConfig";
-import { Block, Plot } from "@/types/firestore-types";
+import { Block, Plot, Owner } from "@/types/firestore-types";
 import { useLocalSearchParams } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -69,7 +69,7 @@ export default function PlotsScreen() {
             <Text style={styles.itemText}>{item.id}</Text>
             <Text>Status: {item.data.status}</Text>
             <Text>
-              Owner: {item.data.owner.first_name} {item.data.owner.last_name}
+              Owner: {item.data.owner?.first_name} {item.data.owner?.last_name}
             </Text>
           </View>
         )}

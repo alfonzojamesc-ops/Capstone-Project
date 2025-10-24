@@ -1,3 +1,5 @@
+import { Phase, Plot } from "@/types/firestore-types";
+
 const phase = "ph2";
 
 const START_BLOCK = 1;
@@ -9,14 +11,12 @@ const RANDOM_PLOT_MAX = 16;
 const MAX_PLOTS_MIN = 16;
 const MAX_PLOTS_MAX = 20;
 
-const statuses = ["available", "reserved", "occupied"];
 const maintenanceStatuses = ["good", "needs_care", "under_maintenance"];
 
 const burialTypes = ["casket", "vault", "mausoleum"];
 
 export async function generateFullData() {
-  // main data structure
-  const data = {
+  const data: Phase = {
     max_blocks: END_BLOCK,
     blocks: {},
   };
@@ -28,24 +28,20 @@ export async function generateFullData() {
       Math.floor(Math.random() * (MAX_PLOTS_MAX - MAX_PLOTS_MIN + 1)) +
       MAX_PLOTS_MIN;
 
-    const numPlots = Math.min(
+    const numPlots =
       Math.floor(Math.random() * (RANDOM_PLOT_MAX - RANDOM_PLOT_MIN + 1)) +
-        RANDOM_PLOT_MIN,
-      max_plots
-    );
+      RANDOM_PLOT_MIN;
 
-    const plots = {};
+    const plots: Record<string, Plot> = {};
 
+    // ---- Generate non-available plots ----
     for (let plotNum = 1; plotNum <= numPlots; plotNum++) {
       const plotId = `${phase}_blk${blockNum}_plot_${plotNum}`;
-      const status = randomFrom(statuses);
+      const status = randomFrom(["reserved", "occupied"]);
       const maintenance_status = randomFrom(maintenanceStatuses);
+
       const deceased = generateDeceased();
-      const owner = generateOwner(
-        deceased.last_name,
-        deceased.middle_name,
-        deceased.sex
-      );
+      const owner = generateOwner(deceased.last_name, deceased.middle_name);
 
       plots[plotId] = {
         grid_coordinates: randomGridCoordinate(),
@@ -53,6 +49,45 @@ export async function generateFullData() {
         maintenance_status,
         owner,
         deceased,
+      };
+    }
+
+    // ---- Generate available plots ----
+    const remainingPlots = max_plots - numPlots;
+    for (let i = 1; i <= remainingPlots; i++) {
+      const plotId = `${phase}_blk${blockNum}_plot_${numPlots + i}`;
+      const status = "available";
+
+      plots[plotId] = {
+        grid_coordinates: randomGridCoordinate(),
+        status,
+        maintenance_status: "", // empty string
+        owner: {
+          sex: "",
+          first_name: "",
+          middle_name: "",
+          last_name: "",
+          date_of_birth: "",
+          address: "",
+          phone: "",
+          email: "",
+          purchase_date: "",
+          deed_number: "",
+          notes: "",
+        },
+        deceased: {
+          sex: "",
+          first_name: "",
+          middle_name: "",
+          last_name: "",
+          date_of_birth: "",
+          date_of_death: "",
+          date_of_interment: "",
+          burial_type: "",
+          funeral_home: "",
+          image: "",
+          notes: "",
+        },
       };
     }
 
@@ -86,13 +121,12 @@ function generateDeceased() {
   );
 
   const date_of_interment = randomDate(intermentStartDate, intermentEndDate);
-  const burial_type = Math.random() > 0.2 ? randomFrom(burialTypes) : undefined;
-  const funeral_home =
-    Math.random() > 0.3 ? randomFrom(funeralHomes) : undefined;
+  const burial_type = Math.random() > 0.2 ? randomFrom(burialTypes) : "";
+  const funeral_home = Math.random() > 0.3 ? randomFrom(funeralHomes) : "";
 
   const randomImageIndex = Math.floor(Math.random() * 100);
   const image = `https://randomuser.me/api/portraits/med/${base.sex}/${randomImageIndex}.jpg`;
-  const notes = Math.random() > 0.5 ? "No additional notes." : undefined;
+  const notes = "No additional notes.";
 
   return {
     ...base,
@@ -108,8 +142,7 @@ function generateDeceased() {
 // generate an owner record (extends shared info)
 function generateOwner(
   relativeLastName: null | string = null,
-  relativeMiddleName: null | string = null,
-  relativeSex: null | string = null
+  relativeMiddleName: null | string = null
 ) {
   const base = generateInfo(
     new Date(1935, 0, 1),
@@ -181,7 +214,7 @@ function randomDate(start = new Date(1950, 0, 1), end = new Date(2005, 0, 1)) {
   return formattedDate;
 }
 
-function randomGridCoordinate() {
+function randomGridCoordinate(): [number, number] {
   return [Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)];
 }
 
