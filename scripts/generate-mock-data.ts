@@ -115,8 +115,7 @@ function generateOwner(
     new Date(1935, 0, 1),
     new Date(2000, 0, 1),
     relativeLastName,
-    relativeMiddleName,
-    relativeSex
+    relativeMiddleName
   );
 
   return {
@@ -135,8 +134,7 @@ function generateInfo(
   dateRangeStart: Date,
   dateRangeEnd: Date,
   relativeLastName: null | string = null,
-  relativeMiddleName: null | string = null,
-  relativeSex: null | string = null
+  relativeMiddleName: null | string = null
 ) {
   const sex = Math.random() > 0.5 ? "male" : "female";
   const first_name: string =
