@@ -4,10 +4,10 @@ const START_BLOCK = 1;
 const END_BLOCK = 6;
 
 const RANDOM_PLOT_MIN = 8;
-const RANDOM_PLOT_MAX = 20;
+const RANDOM_PLOT_MAX = 16;
 
-const MAX_PLOTS_MIN = 15;
-const MAX_PLOTS_MAX = 30;
+const MAX_PLOTS_MIN = 16;
+const MAX_PLOTS_MAX = 20;
 
 const statuses = ["available", "reserved", "occupied"];
 const maintenanceStatuses = ["good", "needs_care", "under_maintenance"];

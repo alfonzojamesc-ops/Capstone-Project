@@ -1,4 +1,5 @@
 import { generateFullData } from "@/scripts/generate-mock-data";
+import { uploadMockData } from "@/scripts/upload-mock-data";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -38,8 +39,8 @@ export default function Test() {
           padding: 20,
           borderRadius: 10,
         }}
-        onPress={() => {
-          // Future upload logic here
+        onPress={async () => {
+          await uploadMockData().catch(console.error);
         }}
       >
         <Text style={{ color: hover2 ? "black" : "white" }}>Upload</Text>
