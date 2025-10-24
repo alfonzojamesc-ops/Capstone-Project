@@ -15,6 +15,7 @@ import {
 interface BlockDoc {
   id: string;
   data: Block;
+  plots_available: number;
 }
 
 export default function BlocksScreen() {
@@ -35,10 +36,27 @@ export default function BlocksScreen() {
         const snapshot = await getDocs(
           collection(db, "phases", parsedPhase.id, "blocks")
         );
-        const data: BlockDoc[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data() as Block,
-        }));
+        const data: BlockDoc[] = await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            const blockData = doc.data() as Block;
+            const plotsSnap = await getDocs(
+              collection(
+                db,
+                "phases",
+                parsedPhase.id,
+                "blocks",
+                doc.id,
+                "plots"
+              )
+            );
+
+            return {
+              id: doc.id,
+              data: blockData,
+              plots_available: blockData.max_plots - plotsSnap.size,
+            };
+          })
+        );
         setBlocks(data);
       } catch (err) {
         console.error(err);
@@ -77,7 +95,7 @@ export default function BlocksScreen() {
             }
           >
             <Text style={styles.itemText}>{item.id}</Text>
-            <Text>Plots available: {item.data.max_plots}</Text>
+            <Text>Plots available: {item.plots_available}</Text>
           </TouchableOpacity>
         )}
       />
