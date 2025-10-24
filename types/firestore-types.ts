@@ -1,50 +1,47 @@
-export interface Deceased {
-  // Firestore document ID
+interface Owner {
+  sex: string;
   first_name: string;
-  middle_name?: string;
+  middle_name: string;
   last_name: string;
-  date_of_birth: string; // ISO format (YYYY-MM-DD)
+  date_of_birth: string;
+  address: string;
+  phone: string;
+  email: string;
+  purchase_date: string;
+  deed_number: string;
+  notes?: string;
+}
+
+interface Deceased {
+  sex: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  date_of_birth: string;
   date_of_death: string;
   date_of_interment: string;
-  plot: string; // references Plot.id
-  burial_type?: "casket" | "vault" | "mausoleum";
-  funeral_home?: string;
-  image?: string; // url
+  burial_type?: string;
+  funeral_home: string;
+  image?: string;
   notes?: string;
 }
 
-type Point = [number, number];
-
-export interface Plot {
-  grid_coordinates?: Point; // [x,y]
-  status: "available" | "reserved" | "occupied";
-  owner_id?: string;
-  maintenance_status?: "good" | "needs_care" | "under_maintenance";
+interface Plot {
+  grid_coordinates: [number, number];
+  status: string;
+  maintenance_status: string;
+  owner: Owner;
+  deceased: Deceased;
 }
 
-export interface Block {
-  // user-gen docid i.e. Block_1
+interface Block {
   max_plots: number;
-  plots: Record<string, Plot>; // user-gen docid i.e. Plot_1
+  plots: Record<string, Plot>;
 }
 
-export interface Phase {
-  // user-gen docid i.e. Phase_1A
+interface Phase {
   max_blocks: number;
-  blocks: Record<string, Block>; // user-gen collectionid i.e. Block_1
-}
-
-export interface PlotOwner {
-  plot: string; // references Plot.id
-  first_name: string;
-  middle_name?: string;
-  last_name: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  purchase_date: string;
-  deed_number?: string;
-  notes?: string;
+  blocks: Record<string, Block>;
 }
 
 export interface UserAdmin {
