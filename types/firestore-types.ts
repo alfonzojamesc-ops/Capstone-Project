@@ -30,8 +30,8 @@ export interface Plot {
   grid_coordinates: [number, number];
   status: string;
   maintenance_status: string;
-  owner: Owner;
-  deceased: Deceased;
+  owner?: Owner;
+  deceased?: Deceased;
 }
 
 export interface Block {
