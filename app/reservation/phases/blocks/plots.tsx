@@ -1,5 +1,5 @@
 import { db } from "@/firebaseConfig";
-import { Block, Plot, Owner } from "@/types/firestore-types";
+import { Block, Plot } from "@/types/firestore-types";
 import { useLocalSearchParams } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -40,6 +40,16 @@ export default function PlotsScreen() {
           id: doc.id,
           data: doc.data() as Plot,
         }));
+
+        // Sort plots by the numeric part of the plot ID after 'plot_'
+        data.sort((a, b) => {
+          // Extract the numeric part from the plot ID (after 'plot_')
+          const numA = parseInt(a.id.split("plot_")[1]);
+          const numB = parseInt(b.id.split("plot_")[1]);
+
+          return numA - numB; // Numeric sorting
+        });
+
         setPlots(data);
       } catch (err) {
         console.error(err);
