@@ -1,9 +1,9 @@
 import { Phase, Plot } from "@/types/firestore-types";
 
-const phase = "ph1";
+const phase = "ph2";
 
 const START_BLOCK = 1;
-const END_BLOCK = 9;
+const END_BLOCK = 6;
 
 const RANDOM_PLOT_MIN = 8;
 const RANDOM_PLOT_MAX = 16;
