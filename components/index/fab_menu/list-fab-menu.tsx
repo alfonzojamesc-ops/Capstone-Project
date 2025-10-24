@@ -16,7 +16,7 @@ const createItems = (openForm: () => void): Item[] => [
     key: "reserve",
     label: "Reserve a Slot",
     icon: "map-marker-star",
-    onPress: () => router.push("./burial-plots"),
+    onPress: () => router.push("./reservation/phases"),
   },
   {
     key: "appointment",

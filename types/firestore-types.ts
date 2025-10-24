@@ -1,4 +1,4 @@
-interface Owner {
+export interface Owner {
   sex: string;
   first_name: string;
   middle_name: string;
@@ -12,7 +12,7 @@ interface Owner {
   notes?: string;
 }
 
-interface Deceased {
+export interface Deceased {
   sex: string;
   first_name: string;
   middle_name: string;
@@ -26,7 +26,7 @@ interface Deceased {
   notes?: string;
 }
 
-interface Plot {
+export interface Plot {
   grid_coordinates: [number, number];
   status: string;
   maintenance_status: string;
@@ -34,12 +34,12 @@ interface Plot {
   deceased: Deceased;
 }
 
-interface Block {
+export interface Block {
   max_plots: number;
   plots: Record<string, Plot>;
 }
 
-interface Phase {
+export interface Phase {
   max_blocks: number;
   blocks: Record<string, Block>;
 }
