@@ -1,9 +1,9 @@
 import { Phase, Plot } from "@/types/firestore-types";
 
-const phase = "ph2";
+const phase = "ph1";
 
 const START_BLOCK = 1;
-const END_BLOCK = 6;
+const END_BLOCK = 9;
 
 const RANDOM_PLOT_MIN = 8;
 const RANDOM_PLOT_MAX = 16;
@@ -34,70 +34,82 @@ export async function generateFullData() {
 
     const plots: Record<string, Plot> = {};
 
-    // ---- Generate non-available plots ----
-    for (let plotNum = 1; plotNum <= numPlots; plotNum++) {
+    // ---- Generate plots with randomized status ----
+    for (let plotNum = 1; plotNum <= max_plots; plotNum++) {
       const plotId = `${phase}_blk${blockNum}_plot_${plotNum}`;
-      const status = randomFrom(["reserved", "occupied"]);
-      const maintenance_status = randomFrom(maintenanceStatuses);
 
-      const deceased = generateDeceased();
-      const owner = generateOwner(deceased.last_name, deceased.middle_name);
+      // Randomly decide whether the plot should be available or non-available
+      const status =
+        Math.random() > 0.5
+          ? "available"
+          : randomFrom(["reserved", "occupied"]);
 
-      plots[plotId] = {
-        grid_coordinates: randomGridCoordinate(),
-        status,
-        maintenance_status,
-        owner,
-        deceased,
-      };
+      if (status === "available") {
+        // ---- Available plot ----
+        plots[plotId] = {
+          grid_coordinates: randomGridCoordinate(),
+          status,
+          maintenance_status: "", // Empty for available
+          owner: {
+            sex: "",
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            date_of_birth: "",
+            address: "",
+            phone: "",
+            email: "",
+            purchase_date: "",
+            deed_number: "",
+            notes: "",
+          },
+          deceased: {
+            sex: "",
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            date_of_birth: "",
+            date_of_death: "",
+            date_of_interment: "",
+            burial_type: "",
+            funeral_home: "",
+            image: "",
+            notes: "",
+          },
+        };
+      } else {
+        // ---- Non-available plot (reserved or occupied) ----
+        const maintenance_status = randomFrom(maintenanceStatuses);
+        const deceased = generateDeceased();
+        const owner = generateOwner(deceased.last_name, deceased.middle_name);
+
+        plots[plotId] = {
+          grid_coordinates: randomGridCoordinate(),
+          status,
+          maintenance_status,
+          owner,
+          deceased,
+        };
+      }
     }
 
-    // ---- Generate available plots ----
-    const remainingPlots = max_plots - numPlots;
-    for (let i = 1; i <= remainingPlots; i++) {
-      const plotId = `${phase}_blk${blockNum}_plot_${numPlots + i}`;
-      const status = "available";
-
-      plots[plotId] = {
-        grid_coordinates: randomGridCoordinate(),
-        status,
-        maintenance_status: "", // empty string
-        owner: {
-          sex: "",
-          first_name: "",
-          middle_name: "",
-          last_name: "",
-          date_of_birth: "",
-          address: "",
-          phone: "",
-          email: "",
-          purchase_date: "",
-          deed_number: "",
-          notes: "",
-        },
-        deceased: {
-          sex: "",
-          first_name: "",
-          middle_name: "",
-          last_name: "",
-          date_of_birth: "",
-          date_of_death: "",
-          date_of_interment: "",
-          burial_type: "",
-          funeral_home: "",
-          image: "",
-          notes: "",
-        },
-      };
-    }
-
+    // Add the block data to the main data structure
     data.blocks[blockKey] = {
       max_plots,
       plots,
     };
   }
 
+  // Output the generated data
   console.log(JSON.stringify(data, null, 2));
+}
+
+// Shuffle array utility function
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
 }
 
 // main helpers
