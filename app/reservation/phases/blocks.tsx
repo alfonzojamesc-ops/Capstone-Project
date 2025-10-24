@@ -57,6 +57,14 @@ export default function BlocksScreen() {
             };
           })
         );
+
+        data.sort((a, b) => {
+          const numA = parseInt(a.id.split("block_")[1]);
+          const numB = parseInt(b.id.split("block_")[1]);
+
+          return numA - numB;
+        });
+
         setBlocks(data);
       } catch (err) {
         console.error(err);

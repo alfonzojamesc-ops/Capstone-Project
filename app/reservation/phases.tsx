@@ -30,6 +30,16 @@ export default function PhasesScreen() {
           id: doc.id,
           data: doc.data() as Phase,
         }));
+
+        // Sort phases by the numeric part of the phase ID
+        data.sort((a, b) => {
+          // Extract numeric part from the phase ID (assuming format like 'ph0', 'ph1', 'ph10', etc.)
+          const numA = parseInt(a.id.replace("ph", ""));
+          const numB = parseInt(b.id.replace("ph", ""));
+
+          return numA - numB; // Numeric sorting
+        });
+
         setPhases(data);
       } catch (err) {
         console.error(err);

@@ -41,13 +41,11 @@ export default function PlotsScreen() {
           data: doc.data() as Plot,
         }));
 
-        // Sort plots by the numeric part of the plot ID after 'plot_'
         data.sort((a, b) => {
-          // Extract the numeric part from the plot ID (after 'plot_')
           const numA = parseInt(a.id.split("plot_")[1]);
           const numB = parseInt(b.id.split("plot_")[1]);
 
-          return numA - numB; // Numeric sorting
+          return numA - numB;
         });
 
         setPlots(data);
