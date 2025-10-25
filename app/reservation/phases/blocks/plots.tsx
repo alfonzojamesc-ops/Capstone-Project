@@ -1,4 +1,6 @@
+import Header from "@/components/header";
 import { db } from "@/firebaseConfig";
+import { back } from "@/scripts/back";
 import { Block, Plot } from "@/types/firestore-types";
 import { useLocalSearchParams } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
@@ -44,7 +46,6 @@ export default function PlotsScreen() {
         data.sort((a, b) => {
           const numA = parseInt(a.id.split("plot_")[1]);
           const numB = parseInt(b.id.split("plot_")[1]);
-
           return numA - numB;
         });
 
@@ -66,9 +67,19 @@ export default function PlotsScreen() {
       </View>
     );
 
+  // ✅ Convert block ID like "block_1" → "Block 1"
+  const blockNumber = parsedBlock?.id.replace(/block_/i, "");
+  const title = `Plots in Block ${blockNumber}`;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Plots in {parsedBlock?.id}</Text>
+      <Header
+        title={title}
+        showBackButton
+        style={{ backgroundColor: "#fff" }}
+        onBackPress={() => back("./")}
+      />
+
       <FlatList
         data={plots}
         keyExtractor={(item) => item.id}
@@ -87,9 +98,8 @@ export default function PlotsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1, backgroundColor: "#fff" },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
   item: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#ccc" },
   itemText: { fontWeight: "bold", fontSize: 18 },
 });

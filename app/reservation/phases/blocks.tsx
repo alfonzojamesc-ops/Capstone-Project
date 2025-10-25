@@ -1,4 +1,6 @@
+import Header from "@/components/header";
 import { db } from "@/firebaseConfig";
+import { back } from "@/scripts/back";
 import { Block, Phase } from "@/types/firestore-types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
@@ -36,9 +38,12 @@ export default function BlocksScreen() {
         const snapshot = await getDocs(
           collection(db, "phases", parsedPhase.id, "blocks")
         );
+
         const data: BlockDoc[] = await Promise.all(
           snapshot.docs.map(async (doc) => {
             const blockData = doc.data() as Block;
+
+            // Get all plots in this block
             const plotsSnap = await getDocs(
               collection(
                 db,
@@ -50,10 +55,19 @@ export default function BlocksScreen() {
               )
             );
 
+            // ✅ Count plots where status === "available"
+            let availableCount = 0;
+            plotsSnap.forEach((plotDoc) => {
+              const plot = plotDoc.data() as any;
+              if (plot.status?.toLowerCase() === "available") {
+                availableCount++;
+              }
+            });
+
             return {
               id: doc.id,
               data: blockData,
-              plots_available: blockData.max_plots - plotsSnap.size,
+              plots_available: availableCount, // ✅ filtered count
             };
           })
         );
@@ -61,7 +75,6 @@ export default function BlocksScreen() {
         data.sort((a, b) => {
           const numA = parseInt(a.id.split("block_")[1]);
           const numB = parseInt(b.id.split("block_")[1]);
-
           return numA - numB;
         });
 
@@ -83,9 +96,19 @@ export default function BlocksScreen() {
       </View>
     );
 
+  // ✅ Convert phase ID like "ph1" → "Phase 1"
+  const phaseNumber = parsedPhase?.id.replace(/phase_/i, "");
+  const title = `Blocks of Phase ${phaseNumber}`;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Blocks of {parsedPhase?.id}</Text>
+      <Header
+        title={title}
+        showBackButton
+        style={{ backgroundColor: "#fff" }}
+        onBackPress={() => back("./")}
+      />
+
       <FlatList
         data={blocks}
         keyExtractor={(item) => item.id}
@@ -112,9 +135,8 @@ export default function BlocksScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1, backgroundColor: "#fff" },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
   item: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#ccc" },
   itemText: { fontWeight: "bold", fontSize: 18 },
 });

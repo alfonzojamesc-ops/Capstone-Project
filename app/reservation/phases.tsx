@@ -1,3 +1,4 @@
+import Header from "@/components/header";
 import { db } from "@/firebaseConfig";
 import { Phase } from "@/types/firestore-types";
 import { useRouter } from "expo-router";
@@ -57,7 +58,11 @@ export default function PhasesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Phases</Text>
+      <Header
+        title="Phases"
+        showBackButton
+        style={{ backgroundColor: "#fff" }}
+      />
       <FlatList
         data={phases}
         keyExtractor={(item) => item.id}
@@ -84,7 +89,6 @@ export default function PhasesScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
   item: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#ccc" },
   itemText: { fontWeight: "bold", fontSize: 18 },
 });
