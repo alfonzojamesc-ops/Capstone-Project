@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -131,11 +132,7 @@ export default function PlotsScreen() {
 
   return (
     <View style={styles.container}>
-      <Header
-        title={title}
-        showBackButton
-        onBackPress={handleBackPress}
-      />
+      <Header title={title} showBackButton onBackPress={handleBackPress} />
 
       <FlatList
         data={plots}
@@ -149,9 +146,16 @@ export default function PlotsScreen() {
               style={styles.item}
               onPress={() => handlePlotPress(item)}
             >
-              <Text style={styles.itemText}>
-                Plot {plotNumber}  |  {deceasedName ? `${deceasedName}` : ""}
-              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                <Text style={styles.itemText}>Plot {plotNumber} |</Text>
+                <Image
+                  source={{ uri: item.data.deceased.image }}
+                  style={styles.image}
+                />
+                <Text style={styles.itemText}>
+                  {deceasedName ? `${deceasedName}` : ""}
+                </Text>
+              </View>
               <Text>Status: {item.data.status}</Text>
               <Text>
                 Owner: {item.data.owner?.first_name ?? "-"}{" "}
@@ -178,4 +182,9 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   item: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#ccc" },
   itemText: { fontWeight: "bold", fontSize: 18 },
+  image: {
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+  },
 });
