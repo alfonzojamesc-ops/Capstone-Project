@@ -1,4 +1,6 @@
+import { useSnackbar } from "@/hooks/use-snack-bar";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { memo, useCallback, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -11,7 +13,7 @@ type Item = {
   onPress: () => void;
 };
 
-const createItems = (openForm: () => void): Item[] => [
+const createItems = (openForm: () => void, contact: () => void): Item[] => [
   {
     key: "reserve",
     label: "Reserve a Slot",
@@ -26,21 +28,24 @@ const createItems = (openForm: () => void): Item[] => [
   },
   {
     key: "contact",
-    label: "Contact Us",
+    label: "Call us: +639876543210",
     icon: "phone",
-    onPress: () => {
-      window.location.href = "tel:+639123456789";
-    },
+    onPress: contact,
   },
 ];
 
 export const ListFabMenu = memo(({ visible }: { visible: boolean }) => {
   const [openForm, setOpenForm] = useState(false);
+  const { Snackbar, show } = useSnackbar();
 
   const handleOpenForm = useCallback(() => setOpenForm(true), []);
   const handleCloseForm = useCallback(() => setOpenForm(false), []);
 
-  const items = createItems(handleOpenForm);
+  const items = createItems(handleOpenForm, async () => {
+    await Clipboard.setStringAsync("09876543210");
+    show("Contact number copied to clipboard!");
+    window.location.href = "tel:+639123456789";
+  });
 
   if (!visible) return null;
 
@@ -62,6 +67,7 @@ export const ListFabMenu = memo(({ visible }: { visible: boolean }) => {
         onClose={handleCloseForm}
         onSubmit={(data) => console.log("Submitted:", data)}
       />
+      {Snackbar}
     </>
   );
 });
