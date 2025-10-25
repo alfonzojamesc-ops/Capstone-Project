@@ -105,7 +105,6 @@ export default function BlocksScreen() {
       <Header
         title={title}
         showBackButton
-        style={{ backgroundColor: "#fff" }}
         onBackPress={() => back("./")}
       />
 

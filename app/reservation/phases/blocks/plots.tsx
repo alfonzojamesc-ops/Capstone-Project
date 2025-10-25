@@ -134,7 +134,6 @@ export default function PlotsScreen() {
       <Header
         title={title}
         showBackButton
-        style={{ backgroundColor: "#fff" }}
         onBackPress={handleBackPress}
       />
 

@@ -59,12 +59,7 @@ export default function PhasesScreen() {
 
   return (
     <View style={styles.container}>
-      <Header
-        title="Phases"
-        showBackButton
-        style={{ backgroundColor: "#fff" }}
-        onBackPress={() => back("/")}
-      />
+      <Header title="Phases" showBackButton onBackPress={() => back("/")} />
       <FlatList
         data={phases}
         keyExtractor={(item) => item.id}
