@@ -119,7 +119,7 @@ export default function BlocksScreen() {
               router.push({
                 pathname: "./blocks/plots",
                 params: {
-                  phaseId: parsedPhase?.id,
+                  phase: JSON.stringify(parsedPhase),
                   block: JSON.stringify({ id: item.id, data: item.data }),
                 },
               })

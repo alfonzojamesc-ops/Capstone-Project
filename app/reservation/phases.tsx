@@ -63,7 +63,7 @@ export default function PhasesScreen() {
         title="Phases"
         showBackButton
         style={{ backgroundColor: "#fff" }}
-        onBackPress={() => back("../")}
+        onBackPress={() => back("/")}
       />
       <FlatList
         data={phases}
@@ -89,7 +89,7 @@ export default function PhasesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   item: { padding: 12, borderBottomWidth: 1, borderBottomColor: "#ccc" },
   itemText: { fontWeight: "bold", fontSize: 18 },

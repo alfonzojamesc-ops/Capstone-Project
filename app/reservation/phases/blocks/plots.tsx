@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import { db } from "@/firebaseConfig";
-import { Block, Plot } from "@/types/firestore-types";
+import { Block, Phase, Plot } from "@/types/firestore-types";
 import { router, useLocalSearchParams } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -18,25 +18,39 @@ interface PlotDoc {
 }
 
 export default function PlotsScreen() {
-  const { phaseId, block } = useLocalSearchParams<{
-    phaseId: string;
+  // ✅ Expect both phase and block from the navigation params
+  const { phase, block } = useLocalSearchParams<{
+    phase: string;
     block: string;
   }>();
-  const parsedBlock: { id: string; data: Block } = block
+
+  const parsedPhase: { id: string; data: Phase } | null = phase
+    ? JSON.parse(phase)
+    : null;
+  const parsedBlock: { id: string; data: Block } | null = block
     ? JSON.parse(block)
     : null;
 
   const [plots, setPlots] = useState<PlotDoc[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Fetch plots for this block
   useEffect(() => {
-    if (!parsedBlock || !phaseId) return;
+    if (!parsedBlock || !parsedPhase) return;
 
     const fetchPlots = async () => {
       try {
         const snapshot = await getDocs(
-          collection(db, "phases", phaseId, "blocks", parsedBlock.id, "plots")
+          collection(
+            db,
+            "phases",
+            parsedPhase.id,
+            "blocks",
+            parsedBlock.id,
+            "plots"
+          )
         );
+
         const data: PlotDoc[] = snapshot.docs.map((doc) => ({
           id: doc.id,
           data: doc.data() as Plot,
@@ -50,14 +64,14 @@ export default function PlotsScreen() {
 
         setPlots(data);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching plots:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPlots();
-  }, [parsedBlock, phaseId]);
+  }, [parsedBlock, parsedPhase]);
 
   if (loading)
     return (
@@ -70,23 +84,30 @@ export default function PlotsScreen() {
   const blockNumber = parsedBlock?.id.replace(/block_/i, "");
   const title = `Plots in Block ${blockNumber}`;
 
+  // ✅ Smart Back Handler (works even after refresh)
+  const handleBackPress = () => {
+    if (router.canGoBack()) {
+      router.back(); // normal navigation
+    } else if (parsedPhase) {
+      // fallback when refreshed
+      router.push({
+        pathname: "../../phases/blocks",
+        params: {
+          phase: JSON.stringify(parsedPhase),
+        },
+      });
+    } else {
+      console.warn("No phase data found for back navigation.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Header
         title={title}
         showBackButton
         style={{ backgroundColor: "#fff" }}
-        onBackPress={() =>
-          router.push({
-            pathname: "./",
-            params: {
-              phase: JSON.stringify({
-                id: parsedBlock.id,
-                data: parsedBlock.data,
-              }),
-            },
-          })
-        }
+        onBackPress={handleBackPress}
       />
 
       <FlatList
@@ -97,7 +118,8 @@ export default function PlotsScreen() {
             <Text style={styles.itemText}>{item.id}</Text>
             <Text>Status: {item.data.status}</Text>
             <Text>
-              Owner: {item.data.owner?.first_name} {item.data.owner?.last_name}
+              Owner: {item.data.owner?.first_name ?? "-"}{" "}
+              {item.data.owner?.last_name ?? ""}
             </Text>
           </View>
         )}
