@@ -115,6 +115,20 @@ export default function PlotsScreen() {
     }
   };
 
+  // Helper function to get plot number
+  const getPlotNumber = (id: string) => {
+    const parts = id.split("_");
+    return parts[parts.length - 1]; // Get last part as plot number (e.g. "1" from "ph0_blk1_plot_1")
+  };
+
+  // Helper function to get deceased name
+  const getDeceasedName = (deceased: {
+    first_name: string;
+    last_name: string;
+  }) => {
+    return deceased ? `${deceased.first_name} ${deceased.last_name}` : null;
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -127,19 +141,26 @@ export default function PlotsScreen() {
       <FlatList
         data={plots}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => handlePlotPress(item)}
-          >
-            <Text style={styles.itemText}>{item.id}</Text>
-            <Text>Status: {item.data.status}</Text>
-            <Text>
-              Owner: {item.data.owner?.first_name ?? "-"}{" "}
-              {item.data.owner?.last_name ?? ""}
-            </Text>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          const plotNumber = getPlotNumber(item.id);
+          const deceasedName = getDeceasedName(item.data.deceased);
+
+          return (
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => handlePlotPress(item)}
+            >
+              <Text style={styles.itemText}>
+                Plot {plotNumber}  |  {deceasedName ? `${deceasedName}` : ""}
+              </Text>
+              <Text>Status: {item.data.status}</Text>
+              <Text>
+                Owner: {item.data.owner?.first_name ?? "-"}{" "}
+                {item.data.owner?.last_name ?? ""}
+              </Text>
+            </TouchableOpacity>
+          );
+        }}
       />
 
       {selectedPlot && (

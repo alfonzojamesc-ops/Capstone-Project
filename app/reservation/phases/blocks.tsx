@@ -125,7 +125,9 @@ export default function BlocksScreen() {
               })
             }
           >
-            <Text style={styles.itemText}>{item.id}</Text>
+            <Text style={styles.itemText}>
+              {item.id.replace(/block_/i, "Block ")}
+            </Text>
             <Text>Plots available: {item.plots_available}</Text>
           </TouchableOpacity>
         )}

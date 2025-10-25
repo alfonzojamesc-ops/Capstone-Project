@@ -80,7 +80,9 @@ export default function PhasesScreen() {
               })
             }
           >
-            <Text style={styles.itemText}>{item.id}</Text>
+            <Text style={styles.itemText}>
+              {item.id.replace(/(phase_|ph)/i, "Phase ")}
+            </Text>
           </TouchableOpacity>
         )}
       />

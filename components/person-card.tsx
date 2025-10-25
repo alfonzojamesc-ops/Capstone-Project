@@ -63,18 +63,8 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
             </>
           ) : (
             <>
-              {showOwner && (
-                <>
-                  <Text style={styles.sectionTitle}>Owner</Text>
-                  <Text style={styles.name}>
-                    {owner.first_name} {owner.last_name}
-                  </Text>
-                </>
-              )}
-
               {showDeceased && (
                 <>
-                  <Text style={styles.sectionTitle}>Deceased</Text>
                   {deceased.image && (
                     <Image
                       source={{ uri: deceased.image }}
