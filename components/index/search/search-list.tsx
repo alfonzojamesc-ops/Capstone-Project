@@ -119,7 +119,7 @@ export default function SearchList({ searchQuery }: SearchListProps) {
       renderItem={({ item }) => (
         <View style={styles.item}>
           <Image
-            source={{ uri: item.image || "https://via.placeholder.com/50" }}
+            source={{ uri: item.image || "https://placehold.co/50x50" }}
             style={styles.image}
           />
           <View>
