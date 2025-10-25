@@ -18,6 +18,7 @@ interface BlockDoc {
   id: string;
   data: Block;
   plots_available: number;
+  total_plots: number;
 }
 
 export default function BlocksScreen() {
@@ -43,7 +44,6 @@ export default function BlocksScreen() {
           snapshot.docs.map(async (doc) => {
             const blockData = doc.data() as Block;
 
-            // Get all plots in this block
             const plotsSnap = await getDocs(
               collection(
                 db,
@@ -55,7 +55,6 @@ export default function BlocksScreen() {
               )
             );
 
-            // ✅ Count plots where status === "available"
             let availableCount = 0;
             plotsSnap.forEach((plotDoc) => {
               const plot = plotDoc.data() as any;
@@ -67,11 +66,13 @@ export default function BlocksScreen() {
             return {
               id: doc.id,
               data: blockData,
-              plots_available: availableCount, // ✅ filtered count
+              plots_available: availableCount,
+              total_plots: plotsSnap.size,
             };
           })
         );
 
+        // Sort blocks numerically
         data.sort((a, b) => {
           const numA = parseInt(a.id.split("block_")[1]);
           const numB = parseInt(b.id.split("block_")[1]);
@@ -96,40 +97,51 @@ export default function BlocksScreen() {
       </View>
     );
 
-  // ✅ Convert phase ID like "ph1" → "Phase 1"
   const phaseNumber = parsedPhase?.id.replace(/phase_/i, "");
   const title = `Blocks of Phase ${phaseNumber}`;
 
+  const getColorForBlock = (available: number, total: number) => {
+    if (total === 0) return "#888"; // gray for edge case
+    const ratio = available / total;
+    if (available === 0) return "firebrick";
+    if (ratio > 0.7) return "orange"; 
+    return "limegreen";
+  };
+
   return (
     <View style={styles.container}>
-      <Header
-        title={title}
-        showBackButton
-        onBackPress={() => back("./")}
-      />
+      <Header title={title} showBackButton onBackPress={() => back("./")} />
 
       <FlatList
         data={blocks}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() =>
-              router.push({
-                pathname: "./blocks/plots",
-                params: {
-                  phase: JSON.stringify(parsedPhase),
-                  block: JSON.stringify({ id: item.id, data: item.data }),
-                },
-              })
-            }
-          >
-            <Text style={styles.itemText}>
-              {item.id.replace(/block_/i, "Block ")}
-            </Text>
-            <Text>Plots available: {item.plots_available}</Text>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          const blockColor = getColorForBlock(
+            item.plots_available,
+            item.total_plots
+          );
+          return (
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() =>
+                router.push({
+                  pathname: "./blocks/plots",
+                  params: {
+                    phase: JSON.stringify(parsedPhase),
+                    block: JSON.stringify({ id: item.id, data: item.data }),
+                  },
+                })
+              }
+            >
+              <Text style={[styles.itemText, { color: blockColor }]}>
+                {item.id.replace(/block_/i, "Block ")}
+              </Text>
+              <Text>
+                Plots available: {item.plots_available}/{item.total_plots}
+              </Text>
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
