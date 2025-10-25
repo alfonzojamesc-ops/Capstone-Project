@@ -28,7 +28,6 @@ export default function SearchList({ searchQuery }: SearchListProps) {
   const [filtered, setFiltered] = useState<Deceased[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch deceased names from Firestore
   useEffect(() => {
     const fetchDeceased = async () => {
       try {
@@ -73,7 +72,6 @@ export default function SearchList({ searchQuery }: SearchListProps) {
     fetchDeceased();
   }, []);
 
-  // 🔹 Filter when search query changes
   useEffect(() => {
     if (!searchQuery) {
       setFiltered([]);
@@ -91,7 +89,6 @@ export default function SearchList({ searchQuery }: SearchListProps) {
     setFiltered(filteredData);
   }, [searchQuery, deceasedList]);
 
-  // 🔹 Show loading while data is being fetched
   if (loading) {
     return (
       <View style={styles.placeholder}>
@@ -101,7 +98,6 @@ export default function SearchList({ searchQuery }: SearchListProps) {
     );
   }
 
-  // 🔹 Show placeholder before typing
   if (!searchQuery)
     return (
       <View style={styles.placeholder}>
@@ -109,7 +105,6 @@ export default function SearchList({ searchQuery }: SearchListProps) {
       </View>
     );
 
-  // 🔹 Show "no results" only when search is active & no matches found
   if (searchQuery && filtered.length === 0 && !loading)
     return (
       <View style={styles.placeholder}>
@@ -117,7 +112,6 @@ export default function SearchList({ searchQuery }: SearchListProps) {
       </View>
     );
 
-  // 🔹 Show results
   return (
     <FlatList
       data={filtered}
