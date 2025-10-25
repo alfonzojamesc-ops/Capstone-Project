@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import { PersonCardOverlay } from "@/components/person-card";
+import { ReservationFormOverlay } from "@/components/reservation-form-overlay";
 import { db } from "@/firebaseConfig";
 import { Block, Phase, Plot } from "@/types/firestore-types";
 import { router, useLocalSearchParams } from "expo-router";
@@ -25,6 +26,9 @@ export default function PlotsScreen() {
     phase: string;
     block: string;
   }>();
+  const [reservationVisible, setReservationVisible] = useState(false);
+  const [selectedAvailablePlot, setSelectedAvailablePlot] =
+    useState<PlotDoc | null>(null);
 
   const parsedPhase: { id: string; data: Phase } | null = phase
     ? JSON.parse(phase)
@@ -106,8 +110,10 @@ export default function PlotsScreen() {
   };
 
   const handlePlotPress = (plot: PlotDoc) => {
-    // Only open overlay if there is owner/deceased info
-    if (
+    if (plot.data.status === "available") {
+      setSelectedAvailablePlot(plot);
+      setReservationVisible(true);
+    } else if (
       plot.data.status !== "available" &&
       (plot.data.owner || plot.data.deceased)
     ) {
@@ -186,6 +192,14 @@ export default function PlotsScreen() {
           visible={overlayVisible}
           onClose={() => setOverlayVisible(false)}
           plot={selectedPlot}
+        />
+      )}
+
+      {selectedAvailablePlot && (
+        <ReservationFormOverlay
+          visible={reservationVisible}
+          onClose={() => setReservationVisible(false)}
+          targetPlotId={selectedAvailablePlot.id}
         />
       )}
     </View>
