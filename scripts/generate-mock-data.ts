@@ -137,7 +137,9 @@ function generateDeceased() {
   const funeral_home = Math.random() > 0.3 ? randomFrom(funeralHomes) : "";
 
   const randomImageIndex = Math.floor(Math.random() * 100);
-  const image = `https://randomuser.me/api/portraits/med/${base.sex}/${randomImageIndex}.jpg`;
+  const image = `https://randomuser.me/api/portraits/med/${
+    base.sex === "male" ? "men" : "women"
+  }/${randomImageIndex}.jpg`;
   const notes = "No additional notes.";
 
   return {
