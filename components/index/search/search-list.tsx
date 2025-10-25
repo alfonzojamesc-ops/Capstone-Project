@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -21,9 +22,10 @@ interface Deceased {
 
 interface SearchListProps {
   searchQuery: string;
+  onSelect?: (person: Deceased) => void;
 }
 
-export default function SearchList({ searchQuery }: SearchListProps) {
+export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
   const [deceasedList, setDeceasedList] = useState<Deceased[]>([]);
   const [filtered, setFiltered] = useState<Deceased[]>([]);
   const [loading, setLoading] = useState(true);
@@ -117,9 +119,16 @@ export default function SearchList({ searchQuery }: SearchListProps) {
       data={filtered}
       keyExtractor={(_, i) => i.toString()}
       renderItem={({ item }) => (
-        <View style={styles.item}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            console.log("Selected:", item.first_name, item.last_name);
+            onSelect?.(item); // optional callback
+          }}
+          style={styles.item}
+        >
           <Image
-            source={{ uri: item.image || "https://placehold.co/50x50" }}
+            source={{ uri: item.image || "https://via.placeholder.com/50" }}
             style={styles.image}
           />
           <View>
@@ -132,7 +141,7 @@ export default function SearchList({ searchQuery }: SearchListProps) {
               </Text>
             )}
           </View>
-        </View>
+        </TouchableOpacity>
       )}
     />
   );
