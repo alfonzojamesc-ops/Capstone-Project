@@ -1,8 +1,7 @@
 import Header from "@/components/header";
 import { db } from "@/firebaseConfig";
-import { back } from "@/scripts/back";
 import { Block, Plot } from "@/types/firestore-types";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -77,7 +76,17 @@ export default function PlotsScreen() {
         title={title}
         showBackButton
         style={{ backgroundColor: "#fff" }}
-        onBackPress={() => back("./")}
+        onBackPress={() =>
+          router.push({
+            pathname: "./",
+            params: {
+              phase: JSON.stringify({
+                id: parsedBlock.id,
+                data: parsedBlock.data,
+              }),
+            },
+          })
+        }
       />
 
       <FlatList

@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import { db } from "@/firebaseConfig";
+import { back } from "@/scripts/back";
 import { Phase } from "@/types/firestore-types";
 import { useRouter } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
@@ -62,6 +63,7 @@ export default function PhasesScreen() {
         title="Phases"
         showBackButton
         style={{ backgroundColor: "#fff" }}
+        onBackPress={() => back("../")}
       />
       <FlatList
         data={phases}
