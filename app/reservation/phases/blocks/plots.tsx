@@ -140,14 +140,29 @@ export default function PlotsScreen() {
         renderItem={({ item }) => {
           const plotNumber = getPlotNumber(item.id);
           const deceasedName = getDeceasedName(item.data.deceased);
+          const isAvailable = item.data.status === "available";
 
           return (
             <TouchableOpacity
               style={styles.item}
               onPress={() => handlePlotPress(item)}
             >
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                <Text style={styles.itemText}>Plot {plotNumber} |</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 8,
+                }}
+              >
+                <Text
+                  style={[
+                    styles.itemText,
+                    isAvailable && { color: "limegreen" },
+                  ]}
+                >
+                  Plot {plotNumber} |
+                </Text>
                 <Image
                   source={{ uri: item.data.deceased.image }}
                   style={styles.image}
