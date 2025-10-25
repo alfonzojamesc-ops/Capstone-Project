@@ -1,4 +1,3 @@
-import { sampleData } from "@/constants/sample-data";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
@@ -14,19 +13,15 @@ import {
 type PersonCardOverlayProps = {
   visible: boolean;
   onClose: () => void;
-  personId: string;
+  plot: any; 
 };
 
 export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
   visible,
   onClose,
-  personId,
+  plot,
 }) => {
-  const person = sampleData.blocks
-    .flatMap((block) => block.slots)
-    .find((slot) => slot.slot === personId);
-
-  const slideAnim = useRef(new Animated.Value(300)).current; // start offscreen
+  const slideAnim = useRef(new Animated.Value(300)).current;
 
   useEffect(() => {
     Animated.timing(slideAnim, {
@@ -37,7 +32,12 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
     }).start();
   }, [visible, slideAnim]);
 
-  if (!visible) return null; // don't render modal if not visible
+  if (!visible) return null;
+
+  const { owner, deceased, status } = plot.data;
+
+  const showOwner = owner && status !== "available";
+  const showDeceased = deceased && status !== "available";
 
   return (
     <Modal
@@ -46,9 +46,7 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
       animationType="none"
       onRequestClose={onClose}
     >
-      {/* Outer Pressable closes overlay when tapping outside */}
       <Pressable style={styles.overlay} onPress={onClose} />
-      {/* Animated card */}
       <View
         style={[StyleSheet.absoluteFillObject, styles.container]}
         pointerEvents="box-none"
@@ -56,29 +54,46 @@ export const PersonCardOverlay: React.FC<PersonCardOverlayProps> = ({
         <Animated.View
           style={[styles.card, { transform: [{ translateY: slideAnim }] }]}
         >
-          {!person ? (
+          {!(showOwner || showDeceased) ? (
             <>
-              <Text style={styles.errorText}>Person not found</Text>
+              <Text style={styles.errorText}>No details available</Text>
               <Pressable onPress={onClose} style={styles.closeButton}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </Pressable>
             </>
           ) : (
             <>
-              {person.picture && (
-                <Image source={{ uri: person.picture }} style={styles.image} />
+              {showOwner && (
+                <>
+                  <Text style={styles.sectionTitle}>Owner</Text>
+                  <Text style={styles.name}>
+                    {owner.first_name} {owner.last_name}
+                  </Text>
+                </>
               )}
-              <Text style={styles.name}>{person.name}</Text>
-              <Text style={styles.detail}>Age: {person.age}</Text>
-              <Text style={styles.detail}>Sex: {person.gender}</Text>
-              <Text style={styles.detail}>
-                Freed from their mortal coil at:
-              </Text>
-              <Text style={styles.detail}>
-                {person.deathDate instanceof Date
-                  ? person.deathDate.toDateString()
-                  : "Unknown"}
-              </Text>
+
+              {showDeceased && (
+                <>
+                  <Text style={styles.sectionTitle}>Deceased</Text>
+                  {deceased.image && (
+                    <Image
+                      source={{ uri: deceased.image }}
+                      style={styles.image}
+                    />
+                  )}
+                  <Text style={styles.name}>
+                    {deceased.first_name} {deceased.last_name}
+                  </Text>
+                  <Text style={styles.detail}>Sex: {deceased.sex}</Text>
+                  <Text style={styles.detail}>
+                    Date of Birth: {deceased.date_of_birth ?? "Unknown"}
+                  </Text>
+                  <Text style={styles.detail}>
+                    Date of Death: {deceased.date_of_death ?? "Unknown"}
+                  </Text>
+                </>
+              )}
+
               <Pressable onPress={onClose} style={styles.closeButton}>
                 <Text style={styles.closeButtonText}>Close</Text>
               </Pressable>
@@ -106,6 +121,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 5,
     margin: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 8,
+    marginBottom: 4,
   },
   image: {
     width: 100,

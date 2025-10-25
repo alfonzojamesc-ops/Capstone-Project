@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import { PersonCardOverlay } from "@/components/person-card";
 import { db } from "@/firebaseConfig";
 import { Block, Phase, Plot } from "@/types/firestore-types";
 import { router, useLocalSearchParams } from "expo-router";
@@ -9,6 +10,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -18,7 +20,6 @@ interface PlotDoc {
 }
 
 export default function PlotsScreen() {
-  // ✅ Expect both phase and block from the navigation params
   const { phase, block } = useLocalSearchParams<{
     phase: string;
     block: string;
@@ -34,7 +35,9 @@ export default function PlotsScreen() {
   const [plots, setPlots] = useState<PlotDoc[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch plots for this block
+  const [selectedPlot, setSelectedPlot] = useState<PlotDoc | null>(null);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+
   useEffect(() => {
     if (!parsedBlock || !parsedPhase) return;
 
@@ -80,11 +83,11 @@ export default function PlotsScreen() {
       </View>
     );
 
-  // ✅ Convert block ID like "block_1" → "Block 1"
+  // Convert block ID like "block_1" → "Block 1"
   const blockNumber = parsedBlock?.id.replace(/block_/i, "");
   const title = `Plots in Block ${blockNumber}`;
 
-  // ✅ Smart Back Handler (works even after refresh)
+  // Smart Back Handler (works even after refresh)
   const handleBackPress = () => {
     if (router.canGoBack()) {
       router.back(); // normal navigation
@@ -101,6 +104,17 @@ export default function PlotsScreen() {
     }
   };
 
+  const handlePlotPress = (plot: PlotDoc) => {
+    // Only open overlay if there is owner/deceased info
+    if (
+      plot.data.status !== "available" &&
+      (plot.data.owner || plot.data.deceased)
+    ) {
+      setSelectedPlot(plot);
+      setOverlayVisible(true);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -114,16 +128,27 @@ export default function PlotsScreen() {
         data={plots}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => handlePlotPress(item)}
+          >
             <Text style={styles.itemText}>{item.id}</Text>
             <Text>Status: {item.data.status}</Text>
             <Text>
               Owner: {item.data.owner?.first_name ?? "-"}{" "}
               {item.data.owner?.last_name ?? ""}
             </Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
+
+      {selectedPlot && (
+        <PersonCardOverlay
+          visible={overlayVisible}
+          onClose={() => setOverlayVisible(false)}
+          plot={selectedPlot}
+        />
+      )}
     </View>
   );
 }
