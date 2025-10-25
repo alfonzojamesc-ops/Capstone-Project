@@ -1,6 +1,6 @@
 import MyFabMenu from "@/components/index/fab_menu/fab-menu";
 import My3DMap from "@/components/index/my-3dmap-view";
-import MySearchBar from "@/components/index/search-bar";
+import MySearchFeature from "@/components/index/search/search-feature";
 import TitleCard from "@/components/index/title-card";
 import { SafeArea } from "@/components/safe-area";
 import React from "react";
@@ -12,15 +12,18 @@ export default function Index() {
       <View style={styles.mapWrapper}>
         <My3DMap />
       </View>
+
       <View style={styles.overlayWrapper} pointerEvents="box-none">
         <View style={styles.titleWrapper}>
           <TitleCard />
         </View>
+
         <View style={styles.fabWrapper}>
           <MyFabMenu />
         </View>
+
         <View style={styles.searchBarWrapper}>
-          <MySearchBar />
+          <MySearchFeature />
         </View>
       </View>
     </SafeArea>

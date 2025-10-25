@@ -1,22 +1,24 @@
 import Feather from "@expo/vector-icons/Feather";
-import { useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
-const MySearchBar = () => {
-  const [value, setValue] = useState("");
+interface MySearchBarProps {
+  value: string;
+  onChangeText: (val: string) => void;
+}
 
+const MySearchBar = ({ value, onChangeText }: MySearchBarProps) => {
   return (
     <View style={[styles.bar, { backgroundColor: "white" }]}>
       <Feather name="search" color={"black"} size={20} />
       <TextInput
         style={[styles.input, { color: "black" }]}
-        placeholder="Search location"
+        placeholder="Search deceased"
         placeholderTextColor={"grey"}
         value={value}
-        onChangeText={setValue}
+        onChangeText={onChangeText}
       />
       {value ? (
-        <Pressable onPress={() => setValue("")} hitSlop={8}>
+        <Pressable onPress={() => onChangeText("")} hitSlop={8}>
           <Feather name="x" color={"black"} size={20} />
         </Pressable>
       ) : null}

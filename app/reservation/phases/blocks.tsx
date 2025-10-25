@@ -104,7 +104,7 @@ export default function BlocksScreen() {
     if (total === 0) return "#888"; // gray for edge case
     const ratio = available / total;
     if (available === 0) return "firebrick";
-    if (ratio > 0.7) return "orange"; 
+    if (ratio > 0.7) return "orange";
     return "limegreen";
   };
 
