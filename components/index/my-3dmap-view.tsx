@@ -45,7 +45,7 @@ const My3DMap = () => {
       camera={{
         fov: 60,
         far: 120,
-        position: cameraPosition,
+        position: [cameraPosition.x, cameraPosition.y, cameraPosition.z],
       }}
     >
       {SCENE_CONFIG.enableAmbientLight && (
@@ -67,7 +67,11 @@ const My3DMap = () => {
       </Suspense>
 
       {SCENE_CONFIG.enableOrbitControls && (
-        <OrbitControls {...SCENE_CONFIG.orbitControls} target={cameraTarget} />
+        <OrbitControls
+          enableZoom={false}
+          {...SCENE_CONFIG.orbitControls}
+          target={cameraTarget}
+        />
       )}
     </Canvas>
   );
