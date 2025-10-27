@@ -1,7 +1,7 @@
 import { useCamera } from "@/hooks/camera-context";
 import { OrbitControls } from "@react-three/drei/native";
-import { Canvas, Vector3 } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Canvas, useThree, Vector3 } from "@react-three/fiber";
+import { Suspense, useEffect } from "react";
 import * as THREE from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
@@ -27,27 +27,19 @@ const SCENE_CONFIG = {
       intensity: Math.PI / 20,
     },
   },
-  enableOrbitControls: true,
-  orbitControls: {
-    enableDamping: true,
-    minDistance: 10,
-    maxDistance: 125,
-    autoRotate: true,
-  },
 };
 
-const My3DMap = () => {
+const SceneContent = () => {
   const { cameraPosition, cameraTarget } = useCamera();
+  const { camera } = useThree();
+
+  useEffect(() => {
+    camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    camera.lookAt(cameraTarget.x, cameraTarget.y, cameraTarget.z);
+  }, [camera, cameraPosition, cameraTarget]);
 
   return (
-    <Canvas
-      {...SCENE_CONFIG.canvas}
-      camera={{
-        fov: 60,
-        far: 120,
-        position: [cameraPosition.x, cameraPosition.y, cameraPosition.z],
-      }}
-    >
+    <>
       {SCENE_CONFIG.enableAmbientLight && (
         <ambientLight {...SCENE_CONFIG.lights.ambient} />
       )}
@@ -66,13 +58,21 @@ const My3DMap = () => {
         </Instances>
       </Suspense>
 
-      {SCENE_CONFIG.enableOrbitControls && (
-        <OrbitControls
-          enableZoom={false}
-          {...SCENE_CONFIG.orbitControls}
-          target={cameraTarget}
-        />
-      )}
+      <OrbitControls
+        // enableZoom={false}
+        // enableRotate={false}
+        // enablePan={false}
+        autoRotate={true}
+        target={cameraTarget}
+      />
+    </>
+  );
+};
+
+const My3DMap = () => {
+  return (
+    <Canvas {...SCENE_CONFIG.canvas}>
+      <SceneContent />
     </Canvas>
   );
 };

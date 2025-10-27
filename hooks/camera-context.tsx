@@ -30,17 +30,23 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
   const setCamera = (
     target: Vector3 | number[],
     position?: Vector3 | number[],
-    distance: number = 0
+    distance: number = 1
   ) => {
-    const targetVector = Array.isArray(target)
-      ? new Vector3(...target)
-      : target.clone();
+    const targetVector = (
+      Array.isArray(target) ? new Vector3(...target) : target
+    )
+      .clone()
+      .add(new Vector3(0, 1.5, 0));
 
-    const positionVector = position
-      ? Array.isArray(position)
-        ? new Vector3(...position)
-        : position.clone()
-      : targetVector.clone().add(new Vector3(distance, distance, distance * 2));
+    const positionVector = (
+      position
+        ? Array.isArray(position)
+          ? new Vector3(...position)
+          : position.clone()
+        : targetVector
+    )
+      .clone()
+      .add(new Vector3(0, distance * 2, distance * 4));
 
     setCameraPosition(positionVector);
     setCameraTarget(targetVector);
