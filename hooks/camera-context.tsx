@@ -34,9 +34,9 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
   ) => {
     const offset = new Vector3(distance * 0, distance * 2, -(distance * 6));
 
-    const targetVector = Array.isArray(target)
-      ? new Vector3(...target)
-      : target;
+    const targetVector = (
+      Array.isArray(target) ? new Vector3(...target) : target
+    ).clone();
 
     const positionVector = (
       position
@@ -44,7 +44,9 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
           ? new Vector3(...position)
           : position
         : targetVector
-    ).add(offset);
+    )
+      .clone()
+      .add(offset);
 
     demandCameraPosition(positionVector);
     demandCameraTarget(targetVector);
