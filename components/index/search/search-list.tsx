@@ -1,5 +1,6 @@
 import { db } from "@/firebaseConfig";
 import { useCamera } from "@/hooks/camera-context";
+import { parseCoords } from "@/scripts/change-camera";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -11,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Vector3 } from "three";
 
 interface Deceased {
   first_name: string;
@@ -32,14 +32,7 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
   const [filtered, setFiltered] = useState<Deceased[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { setCameraPosition, setCameraTarget } = useCamera(); // Access the set functions from the context
-
-  // Function to change the camera view
-  const changeCamera = () => {
-    // Update the camera position and target with new values
-    setCameraPosition(new Vector3(...[103.44676208, -0.92499995, -56.93467331]));  // Set new camera position
-    setCameraTarget(new Vector3(...[103.44676208, -0.92499995, -56.93467331]));  // Set new camera target
-  };
+  const { setCameraPosition, setCameraTarget } = useCamera();
 
   useEffect(() => {
     const fetchDeceased = async () => {
@@ -133,7 +126,11 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            changeCamera();
+            const coords = parseCoords([
+              105.36354065, -0.92499995, -53.42383194,
+            ]);
+            setCameraPosition(coords['position']);
+            setCameraTarget(coords['target']);
             console.log("Selected:", item.first_name, item.last_name);
             onSelect?.(item); // optional callback
           }}

@@ -10,7 +10,7 @@ import { Instances, Model } from "./my-3dmap-model";
 const SCENE_CONFIG = {
   enableCameraMemory: true,
   canvas: {
-    camera: { fov: 45, position: [-44.33, 9.71, 43.54] as Vector3, far: 120 },
+    camera: { fov: 60, position: [-44.33, 9.71, 43.54] as Vector3, far: 120 },
     style: { backgroundColor: "#aaffff" },
   },
   enableFog: true,
