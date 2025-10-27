@@ -45,6 +45,23 @@ const SceneContent = () => {
     camera.lookAt(cameraTarget.x, cameraTarget.y, cameraTarget.z);
   }, [camera, cameraPosition, cameraTarget]);
 
+  useEffect(() => {
+    // Function to log camera position and target
+    const logCameraData = () => {
+      // const cameraLog = [
+      //   camera.position.toArray(),
+      //   camera.getWorldDirection(new THREE.Vector3()).toArray(), // Get world direction as the target
+      // ];
+      console.log( camera.position.toArray().toLocaleString());
+    };
+
+    // Set interval to log every 2 seconds
+    const intervalId = setInterval(logCameraData, 2000);
+
+    // Clear the interval on cleanup
+    return () => clearInterval(intervalId);
+  }, [camera]);
+
   return (
     <>
       {SCENE_CONFIG.enableAmbientLight && (
@@ -69,7 +86,7 @@ const SceneContent = () => {
         // enableZoom={false}
         // enableRotate={false}
         // enablePan={false}
-        autoRotate={true}
+        // autoRotate={true}
         target={cameraTarget}
       />
     </>
