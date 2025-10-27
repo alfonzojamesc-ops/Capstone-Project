@@ -11,7 +11,11 @@ export const parseCoords = (
     ? Array.isArray(setpos)
       ? new Vector3(...setpos)
       : setpos
-    : new Vector3(target.x, target.y + distance, target.z + distance * 2);
+    : new Vector3(
+        target.x + distance,
+        target.y + distance,
+        target.z + distance * 2
+      );
 
   return { target, position };
 };
