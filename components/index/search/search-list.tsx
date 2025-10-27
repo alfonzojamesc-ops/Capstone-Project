@@ -131,7 +131,7 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
           onPress={() => {
             if (item.grid_coordinates) {
               const [x, _, z] = item.grid_coordinates;
-              setCamera([x, 0, z]); 
+              setCamera([x, 0, z]);
             }
             console.log("Selected:", item.first_name, item.last_name);
             onSelect?.(item);

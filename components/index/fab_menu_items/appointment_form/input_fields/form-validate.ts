@@ -13,7 +13,6 @@ const REQUIRED_FIELDS: (keyof InputFields)[] = [
   "email",
 ];
 
-// ---------- Field-level validation ----------
 export const getFieldError = (
   field: keyof InputFields,
   value: string | Date,
@@ -60,7 +59,6 @@ export const getFieldError = (
   return undefined;
 };
 
-// ---------- Full form validation ----------
 export const formValidate = (form: InputFields): string | null => {
   for (const field of REQUIRED_FIELDS) {
     const error = getFieldError(field, form[field], form);

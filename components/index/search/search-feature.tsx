@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#ccc",
-    elevation: 8, // Android shadow
-    shadowColor: "#000", // iOS shadow
+    elevation: 8, 
+    shadowColor: "#000", 
     shadowOpacity: 0.25,
     shadowRadius: 6,
     overflow: "hidden",

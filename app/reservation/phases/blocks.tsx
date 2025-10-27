@@ -72,7 +72,6 @@ export default function BlocksScreen() {
           })
         );
 
-        // Sort blocks numerically
         data.sort((a, b) => {
           const numA = parseInt(a.id.split("block_")[1]);
           const numB = parseInt(b.id.split("block_")[1]);
@@ -101,7 +100,7 @@ export default function BlocksScreen() {
   const title = `Blocks of Phase ${phaseNumber}`;
 
   const getColorForBlock = (available: number, total: number) => {
-    if (total === 0) return "#888"; // gray for edge case
+    if (total === 0) return "#888"; 
     const ratio = available / total;
     if (available === 0) return "firebrick";
     if (ratio > 0.7) return "orange";

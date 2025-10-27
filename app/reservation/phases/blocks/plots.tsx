@@ -88,16 +88,13 @@ export default function PlotsScreen() {
       </View>
     );
 
-  // Convert block ID like "block_1" → "Block 1"
   const blockNumber = parsedBlock?.id.replace(/block_/i, "");
   const title = `Plots in Block ${blockNumber}`;
 
-  // Smart Back Handler (works even after refresh)
   const handleBackPress = () => {
     if (router.canGoBack()) {
-      router.back(); // normal navigation
+      router.back(); 
     } else if (parsedPhase) {
-      // fallback when refreshed
       router.push({
         pathname: "../../phases/blocks",
         params: {
@@ -122,13 +119,11 @@ export default function PlotsScreen() {
     }
   };
 
-  // Helper function to get plot number
   const getPlotNumber = (id: string) => {
     const parts = id.split("_");
-    return parts[parts.length - 1]; // Get last part as plot number (e.g. "1" from "ph0_blk1_plot_1")
+    return parts[parts.length - 1]; 
   };
 
-  // Helper function to get deceased name
   const getDeceasedName = (deceased: {
     first_name: string;
     last_name: string;

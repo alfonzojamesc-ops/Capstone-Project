@@ -146,7 +146,6 @@ export const FormOverlay: React.FC<AppointmentFormOverlayProps> = ({
   );
 };
 
-// ---------- Styles ----------
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,

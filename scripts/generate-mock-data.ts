@@ -34,22 +34,19 @@ export async function generateFullData() {
 
     const plots: Record<string, Plot> = {};
 
-    // ---- Generate plots with randomized status ----
     for (let plotNum = 1; plotNum <= max_plots; plotNum++) {
       const plotId = `${phase}_blk${blockNum}_plot_${plotNum}`;
 
-      // Randomly decide whether the plot should be available or non-available
       const status =
         Math.random() > 0.5
           ? "available"
           : randomFrom(["reserved", "occupied"]);
 
       if (status === "available") {
-        // ---- Available plot ----
         plots[plotId] = {
           grid_coordinates: randomGridCoordinate(),
           status,
-          maintenance_status: "", // Empty for available
+          maintenance_status: "", 
           owner: {
             sex: "",
             first_name: "",
@@ -78,7 +75,6 @@ export async function generateFullData() {
           },
         };
       } else {
-        // ---- Non-available plot (reserved or occupied) ----
         const maintenance_status = randomFrom(maintenanceStatuses);
         const deceased = generateDeceased();
         const owner = generateOwner(deceased.last_name, deceased.middle_name);
@@ -93,27 +89,22 @@ export async function generateFullData() {
       }
     }
 
-    // Add the block data to the main data structure
     data.blocks[blockKey] = {
       max_plots,
       plots,
     };
   }
 
-  // Output the generated data
   console.log(JSON.stringify(data, null, 2));
 }
 
-// Shuffle array utility function
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    [array[i], array[j]] = [array[j], array[i]];
   }
 }
 
-// main helpers
-// generate a deceased record (extends shared info)
 function generateDeceased() {
   const base = generateInfo(new Date(1925, 0, 1), new Date(1975, 0, 1));
 
@@ -153,7 +144,6 @@ function generateDeceased() {
   };
 }
 
-// generate an owner record (extends shared info)
 function generateOwner(
   relativeLastName: null | string = null,
   relativeMiddleName: null | string = null
@@ -176,7 +166,6 @@ function generateOwner(
   };
 }
 
-// sub-helpers
 function generateInfo(
   dateRangeStart: Date,
   dateRangeEnd: Date,

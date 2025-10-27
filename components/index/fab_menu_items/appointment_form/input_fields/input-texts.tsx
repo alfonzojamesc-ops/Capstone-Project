@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { getFieldError } from "./form-validate";
 
-// ---------- Types ----------
+
 export type InputFields = {
   first_name: string;
   middle_name: string;
@@ -20,7 +20,6 @@ type InputTextsProps = {
   setField: (key: keyof InputFields, value: string) => void;
 };
 
-// ---------- Component ----------
 export const InputTexts: React.FC<InputTextsProps> = ({
   form,
   touched,
@@ -63,7 +62,6 @@ export const InputTexts: React.FC<InputTextsProps> = ({
   );
 };
 
-// ---------- Styles ----------
 const styles = StyleSheet.create({
   inputWrapper: { marginBottom: 12 },
   input: {
