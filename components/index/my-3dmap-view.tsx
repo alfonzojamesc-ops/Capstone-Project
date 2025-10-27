@@ -1,5 +1,5 @@
 import { useCamera } from "@/hooks/camera-context";
-import { OrbitControls } from "@react-three/drei/native";
+import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree, Vector3 } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
 import * as THREE from "three";
