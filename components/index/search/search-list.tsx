@@ -1,5 +1,4 @@
 import { db } from "@/firebaseConfig";
-import { useCamera } from "@/hooks/camera-context";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -30,8 +29,6 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
   const [deceasedList, setDeceasedList] = useState<Deceased[]>([]);
   const [filtered, setFiltered] = useState<Deceased[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const { changeCamera } = useCamera();
 
   useEffect(() => {
     const fetchDeceased = async () => {
@@ -125,9 +122,8 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            changeCamera([105.36354065, -0.92499995, -53.42383194]);
             console.log("Selected:", item.first_name, item.last_name);
-            onSelect?.(item); 
+            onSelect?.(item);
           }}
           style={styles.item}
         >

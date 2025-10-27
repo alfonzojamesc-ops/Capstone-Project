@@ -7,7 +7,6 @@ import { Instances, Model } from "./my-3dmap-model";
 
 const SCENE_CONFIG = {
   canvas: {
-    camera: { fov: 60, far: 120 },
     style: { backgroundColor: "#aaffff" },
   },
   enableFog: true,
@@ -44,7 +43,11 @@ const My3DMap = () => {
   return (
     <Canvas
       {...SCENE_CONFIG.canvas}
-      camera={{ position: cameraPosition, near: 1, far: 120 }}
+      camera={{
+        fov: 60,
+        far: 120,
+        position: cameraPosition,
+      }}
     >
       {SCENE_CONFIG.enableAmbientLight && (
         <ambientLight {...SCENE_CONFIG.lights.ambient} />

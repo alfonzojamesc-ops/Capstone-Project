@@ -6,9 +6,9 @@ interface CameraContextType {
   cameraTarget: Vector3;
   setCameraPosition: (position: Vector3) => void;
   setCameraTarget: (target: Vector3) => void;
-  changeCamera: (
-    newTarget: Vector3 | number[],
-    newPos?: Vector3 | number[],
+  setCamera: (
+    target: Vector3 | number[],
+    position?: Vector3 | number[],
     distance?: number
   ) => void;
 }
@@ -27,27 +27,23 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
     new Vector3(-29.46, 3.16, 37.05)
   );
 
-  const changeCamera = (
-    newTarget: Vector3 | number[],
-    newPos?: Vector3 | number[],
-    distance: number = 0.000000001
+  const setCamera = (
+    target: Vector3 | number[],
+    position?: Vector3 | number[],
+    distance: number = 1
   ) => {
-    const target = Array.isArray(newTarget)
-      ? new Vector3(...newTarget)
-      : newTarget;
+    const targetVector = Array.isArray(target)
+      ? new Vector3(...target)
+      : target;
 
-    const position = newPos
-      ? Array.isArray(newPos)
-        ? new Vector3(...newPos)
-        : newPos
-      : new Vector3(
-          target.x + distance,
-          target.y + distance,
-          target.z + distance * 2
-        );
+    const positionVector = position
+      ? Array.isArray(position)
+        ? new Vector3(...position)
+        : position
+      : targetVector.clone().add(new Vector3(distance, distance, distance * 2));
 
-    setCameraPosition(position);
-    setCameraTarget(target);
+    setCameraPosition(positionVector);
+    setCameraTarget(targetVector);
   };
 
   return (
@@ -57,7 +53,7 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
         cameraTarget,
         setCameraPosition,
         setCameraTarget,
-        changeCamera,
+        setCamera,
       }}
     >
       {children}

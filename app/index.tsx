@@ -3,14 +3,24 @@ import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchFeature from "@/components/index/search/search-feature";
 import TitleCard from "@/components/index/title-card";
 import { SafeArea } from "@/components/safe-area";
+import { useCamera } from "@/hooks/camera-context";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
+  const { setCamera } = useCamera();
   return (
     <SafeArea>
       <View style={styles.mapWrapper}>
         <My3DMap />
+        <Pressable
+          style={{ position: "absolute", top: "50%", left: "50%" }}
+          onPress={() => {
+            setCamera([105.36354065, -0.92499995, -53.42383194]);
+          }}
+        >
+          <Text>Test</Text>
+        </Pressable>
       </View>
 
       <View style={styles.overlayWrapper} pointerEvents="box-none">
