@@ -12,6 +12,8 @@ const SceneContent = () => {
   const currentPosition = useRef(new THREE.Vector3().copy(camera.position));
   const currentTarget = useRef(new THREE.Vector3().copy(demandedCameraTarget));
 
+  const speed = 20;
+
   useFrame((state, delta) => {
     const targetPosition = new THREE.Vector3(
       demandedCameraPosition.x,
@@ -26,8 +28,6 @@ const SceneContent = () => {
 
     const positionDiff = currentPosition.current.distanceTo(targetPosition);
     const targetDiff = currentTarget.current.distanceTo(targetTarget);
-
-    const speed = 20;
 
     const tPosition = Math.min(1, (speed * delta) / positionDiff);
     const tTarget = Math.min(1, (speed * delta) / targetDiff);
@@ -63,7 +63,7 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls target={demandedCameraTarget} autoRotate={false} />
+      <OrbitControls target={demandedCameraTarget} autoRotate={true} />
     </>
   );
 };
