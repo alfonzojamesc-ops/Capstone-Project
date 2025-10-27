@@ -21,10 +21,10 @@ const CameraContext = createContext<CameraContextType | undefined>(undefined);
 
 export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
   const [cameraPosition, setCameraPosition] = useState<Vector3>(
-    new Vector3(-44.33, 9.71, 43.54)
+    new Vector3(-45.155, 6.192, 42.063)
   );
   const [cameraTarget, setCameraTarget] = useState<Vector3>(
-    new Vector3(-29.46, 3.16, 37.05)
+    new Vector3(-32.853, 0, 36.792)
   );
 
   const setCamera = (
