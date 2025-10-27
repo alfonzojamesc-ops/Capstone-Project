@@ -2,11 +2,11 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 import { Vector3 } from "three";
 
 interface CameraContextType {
-  cameraPosition: Vector3;
-  cameraTarget: Vector3;
-  setCameraPosition: (position: Vector3) => void;
-  setCameraTarget: (target: Vector3) => void;
-  setCamera: (
+  demandedCameraPosition: Vector3;
+  demandedCameraTarget: Vector3;
+  demandCameraPosition: (position: Vector3) => void;
+  demandCameraTarget: (target: Vector3) => void;
+  demandCamera: (
     target: Vector3 | number[],
     position?: Vector3 | number[],
     distance?: number
@@ -20,10 +20,10 @@ interface CameraProviderProps {
 const CameraContext = createContext<CameraContextType | undefined>(undefined);
 
 export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
-  const [cameraPosition, setCameraPosition] = useState<Vector3>(
+  const [demandedCameraPosition, demandCameraPosition] = useState<Vector3>(
     new Vector3(-45.155, 6.192, 42.063)
   );
-  const [cameraTarget, setCameraTarget] = useState<Vector3>(
+  const [demandedCameraTarget, demandCameraTarget] = useState<Vector3>(
     new Vector3(-32.853, 0, 36.792)
   );
 
@@ -32,6 +32,8 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
     position?: Vector3 | number[],
     distance: number = 1.5
   ) => {
+    const offset = new Vector3(distance * 0, distance * 2, -(distance * 6));
+
     const targetVector = Array.isArray(target)
       ? new Vector3(...target)
       : target;
@@ -40,24 +42,22 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
       position
         ? Array.isArray(position)
           ? new Vector3(...position)
-          : position.clone()
+          : position
         : targetVector
-    )
-      .clone()
-      .add(new Vector3(0, distance * 2, distance * 4));
+    ).add(offset);
 
-    setCameraPosition(positionVector);
-    setCameraTarget(targetVector);
+    demandCameraPosition(positionVector);
+    demandCameraTarget(targetVector);
   };
 
   return (
     <CameraContext.Provider
       value={{
-        cameraPosition,
-        cameraTarget,
-        setCameraPosition,
-        setCameraTarget,
-        setCamera,
+        demandedCameraPosition: demandedCameraPosition,
+        demandedCameraTarget: demandedCameraTarget,
+        demandCameraPosition: demandCameraPosition,
+        demandCameraTarget: demandCameraTarget,
+        demandCamera: setCamera,
       }}
     >
       {children}

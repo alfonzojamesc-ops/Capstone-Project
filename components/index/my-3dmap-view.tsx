@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
 const SceneContent = () => {
-  const { cameraPosition, cameraTarget } = useCamera();
+  const { demandedCameraPosition, demandedCameraTarget } = useCamera();
   const { camera } = useThree();
 
   useEffect(() => {
@@ -16,9 +16,17 @@ const SceneContent = () => {
   }, [camera]);
 
   useEffect(() => {
-    camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
-    camera.lookAt(cameraTarget.x, cameraTarget.y, cameraTarget.z);
-  }, [camera, cameraPosition, cameraTarget]);
+    camera.position.set(
+      demandedCameraPosition.x,
+      demandedCameraPosition.y,
+      demandedCameraPosition.z
+    );
+    camera.lookAt(
+      demandedCameraTarget.x,
+      demandedCameraTarget.y,
+      demandedCameraTarget.z
+    );
+  }, [camera, demandedCameraPosition, demandedCameraTarget]);
 
   useEffect(() => {
     const logCameraData = () => {
@@ -50,7 +58,7 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls target={cameraTarget} />
+      <OrbitControls target={demandedCameraTarget} />
     </>
   );
 };

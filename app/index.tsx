@@ -8,10 +8,10 @@ import React, { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
-  const { cameraPosition, cameraTarget } = useCamera();
+  const { demandedCameraPosition, demandedCameraTarget } = useCamera();
   useEffect(() => {
-    console.log(cameraTarget);
-  }, [cameraTarget]);
+    console.log(demandedCameraTarget);
+  }, [demandedCameraTarget]);
   return (
     <SafeArea>
       <View style={styles.mapWrapper}>
@@ -19,7 +19,7 @@ export default function Index() {
         <Pressable
           style={{ position: "absolute", top: "50%", left: "50%" }}
           onPress={() => {
-            console.log(cameraTarget);
+            console.log(demandedCameraTarget);
           }}
         >
           <Text>Log Camera Pos</Text>
