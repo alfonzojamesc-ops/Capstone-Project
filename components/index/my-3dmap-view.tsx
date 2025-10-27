@@ -17,7 +17,6 @@ const SceneContent = () => {
   const speed = 20;
 
   const damping = 0.1;
-
   useFrame((state, delta) => {
     const targetPosition = new THREE.Vector3(
       demandedCameraPosition.x,
@@ -46,6 +45,8 @@ const SceneContent = () => {
     }
 
     if (controlsRef.current) {
+      if (targetDiff > 0.001)
+        controlsRef.current.target.copy(demandedCameraTarget);
       controlsRef.current.update();
     }
   });
