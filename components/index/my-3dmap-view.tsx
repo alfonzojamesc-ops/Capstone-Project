@@ -67,7 +67,6 @@ const My3DMap = () => {
     return () => {
       sub.remove();
       if (currentOrbit) {
-        // 👈 use the copied ref
         cameraPos = currentOrbit.object.position.toArray();
         cameraPov = currentOrbit.target.toArray();
       }
@@ -79,15 +78,19 @@ const My3DMap = () => {
       {isFocused && isActive && (
         <>
           {SCENE_CONFIG.enableAmbientLight && (
+            // @ts-expect-error TS(2339): Property 'ambientLight' does not exist on type 'JSX.Intri...
             <ambientLight {...SCENE_CONFIG.lights.ambient} />
           )}
 
+          {/* @ts-expect-error TS(2339): Property 'directionalLight' does not exist on type 'JSX.I... */}
           <directionalLight {...SCENE_CONFIG.lights.directional1} />
 
           {SCENE_CONFIG.enableBackLight && (
+            // @ts-expect-error TS(2339): Property 'directionalLight' does not exist on type 'JSX.I...
             <directionalLight {...SCENE_CONFIG.lights.directional2} />
           )}
 
+          {/* @ts-expect-error TS(2339): Property 'fog' does not exist on type 'JSX.IntrinsicEleme... */}
           {SCENE_CONFIG.enableFog && <fog {...SCENE_CONFIG.fog} />}
 
           <Suspense>
