@@ -9,6 +9,8 @@ const SceneContent = () => {
   const { demandedCameraPosition, demandedCameraTarget } = useCamera();
   const { camera } = useThree();
 
+  const controlsRef = useRef();
+
   const currentPosition = useRef(new THREE.Vector3().copy(camera.position));
   const currentTarget = useRef(new THREE.Vector3().copy(demandedCameraTarget));
 
@@ -41,6 +43,9 @@ const SceneContent = () => {
       currentTarget.current.lerp(targetTarget, tTarget);
       camera.lookAt(currentTarget.current);
     }
+
+    controlsRef.current.target.copy(currentTarget.current);
+    controlsRef.current.update();
   });
 
   useEffect(() => {
@@ -63,7 +68,7 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls target={demandedCameraTarget} autoRotate={true} />
+      <OrbitControls ref={controlsRef} />
     </>
   );
 };
