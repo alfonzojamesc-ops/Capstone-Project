@@ -34,7 +34,6 @@ const SCENE_CONFIG = {
     maxDistance: 125,
     autoRotate: true,
   },
-  enableCameraLogging: false,
 };
 
 const My3DMap = () => {
