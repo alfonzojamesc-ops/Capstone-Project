@@ -19,6 +19,7 @@ interface Deceased {
   image?: string;
   date_of_birth?: string;
   date_of_death?: string;
+  grid_coordinates?: number[];
 }
 
 interface SearchListProps {
@@ -58,8 +59,12 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
 
             plotsSnap.forEach((plotDoc) => {
               const plotData = plotDoc.data() as any;
-              if (plotData.deceased) {
-                allDeceased.push(plotData.deceased);
+              if (plotData.deceased && plotData.grid_coordinates) {
+                const deceasedWithCoordinates = {
+                  ...plotData.deceased,
+                  grid_coordinates: plotData.grid_coordinates,
+                };
+                allDeceased.push(deceasedWithCoordinates);
               }
             });
           }
@@ -124,7 +129,10 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            setCamera([105.36354065, 0, -53.42383194]);
+            if (item.grid_coordinates) {
+              const [x, _, z] = item.grid_coordinates;
+              setCamera([x, 0, z]); 
+            }
             console.log("Selected:", item.first_name, item.last_name);
             onSelect?.(item);
           }}
