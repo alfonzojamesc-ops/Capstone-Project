@@ -35,6 +35,7 @@ const SceneContent = () => {
 
   useEffect(() => {
     // @ts-expect-error TS(2339): Property 'fov' does not exist on type 'Camera'. Property ...
+    // ok to ignore, don't mind this
     camera.fov = 60;
     camera.far = 120;
     camera.updateProjectionMatrix();
@@ -46,19 +47,12 @@ const SceneContent = () => {
   }, [camera, cameraPosition, cameraTarget]);
 
   useEffect(() => {
-    // Function to log camera position and target
     const logCameraData = () => {
-      // const cameraLog = [
-      //   camera.position.toArray(),
-      //   camera.getWorldDirection(new THREE.Vector3()).toArray(), // Get world direction as the target
-      // ];
       console.log( camera.position.toArray().toLocaleString());
     };
 
-    // Set interval to log every 2 seconds
     const intervalId = setInterval(logCameraData, 2000);
 
-    // Clear the interval on cleanup
     return () => clearInterval(intervalId);
   }, [camera]);
 
