@@ -124,7 +124,7 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
-            setCamera([105.36354065, -0.92499995, -53.42383194]);
+            setCamera([105.36354065, 0, -53.42383194]);
             console.log("Selected:", item.first_name, item.last_name);
             onSelect?.(item);
           }}
