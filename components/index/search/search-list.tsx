@@ -127,7 +127,7 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
           onPress={() => {
             changeCamera([105.36354065, -0.92499995, -53.42383194]);
             console.log("Selected:", item.first_name, item.last_name);
-            onSelect?.(item); // optional callback
+            onSelect?.(item); 
           }}
           style={styles.item}
         >

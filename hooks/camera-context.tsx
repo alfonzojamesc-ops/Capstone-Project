@@ -1,6 +1,6 @@
 import { parseCoords } from "@/scripts/change-camera";
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { Vector3 } from "three"; // Correct import from 'three'
+import { Vector3 } from "three"; 
 
 interface CameraContextType {
   cameraPosition: Vector3;
@@ -15,7 +15,7 @@ interface CameraContextType {
 }
 
 interface CameraProviderProps {
-  children: ReactNode; // This is where the `children` prop type is added
+  children: ReactNode; 
 }
 
 const CameraContext = createContext<CameraContextType | undefined>(undefined);
@@ -28,7 +28,6 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
     new Vector3(-29.46, 3.16, 37.05)
   );
 
-  // The changeCamera function which will set the new camera position and target
   const changeCamera = (
     newTarget: Vector3 | number[],
     newPos?: Vector3 | number[],
@@ -46,7 +45,7 @@ export const CameraProvider: React.FC<CameraProviderProps> = ({ children }) => {
         cameraTarget,
         setCameraPosition,
         setCameraTarget,
-        changeCamera, // Expose the changeCamera function
+        changeCamera,
       }}
     >
       {children}
