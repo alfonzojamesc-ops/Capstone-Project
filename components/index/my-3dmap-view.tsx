@@ -43,8 +43,8 @@ const SCENE_CONFIG = {
   enableCameraLogging: false,
 };
 
-let cameraPos: number[] | null = null;
-let cameraPov: number[] | null = null;
+let cameraPosition: number[] | null = null;
+let cameraTarget: number[] | null = null;
 
 const My3DMap = () => {
   const isFocused = useIsFocused();
@@ -58,17 +58,17 @@ const My3DMap = () => {
 
     const currentOrbit = orbitRef.current;
 
-    if (currentOrbit && cameraPos && cameraPov) {
-      currentOrbit.object.position.fromArray(cameraPos);
-      currentOrbit.target.fromArray(cameraPov);
+    if (currentOrbit && cameraPosition && cameraTarget) {
+      currentOrbit.object.position.fromArray(cameraPosition);
+      currentOrbit.target.fromArray(cameraTarget);
       currentOrbit.update();
     }
 
     return () => {
       sub.remove();
       if (currentOrbit) {
-        cameraPos = currentOrbit.object.position.toArray();
-        cameraPov = currentOrbit.target.toArray();
+        cameraPosition = currentOrbit.object.position.toArray();
+        cameraTarget = currentOrbit.target.toArray();
       }
     };
   }, []);
