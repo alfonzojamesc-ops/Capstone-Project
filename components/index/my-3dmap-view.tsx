@@ -1,3 +1,4 @@
+import { useCamera } from "@/hooks/camera-context";
 import { useIsFocused } from "@react-navigation/native";
 import { OrbitControls } from "@react-three/drei/native";
 import { Canvas, useFrame, Vector3 } from "@react-three/fiber";
@@ -34,8 +35,6 @@ const SCENE_CONFIG = {
   orbitControls: {
     target: [-29.46, 3.16, 37.05] as Vector3,
     enableDamping: true,
-    // enableZoom: true,
-    // zoomSpeed: 0.5,
     minDistance: 10,
     maxDistance: 125,
     autoRotate: true,
@@ -43,11 +42,9 @@ const SCENE_CONFIG = {
   enableCameraLogging: false,
 };
 
-let cameraPosition: number[] | null = null;
-let cameraTarget: number[] | null = null;
-
 const My3DMap = () => {
   const isFocused = useIsFocused();
+  const { cameraPosition, cameraTarget } = useCamera(); // Using the camera context
   const [isActive, setIsActive] = useState(true);
   const orbitRef = useRef<any>(null);
 
@@ -59,19 +56,15 @@ const My3DMap = () => {
     const currentOrbit = orbitRef.current;
 
     if (currentOrbit && cameraPosition && cameraTarget) {
-      currentOrbit.object.position.fromArray(cameraPosition);
-      currentOrbit.target.fromArray(cameraTarget);
+      currentOrbit.object.position.copy(cameraPosition); // Directly using camera position from context
+      currentOrbit.target.copy(cameraTarget); // Using camera target from context
       currentOrbit.update();
     }
 
     return () => {
       sub.remove();
-      if (currentOrbit) {
-        cameraPosition = currentOrbit.object.position.toArray();
-        cameraTarget = currentOrbit.target.toArray();
-      }
     };
-  }, []);
+  }, [cameraPosition, cameraTarget]); // Re-run effect when camera state changes
 
   return (
     <Canvas {...SCENE_CONFIG.canvas}>
