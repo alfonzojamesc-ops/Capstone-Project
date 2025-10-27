@@ -34,6 +34,13 @@ const SceneContent = () => {
   const { camera } = useThree();
 
   useEffect(() => {
+    // @ts-expect-error TS(2339): Property 'fov' does not exist on type 'Camera'. Property ...
+    camera.fov = 60;
+    camera.far = 120;
+    camera.updateProjectionMatrix();
+  }, [camera]);
+
+  useEffect(() => {
     camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
     camera.lookAt(cameraTarget.x, cameraTarget.y, cameraTarget.z);
   }, [camera, cameraPosition, cameraTarget]);
