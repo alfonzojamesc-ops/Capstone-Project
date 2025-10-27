@@ -9,13 +9,13 @@ import { Instances, Model } from "./my-3dmap-model";
 const SCENE_CONFIG = {
   enableCameraMemory: true,
   canvas: {
-    camera: { fov: 45, position: [-44.33, 9.71, 43.54] as Vector3, far: 100 },
+    camera: { fov: 45, position: [-44.33, 9.71, 43.54] as Vector3, far: 120 },
     style: { backgroundColor: "#aaffff" },
   },
   enableFog: true,
   fog: {
     attach: "fog",
-    args: ["#aaffff", 40, 100] as ConstructorParameters<typeof THREE.Fog>,
+    args: ["#aaffff", 90, 120] as ConstructorParameters<typeof THREE.Fog>,
   },
   enableAmbientLight: true,
   enableBackLight: true,
