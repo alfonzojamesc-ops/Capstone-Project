@@ -16,6 +16,8 @@ const SceneContent = () => {
 
   const speed = 20;
 
+  const damping = 0.1;
+
   useFrame((state, delta) => {
     const targetPosition = new THREE.Vector3(
       demandedCameraPosition.x,
@@ -31,21 +33,21 @@ const SceneContent = () => {
     const positionDiff = currentPosition.current.distanceTo(targetPosition);
     const targetDiff = currentTarget.current.distanceTo(targetTarget);
 
-    const tPosition = Math.min(1, (speed * delta) / positionDiff);
-    const tTarget = Math.min(1, (speed * delta) / targetDiff);
-
     if (positionDiff > 0.001) {
-      currentPosition.current.lerp(targetPosition, tPosition);
+      // Interpolate with damping to smooth movement
+      currentPosition.current.lerp(targetPosition, damping);
       camera.position.copy(currentPosition.current);
     }
 
     if (targetDiff > 0.001) {
-      currentTarget.current.lerp(targetTarget, tTarget);
+      // Interpolate with damping
+      currentTarget.current.lerp(targetTarget, damping);
       camera.lookAt(currentTarget.current);
     }
 
-    controlsRef.current.target.copy(currentTarget.current);
-    controlsRef.current.update();
+    if (controlsRef.current) {
+      controlsRef.current.update();
+    }
   });
 
   useEffect(() => {
