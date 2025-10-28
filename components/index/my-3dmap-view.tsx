@@ -1,7 +1,7 @@
 import { useCamera } from "@/hooks/camera-context";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useRef } from "react";
 import { Vector3 } from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
@@ -71,12 +71,6 @@ const SceneContent = () => {
     }
   });
 
-  useEffect(() => {
-    camera.fov = 60;
-    camera.far = 120;
-    camera.updateProjectionMatrix();
-  }, [camera]);
-
   return (
     <>
       <ambientLight color="#ffffff" />
@@ -104,7 +98,11 @@ const My3DMap = () => {
   return (
     <Canvas
       style={{ backgroundColor: "#aaffff" }}
-      camera={{ position: new Vector3(-45.155, 6.192, 42.063) }}
+      camera={{
+        position: new Vector3(-45.155, 6.192, 42.063),
+        fov: 60,
+        far: 120,
+      }}
     >
       <SceneContent />
     </Canvas>
