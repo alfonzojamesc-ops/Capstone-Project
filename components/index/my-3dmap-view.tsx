@@ -15,53 +15,40 @@ const SceneContent = () => {
   const currentTarget = useRef(new Vector3().copy(demandedCameraTarget));
 
   const useUniformSpeed = true;
-
   const speed = 30;
   const damping = 0.006;
 
   useFrame((state, delta) => {
-    const targetPosition = new Vector3(
-      demandedCameraPosition.x,
-      demandedCameraPosition.y,
-      demandedCameraPosition.z
-    );
-    const targetTarget = new Vector3(
-      demandedCameraTarget.x,
-      demandedCameraTarget.y,
-      demandedCameraTarget.z
-    );
+    const targetPosition = new Vector3().copy(demandedCameraPosition);
+    const targetTarget = new Vector3().copy(demandedCameraTarget);
 
     const positionDiff = currentPosition.current.distanceTo(targetPosition);
     const targetDiff = currentTarget.current.distanceTo(targetTarget);
 
-    if (useUniformSpeed) {
-      if (positionDiff > 0.001) {
+    if (positionDiff > 0.001) {
+      if (useUniformSpeed) {
         const direction = new Vector3()
           .subVectors(targetPosition, currentPosition.current)
           .normalize();
         const moveDistance = Math.min(speed * delta, positionDiff);
         currentPosition.current.add(direction.multiplyScalar(moveDistance));
-        camera.position.copy(currentPosition.current);
+      } else {
+        currentPosition.current.lerp(targetPosition, damping);
       }
+      camera.position.copy(currentPosition.current);
+    }
 
-      if (targetDiff > 0.001) {
+    if (targetDiff > 0.001) {
+      if (useUniformSpeed) {
         const direction = new Vector3()
           .subVectors(targetTarget, currentTarget.current)
           .normalize();
         const moveDistance = Math.min(speed * delta, targetDiff);
         currentTarget.current.add(direction.multiplyScalar(moveDistance));
-        camera.lookAt(currentTarget.current);
-      }
-    } else {
-      if (positionDiff > 0.001) {
-        currentPosition.current.lerp(targetPosition, damping);
-        camera.position.copy(currentPosition.current);
-      }
-
-      if (targetDiff > 0.001) {
+      } else {
         currentTarget.current.lerp(targetTarget, damping);
-        camera.lookAt(currentTarget.current);
       }
+      camera.lookAt(currentTarget.current);
     }
 
     if (controlsRef.current) {
