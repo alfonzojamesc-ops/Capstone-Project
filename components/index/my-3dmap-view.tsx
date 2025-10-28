@@ -11,8 +11,8 @@ const SceneContent = () => {
 
   const controlsRef = useRef();
 
-  const currentPosition = useRef(new Vector3().copy(camera.position));
-  const currentTarget = useRef(new Vector3().copy(demandedCameraTarget));
+  const currentPositionRef = useRef(new Vector3().copy(camera.position));
+  const currentTargetRef = useRef(new Vector3().copy(demandedCameraTarget));
 
   const useUniformSpeed = true;
   const speed = 30;
@@ -22,33 +22,35 @@ const SceneContent = () => {
     const targetPosition = new Vector3().copy(demandedCameraPosition);
     const targetTarget = new Vector3().copy(demandedCameraTarget);
 
-    const positionDiff = currentPosition.current.distanceTo(targetPosition);
-    const targetDiff = currentTarget.current.distanceTo(targetTarget);
+    const positionDiff = currentPositionRef.current.distanceTo(targetPosition);
+    const targetDiff = currentTargetRef.current.distanceTo(targetTarget);
 
     if (positionDiff > 0.001) {
       if (useUniformSpeed) {
-        const direction = new Vector3()
-          .subVectors(targetPosition, currentPosition.current)
-          .normalize();
-        const moveDistance = Math.min(speed * delta, positionDiff);
-        currentPosition.current.add(direction.multiplyScalar(moveDistance));
+        moveTowardsUniformSpeed(
+          currentPositionRef.current,
+          targetPosition,
+          speed,
+          delta
+        );
       } else {
-        currentPosition.current.lerp(targetPosition, damping);
+        moveTowardsLerp(currentPositionRef.current, targetPosition, damping);
       }
-      camera.position.copy(currentPosition.current);
+      camera.position.copy(currentPositionRef.current);
     }
 
     if (targetDiff > 0.001) {
       if (useUniformSpeed) {
-        const direction = new Vector3()
-          .subVectors(targetTarget, currentTarget.current)
-          .normalize();
-        const moveDistance = Math.min(speed * delta, targetDiff);
-        currentTarget.current.add(direction.multiplyScalar(moveDistance));
+        moveTowardsUniformSpeed(
+          currentTargetRef.current,
+          targetTarget,
+          speed,
+          delta
+        );
       } else {
-        currentTarget.current.lerp(targetTarget, damping);
+        moveTowardsLerp(currentTargetRef.current, targetTarget, damping);
       }
-      camera.lookAt(currentTarget.current);
+      camera.lookAt(currentTargetRef.current);
     }
 
     if (controlsRef.current) {
@@ -97,3 +99,14 @@ const My3DMap = () => {
 };
 
 export default My3DMap;
+
+function moveTowardsUniformSpeed(current, target, speed, delta) {
+  const direction = new Vector3().subVectors(target, current).normalize();
+  const distance = current.distanceTo(target);
+  const moveDistance = Math.min(speed * delta, distance);
+  current.add(direction.multiplyScalar(moveDistance));
+}
+
+function moveTowardsLerp(current, target, damping) {
+  current.lerp(target, damping);
+}
