@@ -2,7 +2,7 @@ import { useCamera } from "@/hooks/camera-context";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
-import * as THREE from "three";
+import { Vector3 } from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
 const SceneContent = () => {
@@ -11,21 +11,21 @@ const SceneContent = () => {
 
   const controlsRef = useRef();
 
-  const currentPosition = useRef(new THREE.Vector3().copy(camera.position));
-  const currentTarget = useRef(new THREE.Vector3().copy(demandedCameraTarget));
+  const currentPosition = useRef(new Vector3().copy(camera.position));
+  const currentTarget = useRef(new Vector3().copy(demandedCameraTarget));
 
   const useUniformSpeed = true;
 
-  const speed = 10;
+  const speed = 30;
   const damping = 0.006;
 
   useFrame((state, delta) => {
-    const targetPosition = new THREE.Vector3(
+    const targetPosition = new Vector3(
       demandedCameraPosition.x,
       demandedCameraPosition.y,
       demandedCameraPosition.z
     );
-    const targetTarget = new THREE.Vector3(
+    const targetTarget = new Vector3(
       demandedCameraTarget.x,
       demandedCameraTarget.y,
       demandedCameraTarget.z
@@ -36,7 +36,7 @@ const SceneContent = () => {
 
     if (useUniformSpeed) {
       if (positionDiff > 0.001) {
-        const direction = new THREE.Vector3()
+        const direction = new Vector3()
           .subVectors(targetPosition, currentPosition.current)
           .normalize();
         const moveDistance = Math.min(speed * delta, positionDiff);
@@ -45,7 +45,7 @@ const SceneContent = () => {
       }
 
       if (targetDiff > 0.001) {
-        const direction = new THREE.Vector3()
+        const direction = new Vector3()
           .subVectors(targetTarget, currentTarget.current)
           .normalize();
         const moveDistance = Math.min(speed * delta, targetDiff);
@@ -91,14 +91,21 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls ref={controlsRef} autoRotate />
+      <OrbitControls
+        ref={controlsRef}
+        autoRotate
+        target={new Vector3(-32.853, 0, 36.792)}
+      />
     </>
   );
 };
 
 const My3DMap = () => {
   return (
-    <Canvas style={{ backgroundColor: "#aaffff" }}>
+    <Canvas
+      style={{ backgroundColor: "#aaffff" }}
+      camera={{ position: new Vector3(-45.155, 6.192, 42.063) }}
+    >
       <SceneContent />
     </Canvas>
   );
