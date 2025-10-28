@@ -1,3 +1,4 @@
+// @/constants/waypoints
 import { Vector3 } from "three";
 
 export const waypoints = {
