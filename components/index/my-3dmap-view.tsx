@@ -14,9 +14,11 @@ const SceneContent = () => {
   const currentPosition = useRef(new THREE.Vector3().copy(camera.position));
   const currentTarget = useRef(new THREE.Vector3().copy(demandedCameraTarget));
 
-  const speed = 20;
+  const useUniformSpeed = true;
 
-  const damping = 0.1;
+  const speed = 10;
+  const damping = 0.006;
+
   useFrame((state, delta) => {
     const targetPosition = new THREE.Vector3(
       demandedCameraPosition.x,
@@ -32,16 +34,34 @@ const SceneContent = () => {
     const positionDiff = currentPosition.current.distanceTo(targetPosition);
     const targetDiff = currentTarget.current.distanceTo(targetTarget);
 
-    if (positionDiff > 0.001) {
-      // Interpolate with damping to smooth movement
-      currentPosition.current.lerp(targetPosition, damping);
-      camera.position.copy(currentPosition.current);
-    }
+    if (useUniformSpeed) {
+      if (positionDiff > 0.001) {
+        const direction = new THREE.Vector3()
+          .subVectors(targetPosition, currentPosition.current)
+          .normalize();
+        const moveDistance = Math.min(speed * delta, positionDiff);
+        currentPosition.current.add(direction.multiplyScalar(moveDistance));
+        camera.position.copy(currentPosition.current);
+      }
 
-    if (targetDiff > 0.001) {
-      // Interpolate with damping
-      currentTarget.current.lerp(targetTarget, damping);
-      camera.lookAt(currentTarget.current);
+      if (targetDiff > 0.001) {
+        const direction = new THREE.Vector3()
+          .subVectors(targetTarget, currentTarget.current)
+          .normalize();
+        const moveDistance = Math.min(speed * delta, targetDiff);
+        currentTarget.current.add(direction.multiplyScalar(moveDistance));
+        camera.lookAt(currentTarget.current);
+      }
+    } else {
+      if (positionDiff > 0.001) {
+        currentPosition.current.lerp(targetPosition, damping);
+        camera.position.copy(currentPosition.current);
+      }
+
+      if (targetDiff > 0.001) {
+        currentTarget.current.lerp(targetTarget, damping);
+        camera.lookAt(currentTarget.current);
+      }
     }
 
     if (controlsRef.current) {
@@ -71,7 +91,7 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls ref={controlsRef} />
+      <OrbitControls ref={controlsRef} autoRotate />
     </>
   );
 };
