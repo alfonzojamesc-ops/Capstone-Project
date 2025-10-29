@@ -22,6 +22,8 @@ export default function Dashboard() {
         return <TasksPage />;
       case "Settings":
         return <AccountSettings />;
+      case "Records":
+        return <AccountSettings />;
       default:
         return null;
     }
@@ -64,6 +66,23 @@ export default function Dashboard() {
                   ]}
                 >
                   Tasks
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveTab("Records")}>
+              <View
+                style={[
+                  styles.navItem,
+                  activeTab === "Records" && styles.activeNavItem,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.navText,
+                    activeTab === "Records" && styles.activeNavText,
+                  ]}
+                >
+                  Records
                 </Text>
               </View>
             </TouchableOpacity>

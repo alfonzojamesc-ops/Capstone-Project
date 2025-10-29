@@ -188,7 +188,9 @@ export function BlocksLytics({
           </VictoryChart>
         </View>
       </View>
-      <Text style={{ fontSize: 16, fontWeight: "500" }}>Plots Statuses</Text>
+      <Text style={{ fontSize: 16, fontWeight: "500", color: "#004080" }}>
+        Plots Statuses
+      </Text>
     </View>
   );
 }

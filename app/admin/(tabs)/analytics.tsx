@@ -11,7 +11,9 @@ export default function AnalyticsPage() {
       </View>
 
       <View style={styles.chartContainer}>
-        <Text style={styles.sectionTitle}>Phases Occupancy and Status Data</Text>
+        <Text style={styles.sectionTitle}>
+          Phases Occupancy and Status Data
+        </Text>
         <View style={styles.chartPlaceholder}>
           <PhasesLytics />
           <BlocksLytics />
@@ -20,9 +22,7 @@ export default function AnalyticsPage() {
 
       <View style={styles.cardsContainer}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>
-            Occupied/Reserved Plots Ratio
-          </Text>
+          <Text style={styles.cardTitle}>Total Plots Ratio</Text>
           <View style={{ flexDirection: "row", gap: 6 }}>
             <Text style={[styles.cardValue, { color: "orange" }]}>1,872</Text>
             <Text style={styles.cardValue}>/ 2134</Text>
@@ -36,15 +36,17 @@ export default function AnalyticsPage() {
           </View>
         </View>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Plots that Need Attention</Text>
-          <Text style={[styles.cardValue, { color: "crimson" }]}>40</Text>
+          <Text style={styles.cardTitle}>Monthly Appointments and Tasks</Text>
+          <Text style={[styles.cardValue, { color: "crimson" }]}>617</Text>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>User Engagement</Text>
+        <Text style={styles.sectionTitle}>Block Specific Occupancy Data</Text>
         <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>Engagement Chart</Text>
+          <Text style={styles.placeholderText}>
+            Horizontal Bar Charts for Specific Blocks per Phases Slots
+          </Text>
         </View>
       </View>
     </ScrollView>
