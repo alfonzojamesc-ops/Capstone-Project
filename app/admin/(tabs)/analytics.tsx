@@ -1,3 +1,4 @@
+import { PhasesLytics } from "@/components/admin/analytics/phases-lytics";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -11,7 +12,7 @@ export default function AnalyticsPage() {
       <View style={styles.chartContainer}>
         <Text style={styles.sectionTitle}>Performance Chart</Text>
         <View style={styles.chartPlaceholder}>
-          <Text style={styles.placeholderText}>Chart Area</Text>
+          <PhasesLytics />
         </View>
       </View>
 
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   chartPlaceholder: {
-    height: 200,
+    height: 300,
     backgroundColor: "#bdc3c7",
     justifyContent: "center",
     alignItems: "center",

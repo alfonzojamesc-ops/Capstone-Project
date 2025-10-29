@@ -1,3 +1,4 @@
+// @ts-nocheck too long, lags the ts server
 export const mockData = {
   phase_0: {
     max_blocks: 16,

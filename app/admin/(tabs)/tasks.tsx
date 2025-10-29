@@ -43,12 +43,10 @@ export default function TasksPage() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Tasks</Text>
       </View>
 
-      {/* Task List */}
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
@@ -56,7 +54,6 @@ export default function TasksPage() {
         contentContainerStyle={styles.list}
       />
 
-      {/* Add New Task */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}

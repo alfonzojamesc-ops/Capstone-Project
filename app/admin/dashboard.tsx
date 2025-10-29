@@ -128,11 +128,11 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   activeNavItem: {
-    backgroundColor: "#004080", // Darker shade for active tab
+    backgroundColor: "#004080", 
   },
   navText: {
     left: 20,
-    color: "#fff", // Changed to white for contrast
+    color: "#fff",
     fontSize: 16,
   },
   activeNavText: {

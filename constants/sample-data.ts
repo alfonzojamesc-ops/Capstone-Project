@@ -1,3 +1,4 @@
+// @ts-nocheck too long, lags the ts server
 export const sampleData = {
   blocks: [
     {

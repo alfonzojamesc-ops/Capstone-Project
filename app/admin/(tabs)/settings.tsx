@@ -14,7 +14,6 @@ const AccountSettings = () => {
   const [password, setPassword] = useState("");
 
   const handleSave = () => {
-    // Handle save logic here
     alert("Account details saved!");
   };
 
