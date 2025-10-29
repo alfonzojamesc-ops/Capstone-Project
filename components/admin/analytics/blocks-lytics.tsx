@@ -6,7 +6,6 @@ import {
   VictoryLegend,
   VictoryTheme,
   VictoryTooltip,
-  VictoryZoomContainer,
 } from "victory";
 
 export function BlocksLytics({
@@ -28,7 +27,7 @@ export function BlocksLytics({
     ],
   ],
 }) {
-  const size = 250;
+  const size = 270;
 
   const getMaxima = () => {
     let maxY = 0;

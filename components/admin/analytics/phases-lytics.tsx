@@ -78,6 +78,7 @@ export function PhasesLytics({
                 style={{
                   axisLabel: {
                     padding: size * 0.125,
+                    fill: "white",
                   },
                   axis: {
                     stroke: "none",
@@ -101,7 +102,14 @@ export function PhasesLytics({
           </VictoryChart>
         </View>
       </View>
-      <Text style={{ fontSize: 16, fontWeight: "500", marginTop: 20 }}>
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "500",
+          marginTop: 20,
+          color: "white",
+        }}
+      >
         Plots Occupied
       </Text>
     </View>

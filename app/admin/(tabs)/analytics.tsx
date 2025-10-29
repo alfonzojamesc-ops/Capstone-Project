@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 20,
-    backgroundColor: "#34495e",
+    backgroundColor: "#004080",
     alignItems: "center",
   },
   headerTitle: {
@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   chartPlaceholder: {
-    paddingRight: 10,
+    paddingRight: 4,
     height: 300,
     flexDirection: "row",
     gap: 1,
-    backgroundColor: "#bdc3c7",
+    backgroundColor: "#004080",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
