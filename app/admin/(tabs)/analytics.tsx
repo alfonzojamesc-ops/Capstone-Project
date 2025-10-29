@@ -1,3 +1,4 @@
+import { BlocksLytics } from "@/components/admin/analytics/blocks-lytics";
 import { PhasesLytics } from "@/components/admin/analytics/phases-lytics";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -10,24 +11,33 @@ export default function AnalyticsPage() {
       </View>
 
       <View style={styles.chartContainer}>
-        <Text style={styles.sectionTitle}>Performance Chart</Text>
+        <Text style={styles.sectionTitle}>Phases Occupancy and Status Data</Text>
         <View style={styles.chartPlaceholder}>
           <PhasesLytics />
+          <BlocksLytics />
         </View>
       </View>
 
       <View style={styles.cardsContainer}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Total Users</Text>
-          <Text style={styles.cardValue}>1,234</Text>
+          <Text style={styles.cardTitle}>
+            Occupied/Reserved Plots Ratio
+          </Text>
+          <View style={{ flexDirection: "row", gap: 6 }}>
+            <Text style={[styles.cardValue, { color: "orange" }]}>1,872</Text>
+            <Text style={styles.cardValue}>/ 2134</Text>
+          </View>
         </View>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Active Sessions</Text>
-          <Text style={styles.cardValue}>567</Text>
+          <Text style={styles.cardTitle}>Average Block Occupancy Ratio</Text>
+          <View style={{ flexDirection: "row", gap: 6 }}>
+            <Text style={[styles.cardValue, { color: "limegreen" }]}>16</Text>
+            <Text style={styles.cardValue}>/ 20</Text>
+          </View>
         </View>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Conversion Rate</Text>
-          <Text style={styles.cardValue}>23%</Text>
+          <Text style={styles.cardTitle}>Plots that Need Attention</Text>
+          <Text style={[styles.cardValue, { color: "crimson" }]}>40</Text>
         </View>
       </View>
 
@@ -65,7 +75,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   chartPlaceholder: {
+    paddingRight: 10,
     height: 300,
+    flexDirection: "row",
+    gap: 1,
     backgroundColor: "#bdc3c7",
     justifyContent: "center",
     alignItems: "center",

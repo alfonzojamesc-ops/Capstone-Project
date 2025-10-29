@@ -29,7 +29,6 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      {/* Sidebar */}
       <View style={styles.sidebar}>
         <Text style={styles.logo}>My Dashboard</Text>
         <View style={styles.nav}>
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   activeNavItem: {
-    backgroundColor: "#004080", 
+    backgroundColor: "#004080",
   },
   navText: {
     left: 20,

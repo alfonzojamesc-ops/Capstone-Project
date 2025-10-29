@@ -7,21 +7,22 @@ import {
   VictoryLabel,
   VictoryPolarAxis,
   VictoryTheme,
+  VictoryZoomContainer,
 } from "victory";
 
 export function PhasesLytics({
   data = [
     {
-      "Phase 0": 20,
-      "Phase 1": 40,
-      "Phase 2": 5,
+      "Phase 0": 439,
+      "Phase 1": 958,
+      "Phase 2": 675,
     },
   ],
   maxima = [
     {
-      "Phase 0": 50,
-      "Phase 1": 50,
-      "Phase 2": 50,
+      "Phase 0": 1000,
+      "Phase 1": 1000,
+      "Phase 2": 1000,
     },
   ],
 }) {
@@ -32,7 +33,7 @@ export function PhasesLytics({
 
   const size = 225;
   return (
-    <>
+    <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
       <View
         style={{
           borderRadius: size / 2,
@@ -50,7 +51,14 @@ export function PhasesLytics({
             width: "200%",
           }}
         >
-          <VictoryChart polar theme={VictoryTheme.clean} domain={{ y: [0, 1] }}>
+          <VictoryChart
+            polar
+            theme={VictoryTheme.clean}
+            domain={{ y: [0, 1] }}
+            containerComponent={
+              <VictoryZoomContainer zoomDomain={{ y: [0, 1] }} />
+            }
+          >
             <VictoryGroup
               style={{
                 data: {
@@ -87,7 +95,7 @@ export function PhasesLytics({
                 axisValue={i + 1}
                 label={key}
                 tickFormat={(t) => Math.ceil(t * state.maxima[key])}
-                tickValues={[0.33, 0.66, 1]}
+                tickValues={[0.1, 0.5, 1]}
               />
             ))}
           </VictoryChart>
@@ -96,7 +104,7 @@ export function PhasesLytics({
       <Text style={{ fontSize: 16, fontWeight: "500", marginTop: 20 }}>
         Plots Occupied
       </Text>
-    </>
+    </View>
   );
 }
 
