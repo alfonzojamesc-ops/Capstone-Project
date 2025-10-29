@@ -1,7 +1,42 @@
-import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import AnalyticsPage from "./(tabs)/analytics";
+import TasksPage from "./(tabs)/tasks";
 
 export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState("Analytics");
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "Analytics":
+        return (
+          <>
+            {/* Placeholder for Analytics Content */}
+            <View style={styles.section}>
+              <AnalyticsPage />
+            </View>
+          </>
+        );
+      case "Tasks":
+        return (
+          <>
+            {/* Placeholder for Tasks Content */}
+            <View style={styles.section}>
+              <TasksPage />
+            </View>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Sidebar */}
@@ -9,8 +44,26 @@ export default function Dashboard() {
         <View>
           <Text style={styles.logo}>My Dashboard</Text>
           <View style={styles.nav}>
-            <Text style={styles.navItem}>Analytics</Text>
-            <Text style={styles.navItem}>Tasks</Text>
+            <TouchableOpacity onPress={() => setActiveTab("Analytics")}>
+              <Text
+                style={[
+                  styles.navItem,
+                  activeTab === "Analytics" && styles.activeNavItem,
+                ]}
+              >
+                Analytics
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveTab("Tasks")}>
+              <Text
+                style={[
+                  styles.navItem,
+                  activeTab === "Tasks" && styles.activeNavItem,
+                ]}
+              >
+                Tasks
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View>
@@ -19,28 +72,7 @@ export default function Dashboard() {
         </View>
       </View>
 
-      {/* Main Content */}
-      <ScrollView style={styles.main}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Dashboard Header</Text>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Placeholder for Notifications</Text>
-          <View style={styles.placeholder}>
-            <Text style={styles.placeholderText}>Notifications Area</Text>
-          </View>
-        </View>
-
-        {/* Content Sections */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Placeholder for Charts</Text>
-          <View style={styles.placeholder}>
-            <Text style={styles.placeholderText}>Chart Area</Text>
-          </View>
-        </View>
-      </ScrollView>
+      <ScrollView style={styles.main}>{renderContent()}</ScrollView>
     </View>
   );
 }
@@ -51,50 +83,56 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   sidebar: {
-    width: 250,
-    backgroundColor: "#2c3e50",
+    width: 200,
+    backgroundColor: "#0059b3",
     padding: 20,
   },
   logo: {
+    color: "#ecf0f1",
     fontSize: 20,
     fontWeight: "bold",
-    color: "#ecf0f1",
-    marginBottom: 30,
+    marginBottom: 20,
   },
   nav: {
-    flexDirection: "column",
+    marginBottom: 40,
   },
   navItem: {
-    color: "#ecf0f1",
+    color: "#fff", // Changed to white for contrast
     fontSize: 16,
-    marginBottom: 15,
+    marginVertical: 10,
+  },
+  activeNavItem: {
+    color: "#fff",
+    fontWeight: "bold",
+    textDecorationLine: "underline", // Optional: highlight active tab
   },
   main: {
     flex: 1,
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "#f4f6f8",
   },
   header: {
     padding: 20,
-    backgroundColor: "#bdc3c7",
-    alignItems: "center",
+    backgroundColor: "#0059b3", // Match theme color
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
+    color: "#fff",
   },
   section: {
     padding: 20,
-    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
+    fontWeight: "600",
     marginBottom: 10,
   },
   placeholder: {
-    height: 200,
+    height: 150,
     backgroundColor: "#95a5a6",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 8,
   },
   placeholderText: {
     fontSize: 16,
