@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -7,6 +8,7 @@ import {
   View,
 } from "react-native";
 import AnalyticsPage from "./(tabs)/analytics";
+import AccountSettings from "./(tabs)/settings";
 import TasksPage from "./(tabs)/tasks";
 
 export default function Dashboard() {
@@ -15,23 +17,11 @@ export default function Dashboard() {
   const renderContent = () => {
     switch (activeTab) {
       case "Analytics":
-        return (
-          <>
-            {/* Placeholder for Analytics Content */}
-            <View style={styles.section}>
-              <AnalyticsPage />
-            </View>
-          </>
-        );
+        return <AnalyticsPage />;
       case "Tasks":
-        return (
-          <>
-            {/* Placeholder for Tasks Content */}
-            <View style={styles.section}>
-              <TasksPage />
-            </View>
-          </>
-        );
+        return <TasksPage />;
+      case "Settings":
+        return <AccountSettings />;
       default:
         return null;
     }
@@ -40,38 +30,73 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       {/* Sidebar */}
-      <View style={[styles.sidebar, { justifyContent: "space-between" }]}>
-        <View>
-          <Text style={styles.logo}>My Dashboard</Text>
-          <View style={styles.nav}>
+      <View style={styles.sidebar}>
+        <Text style={styles.logo}>My Dashboard</Text>
+        <View style={styles.nav}>
+          <View>
             <TouchableOpacity onPress={() => setActiveTab("Analytics")}>
-              <Text
+              <View
                 style={[
                   styles.navItem,
                   activeTab === "Analytics" && styles.activeNavItem,
                 ]}
               >
-                Analytics
-              </Text>
+                <Text
+                  style={[
+                    styles.navText,
+                    activeTab === "Analytics" && styles.activeNavText,
+                  ]}
+                >
+                  Analytics
+                </Text>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setActiveTab("Tasks")}>
-              <Text
+              <View
                 style={[
                   styles.navItem,
                   activeTab === "Tasks" && styles.activeNavItem,
                 ]}
               >
-                Tasks
-              </Text>
+                <Text
+                  style={[
+                    styles.navText,
+                    activeTab === "Tasks" && styles.activeNavText,
+                  ]}
+                >
+                  Tasks
+                </Text>
+              </View>
             </TouchableOpacity>
           </View>
-        </View>
-        <View>
-          <Text style={styles.navItem}>Account Settings</Text>
-          <Text style={styles.navItem}>Logout</Text>
+          <View>
+            <TouchableOpacity onPress={() => setActiveTab("Settings")}>
+              <View
+                style={[
+                  styles.navItem,
+                  activeTab === "Settings" && styles.activeNavItem,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.navText,
+                    activeTab === "Settings" && styles.activeNavText,
+                  ]}
+                >
+                  Account Settings
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <Link href="/" asChild>
+              <TouchableOpacity>
+                <View style={styles.navItem}>
+                  <Text style={styles.navText}>Logout</Text>
+                </View>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </View>
       </View>
-
       <ScrollView style={styles.main}>{renderContent()}</ScrollView>
     </View>
   );
@@ -84,58 +109,37 @@ const styles = StyleSheet.create({
   },
   sidebar: {
     width: 200,
-    backgroundColor: "#0059b3",
-    padding: 20,
+    backgroundColor: "#0068d0",
   },
   logo: {
     color: "#ecf0f1",
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 20,
+    margin: 20,
   },
   nav: {
+    flex: 1,
+    justifyContent: "space-between",
     marginBottom: 40,
   },
   navItem: {
-    color: "#fff", // Changed to white for contrast
-    fontSize: 16,
-    marginVertical: 10,
+    height: 30,
+    justifyContent: "center",
+    alignSelf: "stretch",
   },
   activeNavItem: {
-    color: "#fff",
+    backgroundColor: "#004080", // Darker shade for active tab
+  },
+  navText: {
+    left: 20,
+    color: "#fff", // Changed to white for contrast
+    fontSize: 16,
+  },
+  activeNavText: {
     fontWeight: "bold",
-    textDecorationLine: "underline", // Optional: highlight active tab
   },
   main: {
     flex: 1,
     backgroundColor: "#f4f6f8",
-  },
-  header: {
-    padding: 20,
-    backgroundColor: "#0059b3", // Match theme color
-  },
-  headerText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  section: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 10,
-  },
-  placeholder: {
-    height: 150,
-    backgroundColor: "#95a5a6",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 8,
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: "#2c3e50",
   },
 });
