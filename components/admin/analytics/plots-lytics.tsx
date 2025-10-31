@@ -2,7 +2,13 @@ import { mockData } from "@/constants/mock-data-structure";
 import { Phase } from "@/types/firestore-types";
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
-import { VictoryAxis, VictoryBar, VictoryChart, VictoryStack } from "victory";
+import {
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryStack,
+  VictoryTooltip,
+} from "victory";
 
 interface PlotsLyticsProps {
   data?: Record<string, Phase>;
@@ -121,6 +127,13 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
                     };
                   })
                   .reverse()}
+                labels={({ datum }) => datum.y}
+                labelComponent={
+                  <VictoryTooltip
+                    style={{ fill: "white", fontSize: 8, padding: 0 }}
+                    flyoutStyle={{ fill: "dodgerblue", strokeWidth: 0 }}
+                  />
+                }
                 style={{
                   data: {
                     fill: ({ active }) =>
@@ -164,6 +177,13 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
                     };
                   })
                   .reverse()}
+                labels={({ datum }) => datum.y}
+                labelComponent={
+                  <VictoryTooltip
+                    style={{ fill: "white", fontSize: 8, padding: 0 }}
+                    flyoutStyle={{ fill: "dodgerblue", strokeWidth: 0 }}
+                  />
+                }
                 style={{
                   data: {
                     fill: ({ active }) =>
@@ -207,6 +227,13 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
                     };
                   })
                   .reverse()}
+                labels={({ datum }) => datum.y}
+                labelComponent={
+                  <VictoryTooltip
+                    style={{ fill: "white", fontSize: 8, padding: 0 }}
+                    flyoutStyle={{ fill: "dodgerblue", strokeWidth: 0 }}
+                  />
+                }
                 style={{
                   data: {
                     fill: ({ active }) =>
