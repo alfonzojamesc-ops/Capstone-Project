@@ -1,133 +1,144 @@
-import React, { useState } from "react";
+import "@/constants/tasks.css";
 import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+  INITIAL_EVENTS,
+  createEventId,
+} from "@/scripts/admin/tasks/event-utils";
+import { formatDate } from "@fullcalendar/core";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import React, { useState } from "react";
 
 export default function TasksPage() {
-  const [tasks, setTasks] = useState([
-    { id: "1", title: "Complete project report", completed: false },
-    { id: "2", title: "Attend team meeting", completed: false },
-    { id: "3", title: "Review code PRs", completed: false },
-  ]);
-  const [newTask, setNewTask] = useState("");
+  const [weekendsVisible, setWeekendsVisible] = useState(true);
+  const [currentEvents, setCurrentEvents] = useState([]);
 
-  const addTask = () => {
-    if (newTask.trim()) {
-      const newId = (tasks.length + 1).toString();
-      setTasks([...tasks, { id: newId, title: newTask, completed: false }]);
-      setNewTask("");
+  function handleWeekendsToggle() {
+    setWeekendsVisible(!weekendsVisible);
+  }
+
+  function handleDateSelect(selectInfo) {
+    let title = prompt("Please enter a new title for your task");
+    let calendarApi = selectInfo.view.calendar;
+
+    calendarApi.unselect(); // clear date selection
+
+    if (title) {
+      calendarApi.addEvent({
+        id: createEventId(),
+        title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay,
+      });
     }
-  };
+  }
 
-  const toggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
+  function handleEventClick(clickInfo) {
+    if (
+      confirm(
+        `Are you sure you want to delete the task '${clickInfo.event.title}'`
       )
-    );
-  };
+    ) {
+      clickInfo.event.remove();
+    }
+  }
 
-  const renderTask = ({ item }) => (
-    <TouchableOpacity
-      style={[styles.taskItem, item.completed && styles.taskCompleted]}
-      onPress={() => toggleTask(item.id)}
-    >
-      <Text style={styles.taskText}>{item.title}</Text>
-    </TouchableOpacity>
-  );
+  function handleEvents(events) {
+    setCurrentEvents(events);
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Tasks</Text>
-      </View>
-
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id}
-        renderItem={renderTask}
-        contentContainerStyle={styles.list}
+    <div className="calendar">
+      <Sidebar
+        weekendsVisible={weekendsVisible}
+        handleWeekendsToggle={handleWeekendsToggle}
+        currentEvents={currentEvents}
       />
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Add new task..."
-          value={newTask}
-          onChangeText={setNewTask}
+      <div className="calendar-main">
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
+          }}
+          initialView="dayGridMonth"
+          editable={true}
+          selectable={true}
+          selectMirror={true}
+          dayMaxEvents={true}
+          weekends={weekendsVisible}
+          initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+          select={handleDateSelect}
+          eventContent={renderEventContent} // custom render function
+          eventClick={handleEventClick}
+          eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+          /* you can update a remote database when these fire:
+          eventAdd={function(){}}
+          eventChange={function(){}}
+          eventRemove={function(){}}
+          */
         />
-        <TouchableOpacity style={styles.addButton} onPress={addTask}>
-          <Text style={styles.addButtonText}>Add</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      </div>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f4f6f8",
-  },
-  header: {
-    padding: 20,
-    backgroundColor: "#2ecc71",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  list: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  taskItem: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  taskCompleted: {
-    backgroundColor: "#d3f9d8",
-  },
-  taskText: {
-    fontSize: 16,
-    color: "#34495e",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    padding: 20,
-    borderTopWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "#fff",
-  },
-  input: {
-    flex: 1,
-    backgroundColor: "#ecf0f1",
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    height: 40,
-  },
-  addButton: {
-    marginLeft: 10,
-    backgroundColor: "#27ae60",
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    justifyContent: "center",
-  },
-  addButtonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-});
+function renderEventContent(eventInfo) {
+  return (
+    <>
+      <b>{eventInfo.timeText}</b>
+      <i>{eventInfo.event.title}</i>
+    </>
+  );
+}
+
+function Sidebar({ weekendsVisible, handleWeekendsToggle, currentEvents }) {
+  return (
+    <div className="calendar-sidebar">
+      <div className="calendar-sidebar-section">
+        <h2>Instructions</h2>
+        <ul>
+          <li>Select dates and you will be prompted to create a new task</li>
+          <li>Drag, drop, and resize tasks</li>
+          <li>Click a task to delete it</li>
+        </ul>
+      </div>
+      <div className="calendar-sidebar-section">
+        {/* <label>
+          <input
+            type="checkbox"
+            checked={weekendsVisible}
+            onChange={handleWeekendsToggle}
+          ></input>
+          toggle weekends
+        </label> */}
+      </div>
+      <div className="calendar-sidebar-section">
+        <h2>All Tasks ({currentEvents.length})</h2>
+        <ul>
+          {currentEvents.map((event) => (
+            <SidebarEvent key={event.id} event={event} />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function SidebarEvent({ event }) {
+  return (
+    <li key={event.id}>
+      <b>
+        {formatDate(event.start, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })}
+      </b>
+      <i>{event.title}</i>
+    </li>
+  );
+}
