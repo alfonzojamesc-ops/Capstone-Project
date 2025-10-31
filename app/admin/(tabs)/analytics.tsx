@@ -32,8 +32,8 @@ export default function AnalyticsPage() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Average Block Occupancy Ratio</Text>
           <View style={{ flexDirection: "row", gap: 6 }}>
-            <Text style={[styles.cardValue, { color: "limegreen" }]}>16</Text>
-            <Text style={styles.cardValue}>/ 20</Text>
+            <Text style={[styles.cardValue, { color: "limegreen" }]}>9</Text>
+            <Text style={styles.cardValue}>/ 12</Text>
           </View>
         </View>
         <View style={styles.card}>

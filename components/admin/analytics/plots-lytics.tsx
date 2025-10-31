@@ -101,8 +101,10 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
 
               <VictoryAxis
                 dependentAxis
+                label="Plot Count"
                 style={{
-                  tickLabels: { fontSize: 6 },
+                  tickLabels: { fontSize: 8 },
+                  axisLabel: { fontSize: 8 },
                 }}
               />
 
