@@ -46,6 +46,7 @@ export interface Phase {
 
 export interface UserAdmin {
   // Firestore document ID
+  level: number, // 1 for regular admin, 2 for super admin
   username: string;
   password_hash: string;
   last_login: string;

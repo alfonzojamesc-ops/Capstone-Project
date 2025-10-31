@@ -1,5 +1,6 @@
 import { BlocksLytics } from "@/components/admin/analytics/blocks-lytics";
 import { PhasesLytics } from "@/components/admin/analytics/phases-lytics";
+import PlotsLytics from "@/components/admin/analytics/plots-lytics";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -44,9 +45,7 @@ export default function AnalyticsPage() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Block Specific Occupancy Data</Text>
         <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>
-            Horizontal Bar Charts for Specific Blocks per Phases Slots
-          </Text>
+          <PlotsLytics />
         </View>
       </View>
     </ScrollView>
@@ -116,8 +115,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   placeholder: {
-    height: 150,
-    backgroundColor: "#95a5a6",
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
