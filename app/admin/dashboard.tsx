@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import AdminManagement from "./(tabs)/admins";
 import AnalyticsPage from "./(tabs)/analytics";
 import AccountSettings from "./(tabs)/settings";
 import TasksPage from "./(tabs)/tasks";
+import RecordPage from "./(tabs)/records";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("Analytics");
@@ -23,7 +25,9 @@ export default function Dashboard() {
       case "Settings":
         return <AccountSettings />;
       case "Records":
-        return <AccountSettings />;
+        return <RecordPage />;
+      case "Admins":
+        return <AdminManagement />;
       default:
         return null;
     }
@@ -83,6 +87,23 @@ export default function Dashboard() {
                   ]}
                 >
                   Records
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveTab("Admins")}>
+              <View
+                style={[
+                  styles.navItem,
+                  activeTab === "Admins" && styles.activeNavItem,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.navText,
+                    activeTab === "Admins" && styles.activeNavText,
+                  ]}
+                >
+                  Manage Admins
                 </Text>
               </View>
             </TouchableOpacity>
