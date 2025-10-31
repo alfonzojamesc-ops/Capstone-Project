@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 
 // Define TypeScript interfaces for data structure
 interface Plot {
@@ -43,25 +43,34 @@ const processDataIntoHierarchy = (dataObject: any): HierarchyData => {
   const hierarchy: HierarchyData = [];
 
   Object.entries(dataObject).forEach(([phaseKey, phaseValue]) => {
+    // @ts-expect-error TS(2339): Property 'blocks' does not exist on type '{}'.
     if (!phaseValue || !phaseValue.blocks) return;
 
     const blocksArray: Block[] = [];
 
+    // @ts-expect-error TS(2339): Property 'blocks' does not exist on type '{}'.
     Object.entries(phaseValue.blocks).forEach(([blockKey, blockValue]) => {
+      // @ts-expect-error TS(2339): Property 'plots' does not exist on type '{}'.
       if (!blockValue || !blockValue.plots) return;
 
       const plotsArray: Plot[] = [];
 
+      // @ts-expect-error TS(2339): Property 'plots' does not exist on type '{}'.
       Object.entries(blockValue.plots).forEach(([plotKey, plotValue]) => {
         if (!plotValue) return;
 
         plotsArray.push({
           id: `${phaseKey}-${blockKey}-${plotKey}`,
           plot: plotKey,
+          // @ts-expect-error TS(2339): Property 'grid_coordinates' does not exist on type '{}'.
           grid_coordinates: plotValue.grid_coordinates,
+          // @ts-expect-error TS(2339): Property 'status' does not exist on type '{}'.
           status: plotValue.status,
+          // @ts-expect-error TS(2339): Property 'maintenance_status' does not exist on type '{}'.
           maintenance_status: plotValue.maintenance_status,
+          // @ts-expect-error TS(2339): Property 'owner' does not exist on type '{}'.
           owner: plotValue.owner,
+          // @ts-expect-error TS(2339): Property 'deceased' does not exist on type '{}'.
           deceased: plotValue.deceased,
         });
       });
