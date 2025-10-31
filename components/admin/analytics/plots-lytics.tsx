@@ -122,8 +122,33 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
                   })
                   .reverse()}
                 style={{
-                  data: { fill: statusColors.available, width: 15 },
+                  data: {
+                    fill: ({ active }) =>
+                      active ? "dodgerblue" : statusColors.available,
+                    width: 15,
+                  },
                 }}
+                events={[
+                  {
+                    target: "data",
+                    eventHandlers: {
+                      onMouseEnter: () => {
+                        return [
+                          {
+                            mutation: () => ({ active: true }),
+                          },
+                        ];
+                      },
+                      onMouseLeave: () => {
+                        return [
+                          {
+                            mutation: () => ({ active: false }),
+                          },
+                        ];
+                      },
+                    },
+                  },
+                ]}
               />
 
               <VictoryBar
@@ -140,8 +165,33 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
                   })
                   .reverse()}
                 style={{
-                  data: { fill: statusColors.reserved, width: 15 },
+                  data: {
+                    fill: ({ active }) =>
+                      active ? "dodgerblue" : statusColors.reserved,
+                    width: 15,
+                  },
                 }}
+                events={[
+                  {
+                    target: "data",
+                    eventHandlers: {
+                      onMouseEnter: () => {
+                        return [
+                          {
+                            mutation: () => ({ active: true }),
+                          },
+                        ];
+                      },
+                      onMouseLeave: () => {
+                        return [
+                          {
+                            mutation: () => ({ active: false }),
+                          },
+                        ];
+                      },
+                    },
+                  },
+                ]}
               />
 
               <VictoryBar
@@ -158,8 +208,33 @@ const PlotsLytics: React.FC<PlotsLyticsProps> = ({ data = mockData }) => {
                   })
                   .reverse()}
                 style={{
-                  data: { fill: statusColors.occupied, width: 15 },
+                  data: {
+                    fill: ({ active }) =>
+                      active ? "dodgerblue" : statusColors.occupied,
+                    width: 15,
+                  },
                 }}
+                events={[
+                  {
+                    target: "data",
+                    eventHandlers: {
+                      onMouseEnter: () => {
+                        return [
+                          {
+                            mutation: () => ({ active: true }),
+                          },
+                        ];
+                      },
+                      onMouseLeave: () => {
+                        return [
+                          {
+                            mutation: () => ({ active: false }),
+                          },
+                        ];
+                      },
+                    },
+                  },
+                ]}
               />
               <VictoryStack
                 colorScale={[
