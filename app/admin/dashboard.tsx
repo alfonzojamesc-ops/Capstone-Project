@@ -36,7 +36,7 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       <View style={styles.sidebar}>
-        <Text style={styles.logo}>My Dashboard</Text>
+        <Text style={styles.logo}>CSJDM Cemetery Park</Text>
         <View style={styles.nav}>
           <View>
             <TouchableOpacity onPress={() => setActiveTab("Analytics")}>
