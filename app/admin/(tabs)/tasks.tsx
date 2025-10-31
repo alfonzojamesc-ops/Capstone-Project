@@ -14,6 +14,9 @@ export default function TasksPage() {
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
 
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   function handleWeekendsToggle() {
     setWeekendsVisible(!weekendsVisible);
   }
@@ -22,31 +25,35 @@ export default function TasksPage() {
     let title = prompt("Please enter a new title for your task");
     let calendarApi = selectInfo.view.calendar;
 
-    calendarApi.unselect(); // clear date selection
+    calendarApi.unselect();
 
     if (title) {
-      calendarApi.addEvent({
+      const newEvent = {
         id: createEventId(),
         title,
+        description: "New task description",
+        date_created: new Date().toISOString(),
+        last_modified: new Date().toISOString(),
+        date_due: selectInfo.startStr,
+        author: "User",
         start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
+      };
+      calendarApi.addEvent(newEvent);
     }
   }
 
   function handleEventClick(clickInfo) {
-    if (
-      confirm(
-        `Are you sure you want to delete the task '${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove();
-    }
+    setSelectedEvent({ ...clickInfo.event.extendedProps });
+    setIsModalOpen(true);
   }
 
   function handleEvents(events) {
     setCurrentEvents(events);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
   }
 
   return (
@@ -70,18 +77,17 @@ export default function TasksPage() {
           selectMirror={true}
           dayMaxEvents={true}
           weekends={weekendsVisible}
-          initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
+          initialEvents={INITIAL_EVENTS}
           select={handleDateSelect}
-          eventContent={renderEventContent} // custom render function
+          eventContent={renderEventContent}
           eventClick={handleEventClick}
-          eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-          /* you can update a remote database when these fire:
-          eventAdd={function(){}}
-          eventChange={function(){}}
-          eventRemove={function(){}}
-          */
+          eventsSet={handleEvents}
         />
       </div>
+
+      {isModalOpen && (
+        <EventDetailsModal event={selectedEvent} onClose={closeModal} />
+      )}
     </div>
   );
 }
@@ -89,8 +95,8 @@ export default function TasksPage() {
 function renderEventContent(eventInfo) {
   return (
     <>
-      <b>{eventInfo.timeText}</b>
-      <i>{eventInfo.event.title}</i>
+      <b className="event-time">{eventInfo.timeText}</b>
+      <i className="event-title">{eventInfo.event.title}</i>
     </>
   );
 }
@@ -103,7 +109,7 @@ function Sidebar({ weekendsVisible, handleWeekendsToggle, currentEvents }) {
         <ul>
           <li>Select dates and you will be prompted to create a new task</li>
           <li>Drag, drop, and resize tasks</li>
-          <li>Click a task to delete it</li>
+          <li>Click a task to view details</li>
         </ul>
       </div>
       <div className="calendar-sidebar-section">
@@ -112,8 +118,7 @@ function Sidebar({ weekendsVisible, handleWeekendsToggle, currentEvents }) {
             type="checkbox"
             checked={weekendsVisible}
             onChange={handleWeekendsToggle}
-          ></input>
-          toggle weekends
+          /> toggle weekends
         </label> */}
       </div>
       <div className="calendar-sidebar-section">
@@ -130,7 +135,7 @@ function Sidebar({ weekendsVisible, handleWeekendsToggle, currentEvents }) {
 
 function SidebarEvent({ event }) {
   return (
-    <li key={event.id}>
+    <li>
       <b>
         {formatDate(event.start, {
           year: "numeric",
@@ -140,5 +145,37 @@ function SidebarEvent({ event }) {
       </b>
       <i>{event.title}</i>
     </li>
+  );
+}
+
+function EventDetailsModal({ event, onClose }) {
+  if (!event) return null;
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2 className="modal-title">{event.title}</h2>
+        <p>
+          <strong>Description:</strong> {event.description}
+        </p>
+        <p>
+          <strong>Author:</strong> {event.author}
+        </p>
+        <p>
+          <strong>Date Created:</strong> {event.date_created}
+        </p>
+        <p>
+          <strong>Last Modified:</strong> {event.last_modified}
+        </p>
+        <p>
+          <strong>Date Due:</strong> {event.date_due}
+        </p>
+        <p>
+          <strong>Start:</strong> {event.start}
+        </p>
+        <button className="close-button" onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </div>
   );
 }
