@@ -1,15 +1,15 @@
 import { mockData } from "@/constants/mock-data-structure";
+import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-
-import { Picker } from "@react-native-picker/picker";
 
 const processDataIntoHierarchy = (dataObject) => {
   const hierarchy = [];
@@ -52,6 +52,7 @@ const RecordPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const plotsPerPage = 10;
   const [expandedOwnerId, setExpandedOwnerId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const data = processDataIntoHierarchy(mockData);
@@ -87,8 +88,12 @@ const RecordPage = () => {
     }
   };
 
+  const filteredPlotsBySearch = filteredPlots.filter((plot) =>
+    plotMatchesSearch(plot, searchQuery)
+  );
+
   const startIndex = (currentPage - 1) * plotsPerPage;
-  const currentPlots = filteredPlots.slice(
+  const currentPlots = filteredPlotsBySearch.slice(
     startIndex,
     startIndex + plotsPerPage
   );
@@ -122,7 +127,6 @@ const RecordPage = () => {
           ))}
         </Picker>
 
-        {/* Block Picker */}
         <Text style={styles.label}>Block:</Text>
         <Picker
           selectedValue={selectedBlock}
@@ -142,6 +146,37 @@ const RecordPage = () => {
             />
           ))}
         </Picker>
+
+        <View style={styles.paginationContainer}>
+          <TouchableOpacity
+            onPress={handlePrevPage}
+            disabled={currentPage === 1}
+            style={styles.pageButton}
+          >
+            <Text style={styles.pageButtonText}>Previous</Text>
+          </TouchableOpacity>
+          <Text style={styles.pageInfo}>
+            Page {currentPage} of{" "}
+            {Math.ceil(filteredPlots.length / plotsPerPage)}
+          </Text>
+          <TouchableOpacity
+            onPress={handleNextPage}
+            disabled={currentPage * plotsPerPage >= filteredPlots.length}
+            style={styles.pageButton}
+          >
+            <Text style={styles.pageButtonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search..."
+          value={searchQuery}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+            setCurrentPage(1);
+          }}
+        />
       </View>
 
       <FlatList
@@ -153,7 +188,7 @@ const RecordPage = () => {
 
           return (
             <View style={styles.plotContainer}>
-              <Text style={styles.plotHeader}>Plot: {item.plot}</Text>
+              <Text style={styles.plotHeader}>Plot ID: {item.plot}</Text>
 
               <Text>
                 <Text style={styles.boldText}>Grid Coordinates: </Text>{" "}
@@ -272,26 +307,6 @@ const RecordPage = () => {
         }}
         contentContainerStyle={styles.listContainer}
       />
-
-      <View style={styles.paginationContainer}>
-        <TouchableOpacity
-          onPress={handlePrevPage}
-          disabled={currentPage === 1}
-          style={styles.pageButton}
-        >
-          <Text style={styles.pageButtonText}>Previous</Text>
-        </TouchableOpacity>
-        <Text style={styles.pageInfo}>
-          Page {currentPage} of {Math.ceil(filteredPlots.length / plotsPerPage)}
-        </Text>
-        <TouchableOpacity
-          onPress={handleNextPage}
-          disabled={currentPage * plotsPerPage >= filteredPlots.length}
-          style={styles.pageButton}
-        >
-          <Text style={styles.pageButtonText}>Next</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -312,6 +327,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   navigatorContainer: {
+    zIndex: 1,
+    backgroundColor: "dodgerblue",
+    position: "sticky",
+    top: 0,
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
@@ -326,6 +345,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   paginationContainer: {
+    position: "sticky",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -333,7 +353,7 @@ const styles = StyleSheet.create({
   },
   pageButton: {
     padding: 10,
-    backgroundColor: "#007AFF",
+    backgroundColor: "#004080",
     borderRadius: 5,
     marginHorizontal: 10,
   },
@@ -372,6 +392,73 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: "bold",
   },
+  searchInput: {
+    backgroundColor: "white",
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    marginRight: 10,
+    width: 200,
+  },
 });
 
 export default RecordPage;
+
+const plotMatchesSearch = (plot, query) => {
+  if (!query) return true;
+
+  const lowerQuery = query.toLowerCase();
+
+  if (plot.plot.toLowerCase().includes(lowerQuery)) return true;
+  if (
+    plot.status.toLowerCase().includes(lowerQuery) ||
+    plot.maintenance_status.toLowerCase().includes(lowerQuery)
+  )
+    return true;
+
+  if (plot.owner) {
+    const ownerFields = [
+      plot.owner.first_name,
+      plot.owner.middle_name,
+      plot.owner.last_name,
+      plot.owner.sex,
+      plot.owner.date_of_birth,
+      plot.owner.address,
+      plot.owner.phone,
+      plot.owner.email,
+      plot.owner.purchase_date,
+      plot.owner.deed_number,
+      plot.owner.notes,
+    ];
+    for (let field of ownerFields) {
+      if (field && field.toLowerCase().includes(lowerQuery)) return true;
+    }
+  }
+
+  if (plot.deceased) {
+    const deceasedFields = [
+      plot.deceased.first_name,
+      plot.deceased.middle_name,
+      plot.deceased.last_name,
+      plot.deceased.sex,
+      plot.deceased.date_of_birth,
+      plot.deceased.date_of_death,
+      plot.deceased.date_of_interment,
+      plot.deceased.burial_type,
+      plot.deceased.funeral_home,
+      plot.deceased.notes,
+    ];
+    for (let field of deceasedFields) {
+      if (field && field.toLowerCase().includes(lowerQuery)) return true;
+    }
+    if (
+      plot.deceased.image &&
+      plot.deceased.image.toLowerCase().includes(lowerQuery)
+    )
+      return true;
+  }
+
+  return false;
+};
