@@ -3,25 +3,54 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
-  Picker,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
-const processDataIntoHierarchy = (dataObject) => {
-  const hierarchy = [];
+import { Picker } from '@react-native-picker/picker';
+
+// Define TypeScript interfaces for data structure
+interface Plot {
+  id: string;
+  plot: string;
+  grid_coordinates: any[];
+  status: string;
+  maintenance_status: string;
+  owner?: {
+    first_name: string;
+    last_name: string;
+  };
+  deceased?: {
+    image: string;
+  };
+}
+
+interface Block {
+  block: string;
+  plots: Plot[];
+}
+
+interface Phase {
+  phase: string;
+  blocks: Block[];
+}
+
+type HierarchyData = Phase[];
+
+const processDataIntoHierarchy = (dataObject: any): HierarchyData => {
+  const hierarchy: HierarchyData = [];
 
   Object.entries(dataObject).forEach(([phaseKey, phaseValue]) => {
     if (!phaseValue || !phaseValue.blocks) return;
 
-    const blocksArray = [];
+    const blocksArray: Block[] = [];
 
     Object.entries(phaseValue.blocks).forEach(([blockKey, blockValue]) => {
       if (!blockValue || !blockValue.plots) return;
 
-      const plotsArray = [];
+      const plotsArray: Plot[] = [];
 
       Object.entries(blockValue.plots).forEach(([plotKey, plotValue]) => {
         if (!plotValue) return;
@@ -53,10 +82,10 @@ const processDataIntoHierarchy = (dataObject) => {
 };
 
 const RecordPage = () => {
-  const [hierarchicalData, setHierarchicalData] = useState([]);
-  const [selectedPhase, setSelectedPhase] = useState(null);
-  const [selectedBlock, setSelectedBlock] = useState(null);
-  const [filteredPlots, setFilteredPlots] = useState([]);
+  const [hierarchicalData, setHierarchicalData] = useState<HierarchyData>([]);
+  const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
+  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
+  const [filteredPlots, setFilteredPlots] = useState<Plot[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const plotsPerPage = 10;
 
@@ -68,9 +97,10 @@ const RecordPage = () => {
     }
   }, []);
 
-  // Update blocks based on selected phase
+  // Current selected phase object
   const currentPhase = hierarchicalData.find((p) => p.phase === selectedPhase);
   const blocks = currentPhase ? currentPhase.blocks : [];
+  // Current selected block object
   const currentBlockObj = blocks.find((b) => b.block === selectedBlock);
   const allPlots = currentBlockObj ? currentBlockObj.plots : [];
 
@@ -223,6 +253,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
+    flexWrap: "wrap",
   },
   label: {
     marginRight: 5,
