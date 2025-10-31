@@ -11,92 +11,47 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 
-// Define TypeScript interfaces for data structure
-interface Plot {
-  id: string;
-  plot: string;
-  grid_coordinates: any[];
-  status: string;
-  maintenance_status: string;
-  owner?: {
-    first_name: string;
-    last_name: string;
-  };
-  deceased?: {
-    image: string;
-  };
-}
-
-interface Block {
-  block: string;
-  plots: Plot[];
-}
-
-interface Phase {
-  phase: string;
-  blocks: Block[];
-}
-
-type HierarchyData = Phase[];
-
-const processDataIntoHierarchy = (dataObject: any): HierarchyData => {
-  const hierarchy: HierarchyData = [];
-
+const processDataIntoHierarchy = (dataObject) => {
+  const hierarchy = [];
   Object.entries(dataObject).forEach(([phaseKey, phaseValue]) => {
-    // @ts-expect-error TS(2339): Property 'blocks' does not exist on type '{}'.
     if (!phaseValue || !phaseValue.blocks) return;
-
-    const blocksArray: Block[] = [];
-
-    // @ts-expect-error TS(2339): Property 'blocks' does not exist on type '{}'.
+    const blocksArray = [];
     Object.entries(phaseValue.blocks).forEach(([blockKey, blockValue]) => {
-      // @ts-expect-error TS(2339): Property 'plots' does not exist on type '{}'.
       if (!blockValue || !blockValue.plots) return;
-
-      const plotsArray: Plot[] = [];
-
-      // @ts-expect-error TS(2339): Property 'plots' does not exist on type '{}'.
+      const plotsArray = [];
       Object.entries(blockValue.plots).forEach(([plotKey, plotValue]) => {
         if (!plotValue) return;
-
         plotsArray.push({
           id: `${phaseKey}-${blockKey}-${plotKey}`,
           plot: plotKey,
-          // @ts-expect-error TS(2339): Property 'grid_coordinates' does not exist on type '{}'.
           grid_coordinates: plotValue.grid_coordinates,
-          // @ts-expect-error TS(2339): Property 'status' does not exist on type '{}'.
           status: plotValue.status,
-          // @ts-expect-error TS(2339): Property 'maintenance_status' does not exist on type '{}'.
           maintenance_status: plotValue.maintenance_status,
-          // @ts-expect-error TS(2339): Property 'owner' does not exist on type '{}'.
           owner: plotValue.owner,
-          // @ts-expect-error TS(2339): Property 'deceased' does not exist on type '{}'.
           deceased: plotValue.deceased,
         });
       });
-
       blocksArray.push({
         block: blockKey,
         plots: plotsArray,
       });
     });
-
     hierarchy.push({
       phase: phaseKey,
       blocks: blocksArray,
     });
   });
-
   return hierarchy;
 };
 
 const RecordPage = () => {
-  const [hierarchicalData, setHierarchicalData] = useState<HierarchyData>([]);
-  const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
-  const [filteredPlots, setFilteredPlots] = useState<Plot[]>([]);
+  const [hierarchicalData, setHierarchicalData] = useState([]);
+  const [selectedPhase, setSelectedPhase] = useState(null);
+  const [selectedBlock, setSelectedBlock] = useState(null);
+  const [filteredPlots, setFilteredPlots] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const plotsPerPage = 10;
+  const [expandedOwnerId, setExpandedOwnerId] = useState(null);
 
   useEffect(() => {
     const data = processDataIntoHierarchy(mockData);
@@ -106,14 +61,11 @@ const RecordPage = () => {
     }
   }, []);
 
-  // Current selected phase object
   const currentPhase = hierarchicalData.find((p) => p.phase === selectedPhase);
   const blocks = currentPhase ? currentPhase.blocks : [];
-  // Current selected block object
   const currentBlockObj = blocks.find((b) => b.block === selectedBlock);
   const allPlots = currentBlockObj ? currentBlockObj.plots : [];
 
-  // When phase or block changes, reset page and filtered plots
   useEffect(() => {
     if (allPlots.length > 0) {
       setFilteredPlots(allPlots);
@@ -151,16 +103,14 @@ const RecordPage = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Header for phase and block selection */}
       <View style={styles.navigatorContainer}>
-        {/* Phase Picker */}
         <Text style={styles.label}>Phase:</Text>
         <Picker
           selectedValue={selectedPhase}
           style={styles.picker}
           onValueChange={(itemValue) => {
             setSelectedPhase(itemValue);
-            setSelectedBlock(null); // reset block when phase changes
+            setSelectedBlock(null);
           }}
         >
           {hierarchicalData.map((phase) => (
@@ -179,7 +129,8 @@ const RecordPage = () => {
           style={styles.picker}
           onValueChange={(itemValue) => {
             setSelectedBlock(itemValue);
-            setCurrentPage(1); // reset page
+            setCurrentPage(1);
+            setExpandedOwnerId(null);
           }}
         >
           <Picker.Item label="Select Block" value={null} />
@@ -193,33 +144,135 @@ const RecordPage = () => {
         </Picker>
       </View>
 
-      {/* Plot List */}
       <FlatList
         data={currentPlots}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.plotContainer}>
-            <Text style={styles.plotHeader}>Plot: {item.plot}</Text>
-            <Text>Grid Coordinates: {item.grid_coordinates.join(", ")}</Text>
-            <Text>Status: {item.status}</Text>
-            <Text>Maintenance: {item.maintenance_status}</Text>
-            {item.owner && (
+        renderItem={({ item }) => {
+          const isOwnerExpanded = item.id === expandedOwnerId;
+          const showDetails = item.status !== "available";
+
+          return (
+            <View style={styles.plotContainer}>
+              <Text style={styles.plotHeader}>Plot: {item.plot}</Text>
+
               <Text>
-                Owner: {item.owner.first_name} {item.owner.last_name}
+                <Text style={styles.boldText}>Grid Coordinates: </Text>{" "}
+                {item.grid_coordinates.join(", ")}
               </Text>
-            )}
-            {item.deceased && item.deceased.image && (
-              <Image
-                source={{ uri: item.deceased.image }}
-                style={{ width: 50, height: 50, marginTop: 5 }}
-              />
-            )}
-          </View>
-        )}
+              <Text>
+                <Text style={styles.boldText}>Status: </Text>
+                {item.status}
+              </Text>
+              <Text>
+                <Text style={styles.boldText}>Maintenance: </Text>
+                {item.maintenance_status}
+              </Text>
+
+              {item.deceased && item.deceased.image && (
+                <Image
+                  source={{ uri: item.deceased.image }}
+                  style={styles.deceasedImage}
+                />
+              )}
+
+              {item.deceased && showDetails && (
+                <View style={styles.deceasedDetails}>
+                  <Text>
+                    <Text style={styles.boldText}>Name: </Text>
+                    {item.deceased.first_name} {item.deceased.middle_name}{" "}
+                    {item.deceased.last_name}
+                  </Text>
+                  <Text>
+                    <Text style={styles.boldText}>Date of Birth: </Text>
+                    {item.deceased.date_of_birth}
+                  </Text>
+                  <Text>
+                    <Text style={styles.boldText}>Date of Death: </Text>
+                    {item.deceased.date_of_death}
+                  </Text>
+                  <Text>
+                    <Text style={styles.boldText}>Burial Type: </Text>
+                    {item.deceased.burial_type}
+                  </Text>
+                  <Text>
+                    <Text style={styles.boldText}>Funeral Home: </Text>
+                    {item.deceased.funeral_home}
+                  </Text>
+                  <Text>
+                    <Text style={styles.boldText}>Notes: </Text>
+                    {item.deceased.notes}
+                  </Text>
+                </View>
+              )}
+
+              {item.owner && showDetails && (
+                <View style={{ marginTop: 10 }}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setExpandedOwnerId(isOwnerExpanded ? null : item.id)
+                    }
+                    style={styles.collapsibleHeader}
+                  >
+                    <Text style={styles.collapsibleHeaderText}>
+                      {isOwnerExpanded ? "Hide Owner" : "Show Owner"}
+                    </Text>
+                  </TouchableOpacity>
+                  {isOwnerExpanded && (
+                    <View style={styles.ownerDetails}>
+                      <Text>
+                        <Text style={styles.boldText}>First Name: </Text>
+                        {item.owner.first_name}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Middle Name: </Text>
+                        {item.owner.middle_name}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Last Name: </Text>
+                        {item.owner.last_name}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Sex: </Text>
+                        {item.owner.sex}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Date of Birth: </Text>
+                        {item.owner.date_of_birth}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Address: </Text>
+                        {item.owner.address}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Phone: </Text>
+                        {item.owner.phone}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Email: </Text>
+                        {item.owner.email}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Purchase Date: </Text>
+                        {item.owner.purchase_date}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Deed Number: </Text>
+                        {item.owner.deed_number}
+                      </Text>
+                      <Text>
+                        <Text style={styles.boldText}>Notes: </Text>
+                        {item.owner.notes}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>
+          );
+        }}
         contentContainerStyle={styles.listContainer}
       />
 
-      {/* Pagination controls */}
       <View style={styles.paginationContainer}>
         <TouchableOpacity
           onPress={handlePrevPage}
@@ -294,6 +347,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  collapsibleHeader: {
+    marginTop: 10,
+    padding: 5,
+    backgroundColor: "#ddd",
+    borderRadius: 4,
+  },
+  collapsibleHeaderText: {
+    fontWeight: "bold",
+  },
+  ownerDetails: {
+    marginTop: 5,
+    paddingLeft: 10,
+  },
+  deceasedImage: {
+    width: 100,
+    height: 100,
+    marginTop: 5,
+  },
+  deceasedDetails: {
+    marginTop: 10,
+  },
+  boldText: {
+    fontWeight: "bold",
   },
 });
 
