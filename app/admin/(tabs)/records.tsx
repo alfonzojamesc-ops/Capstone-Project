@@ -59,9 +59,13 @@ const RecordPage = () => {
     setHierarchicalData(data);
     if (data.length > 0) {
       setSelectedPhase(data[0].phase);
+      // Automatically select block_1 if it exists in the phase
+      const phaseBlocks = data[0].blocks;
+      const defaultBlock =
+        phaseBlocks.find((b) => b.block === "block_1") || phaseBlocks[0];
+      setSelectedBlock(defaultBlock ? defaultBlock.block : null);
     }
   }, []);
-
   const currentPhase = hierarchicalData.find((p) => p.phase === selectedPhase);
   const blocks = currentPhase ? currentPhase.blocks : [];
   const currentBlockObj = blocks.find((b) => b.block === selectedBlock);
@@ -115,7 +119,14 @@ const RecordPage = () => {
           style={styles.picker}
           onValueChange={(itemValue) => {
             setSelectedPhase(itemValue);
-            setSelectedBlock(null);
+            // Reset block to block_1 whenever phase changes
+            const phaseData = hierarchicalData.find(
+              (p) => p.phase === itemValue
+            );
+            const defaultBlock =
+              phaseData?.blocks.find((b) => b.block === "block_1") ||
+              phaseData?.blocks[0];
+            setSelectedBlock(defaultBlock ? defaultBlock.block : null);
           }}
         >
           {hierarchicalData.map((phase) => (
@@ -387,7 +398,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   buttonText: {
-    textAlign: 'center',
+    textAlign: "center",
     color: "white",
     fontWeight: "bold",
     fontSize: 14,
