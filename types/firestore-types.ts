@@ -57,7 +57,7 @@ export interface Task {
   date_created: string;
   last_modified: string;
   date_due: string;
-  author: string; // references username
+  author: string;
 }
 
 export interface TaskReservation {
@@ -70,6 +70,7 @@ export interface TaskReservation {
     phone: string;
     email: string;
   }; // input name
+  meeting_date: string;
   target_plot: string;
 }
 
@@ -83,6 +84,6 @@ export interface TaskAppointment {
     phone: string;
     email: string;
   }; // input name
-  date_specified: string;
+  meeting_date: string;
   message: string;
 }
