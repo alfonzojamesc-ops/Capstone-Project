@@ -3,8 +3,9 @@ import My3DMap from "@/components/index/my-3dmap-view";
 import MySearchFeature from "@/components/index/search/search-feature";
 import TitleCard from "@/components/index/title-card";
 import { SafeArea } from "@/components/safe-area";
+import { moveCamera } from "@/scripts/camera";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 
 export default function Index() {
   return (
@@ -25,6 +26,14 @@ export default function Index() {
         <View style={styles.searchBarWrapper}>
           <MySearchFeature />
         </View>
+      </View>
+      <View style={{ position: "absolute", top: "50%", left: "50%" }}>
+        <Button
+          title="test"
+          onPress={() => {
+            moveCamera([21, 31, 15]);
+          }}
+        />
       </View>
     </SafeArea>
   );
