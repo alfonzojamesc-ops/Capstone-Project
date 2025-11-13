@@ -17,110 +17,112 @@ export const PlotItem = ({
         <View style={{ flex: 1 }}>
           <Text style={styles.plotHeader}>Plot ID: {item.plot}</Text>
           <Text>
-            <Text style={styles.boldText}>Grid Coordinates: </Text>{" "}
+            <Text style={styles.boldText}>Grid Coordinates: </Text>
             {item.grid_coordinates.join(", ")}
           </Text>
-          <Text>
-            <Text style={styles.boldText}>Status: </Text>
-            {item.status}
-          </Text>
-          <Text>
-            <Text style={styles.boldText}>Maintenance: </Text>
-            {item.maintenance_status}
-          </Text>
-
-          {item.deceased && item.deceased.image && !isAvailable && (
-            <Image
-              source={{ uri: item.deceased.image }}
-              style={styles.deceasedImage}
-            />
+          {item.status && (
+            <Text>
+              <Text style={styles.boldText}>Status: </Text>
+              {item.status}
+            </Text>
           )}
-          {item.deceased && showDetails && !isAvailable && (
-            <View style={styles.deceasedDetails}>
-              <Text>
-                <Text style={styles.boldText}>Name: </Text>
-                {item.deceased.first_name} {item.deceased.middle_name}{" "}
-                {item.deceased.last_name}
-              </Text>
-              <Text>
-                <Text style={styles.boldText}>Date of Birth: </Text>
-                {item.deceased.date_of_birth}
-              </Text>
-              <Text>
-                <Text style={styles.boldText}>Date of Death: </Text>
-                {item.deceased.date_of_death}
-              </Text>
-              <Text>
-                <Text style={styles.boldText}>Burial Type: </Text>
-                {item.deceased.burial_type}
-              </Text>
-              <Text>
-                <Text style={styles.boldText}>Funeral Home: </Text>
-                {item.deceased.funeral_home}
-              </Text>
-              <Text>
-                <Text style={styles.boldText}>Notes: </Text>
-                {item.deceased.notes}
-              </Text>
-            </View>
+          {item.maintenance_status && (
+            <Text>
+              <Text style={styles.boldText}>Maintenance: </Text>
+              {item.maintenance_status}
+            </Text>
           )}
 
-          {item.owner && showDetails && !isAvailable && (
-            <View style={{ marginTop: 10 }}>
-              <TouchableOpacity
-                onPress={() => toggleOwnerExpansion(item.id)}
-                style={styles.collapsibleHeader}
-              >
-                <Text style={styles.collapsibleHeaderText}>
-                  {isOwnerExpanded ? "Hide Plot Owner" : "Show Plot Owner"}
-                </Text>
-              </TouchableOpacity>
-              {isOwnerExpanded && (
-                <View style={styles.ownerDetails}>
+          {item.deceased && showDetails && (
+            <>
+              {item.deceased.image ? (
+                <Image
+                  source={{ uri: item.deceased.image }}
+                  style={styles.deceasedImage}
+                />
+              ) : null}
+
+              <View style={styles.deceasedDetails}>
+                {item.deceased.first_name ||
+                item.deceased.middle_name ||
+                item.deceased.last_name ? (
                   <Text>
-                    <Text style={styles.boldText}>First Name: </Text>
-                    {item.owner.first_name}
+                    <Text style={styles.boldText}>Name: </Text>
+                    {[
+                      item.deceased.first_name,
+                      item.deceased.middle_name,
+                      item.deceased.last_name,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   </Text>
-                  <Text>
-                    <Text style={styles.boldText}>Middle Name: </Text>
-                    {item.owner.middle_name}
-                  </Text>
-                  <Text>
-                    <Text style={styles.boldText}>Last Name: </Text>
-                    {item.owner.last_name}
-                  </Text>
-                  <Text>
-                    <Text style={styles.boldText}>Sex: </Text>
-                    {item.owner.sex}
-                  </Text>
+                ) : null}
+
+                {item.deceased.date_of_birth ? (
                   <Text>
                     <Text style={styles.boldText}>Date of Birth: </Text>
-                    {item.owner.date_of_birth}
+                    {item.deceased.date_of_birth}
                   </Text>
+                ) : null}
+
+                {item.deceased.date_of_death && (
                   <Text>
-                    <Text style={styles.boldText}>Address: </Text>
-                    {item.owner.address}
+                    <Text style={styles.boldText}>Date of Death: </Text>
+                    {item.deceased.date_of_death}
                   </Text>
+                )}
+
+                {item.deceased.burial_type && (
                   <Text>
-                    <Text style={styles.boldText}>Phone: </Text>
-                    {item.owner.phone}
+                    <Text style={styles.boldText}>Burial Type: </Text>
+                    {item.deceased.burial_type}
                   </Text>
+                )}
+
+                {item.deceased.funeral_home && (
                   <Text>
-                    <Text style={styles.boldText}>Email: </Text>
-                    {item.owner.email}
+                    <Text style={styles.boldText}>Funeral Home: </Text>
+                    {item.deceased.funeral_home}
                   </Text>
-                  <Text>
-                    <Text style={styles.boldText}>Purchase Date: </Text>
-                    {item.owner.purchase_date}
-                  </Text>
-                  <Text>
-                    <Text style={styles.boldText}>Deed Number: </Text>
-                    {item.owner.deed_number}
-                  </Text>
+                )}
+
+                {item.deceased.notes && (
                   <Text>
                     <Text style={styles.boldText}>Notes: </Text>
-                    {item.owner.notes}
+                    {item.deceased.notes}
                   </Text>
+                )}
+              </View>
+            </>
+          )}
+
+          {item.owner && showDetails && (
+            <View style={{ marginTop: 10 }}>
+              {!isAvailable && (
+                <TouchableOpacity
+                  onPress={() => toggleOwnerExpansion(item.id)}
+                  style={styles.collapsibleHeader}
+                >
+                  <Text style={styles.collapsibleHeaderText}>
+                    {isOwnerExpanded ? "Hide Plot Owner" : "Show Plot Owner"}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {isOwnerExpanded && (
+                <View style={styles.ownerDetails}>
+                  {Object.entries(item.owner).map(([key, value]) =>
+                    value ? (
+                      <Text key={key} style={styles.ownerDetails}>
+                        <Text style={styles.boldText}>
+                          {key
+                            .replace(/_/g, " ")
+                            .replace(/\b\w/g, (c) => c.toUpperCase())}
+                          :{" "}
+                        </Text>
+                        {value.toString()}
+                      </Text>
+                    ) : null
+                  )}
                 </View>
               )}
             </View>
@@ -128,28 +130,21 @@ export const PlotItem = ({
         </View>
 
         <View style={styles.buttonsContainer}>
-          {isAvailable ? (
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => handleEdit(item.id)}
+          >
+            <Text style={styles.buttonText}>
+              {isAvailable ? "Add" : "Edit"}
+            </Text>
+          </TouchableOpacity>
+          {!isAvailable && (
             <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => handleAdd(item.id)}
+              style={styles.deleteButton}
+              onPress={() => handleDelete(item.id)}
             >
-              <Text style={styles.buttonText}>Add</Text>
+              <Text style={styles.buttonText}>Delete</Text>
             </TouchableOpacity>
-          ) : (
-            <>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => handleEdit(item.id)}
-              >
-                <Text style={styles.buttonText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleDelete(item.id)}
-              >
-                <Text style={styles.buttonText}>Delete</Text>
-              </TouchableOpacity>
-            </>
           )}
         </View>
       </View>
