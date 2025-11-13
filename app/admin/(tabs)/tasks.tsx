@@ -169,21 +169,15 @@ function SidebarEvent({ event }) {
   );
 }
 
+import { ConfirmModal } from "@/components/admin/tasks/confirm-modal";
 import { deleteDoc } from "firebase/firestore";
 
-export function EventDetailsModal({
-  event,
-  onClose,
-  onUpdate,
-}: {
-  event: any;
-  onClose: () => void;
-  onUpdate?: (updatedEvent?: any) => void;
-}) {
+export function EventDetailsModal({ event, onClose, onUpdate }) {
   if (!event) return null;
 
   const [isEditing, setIsEditing] = useState(false);
   const [status, setStatus] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
   const [formData, setFormData] = useState({
     title: event.title || "",
     description: event.description || "",
@@ -191,19 +185,17 @@ export function EventDetailsModal({
     date_due: event.date_due || "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  /** ✅ SAVE CHANGES **/
   const handleSave = async () => {
     if (!formData.title.trim()) {
-      setStatus("⚠️ Title cannot be empty");
+      setStatus("Title cannot be empty");
       return;
     }
+
     try {
       setStatus("Saving...");
       const taskRef = doc(db, "tasks", event.id);
@@ -212,127 +204,127 @@ export function EventDetailsModal({
         last_modified: new Date().toISOString(),
       });
 
-      if (onUpdate) {
-        onUpdate({
-          ...event,
-          ...formData,
-          last_modified: new Date().toISOString(),
-        });
-      }
-
-      setStatus("✅ Task updated!");
+      if (onUpdate) onUpdate({ ...event, ...formData });
+      setStatus("Task updated!");
       setTimeout(() => {
         setIsEditing(false);
         onClose();
-      }, 800);
+      }, 700);
     } catch (error) {
       console.error("Error updating task:", error);
-      setStatus("❌ Failed to update task");
+      setStatus("Failed to update task");
     }
   };
 
-  /** 🗑️ DELETE TASK **/
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this task?")) return;
-
     try {
       setStatus("Deleting...");
       const taskRef = doc(db, "tasks", event.id);
       await deleteDoc(taskRef);
 
-      setStatus("✅ Task deleted!");
-      if (onUpdate) onUpdate(); // trigger a refresh
-      setTimeout(() => onClose(), 500);
+      setStatus("Task deleted!");
+      if (onUpdate) onUpdate();
+      setTimeout(() => onClose(), 700);
     } catch (error) {
       console.error("Error deleting task:", error);
-      setStatus("❌ Failed to delete task");
+      setStatus("Failed to delete task");
     }
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        {isEditing ? (
-          <>
-            <h3>Edit Task</h3>
+    <>
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          {isEditing ? (
+            <>
+              <h3>Edit Task</h3>
+              <label>
+                <strong>Title:</strong>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                <strong>Description:</strong>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                <strong>Author:</strong>
+                <input
+                  type="text"
+                  name="author"
+                  value={formData.author}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                <strong>Date Due:</strong>
+                <input
+                  type="date"
+                  name="date_due"
+                  value={formData.date_due}
+                  onChange={handleChange}
+                />
+              </label>
 
-            <label>
-              <strong>Title:</strong>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-              />
-            </label>
+              <div className="modal-buttons">
+                <button onClick={handleSave}>Save</button>
+                <button onClick={() => setIsEditing(false)}>Cancel</button>
+              </div>
 
-            <label>
-              <strong>Description:</strong>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-              />
-            </label>
+              {status && <p className="status-msg">{status}</p>}
+            </>
+          ) : (
+            <>
+              <h3>Task Details</h3>
+              <p>
+                <strong>Title:</strong> {event.title}
+              </p>
+              <p>
+                <strong>Description:</strong> {event.description}
+              </p>
+              <p>
+                <strong>Author:</strong> {event.author}
+              </p>
+              <p>
+                <strong>Date Created:</strong> {event.date_created}
+              </p>
+              <p>
+                <strong>Date Due:</strong> {event.date_due}
+              </p>
 
-            <label>
-              <strong>Author:</strong>
-              <input
-                type="text"
-                name="author"
-                value={formData.author}
-                onChange={handleChange}
-              />
-            </label>
+              <div className="modal-buttons">
+                <button onClick={() => setIsEditing(true)} className="edit-button">Edit</button>
+                <button onClick={() => setShowConfirm(true)} className="delete-button">Delete</button>
+                <button className="close-button" onClick={onClose}>
+                  Close
+                </button>
+              </div>
 
-            <label>
-              <strong>Date Due:</strong>
-              <input
-                type="date"
-                name="date_due"
-                value={formData.date_due}
-                onChange={handleChange}
-              />
-            </label>
-
-            <div className="modal-buttons">
-              <button onClick={handleSave}>💾 Save</button>
-              <button onClick={() => setIsEditing(false)}>Cancel</button>
-            </div>
-
-            {status && <p className="status-msg">{status}</p>}
-          </>
-        ) : (
-          <>
-            <h3>Task Details</h3>
-            <p>
-              <strong>Title:</strong> {event.title}
-            </p>
-            <p>
-              <strong>Description:</strong> {event.description}
-            </p>
-            <p>
-              <strong>Author:</strong> {event.author}
-            </p>
-            <p>
-              <strong>Date Created:</strong> {event.date_created}
-            </p>
-            <p>
-              <strong>Date Due:</strong> {event.date_due}
-            </p>
-
-            <div className="modal-buttons">
-              <button onClick={() => setIsEditing(true)}>✏️ Edit</button>
-              <button onClick={handleDelete}>🗑️ Delete</button>
-              <button className="close-button" onClick={onClose}>
-                Close
-              </button>
-            </div>
-
-            {status && <p className="status-msg">{status}</p>}
-          </>
-        )}
+              {status && <p className="status-msg">{status}</p>}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+
+      {showConfirm && (
+        <ConfirmModal
+          title="Delete Task"
+          message="Are you sure you want to permanently delete this task?"
+          onConfirm={() => {
+            setShowConfirm(false);
+            handleDelete();
+          }}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
+    </>
   );
 }

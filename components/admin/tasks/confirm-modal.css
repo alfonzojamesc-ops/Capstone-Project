@@ -1,0 +1,29 @@
+.modal-buttons .confirm {
+  margin-top: 1em;
+  padding: 0.5em 1em;
+  background-color: #06b400;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.modal-buttons .confirm:hover {
+  background-color: #047000;
+}
+
+.modal-buttons .cancel {
+  margin-top: 1em;
+  padding: 0.5em 1em;
+  background-color: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.modal-buttons .cancel:hover {
+  background-color: #770505;
+}
