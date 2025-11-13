@@ -46,7 +46,7 @@ export interface Phase {
 
 export interface UserAdmin {
   // Firestore document ID
-  level: number, // 1 for regular admin, 2 for super admin
+  level: number; // 1 for regular admin, 2 for super admin
   username: string;
   password_hash: string;
   last_login: string;
@@ -62,7 +62,7 @@ export interface Task {
 }
 
 export interface TaskReservation {
-  type: "reservation" ,
+  type: "reservation";
   date_sent: string;
   author: {
     first_name: string;
@@ -72,12 +72,11 @@ export interface TaskReservation {
     phone: string;
     email: string;
   }; // input name
-  meeting_date: string;
   target_plot: string;
 }
 
 export interface TaskAppointment {
-  type: "appointment",
+  type: "appointment";
   date_sent: string;
   author: {
     first_name: string;

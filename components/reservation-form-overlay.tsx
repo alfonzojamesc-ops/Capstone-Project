@@ -14,6 +14,12 @@ import {
   View,
 } from "react-native";
 
+function write(data: TaskReservation) {
+  (async () => {
+    await addDoc(collection(db, "tasks"), data);
+  })();
+}
+
 interface Props {
   visible: boolean;
   onClose: () => void;
@@ -48,6 +54,7 @@ export function ReservationFormOverlay({
     }
 
     const reservation: TaskReservation = {
+      type: "reservation",
       date_sent: new Date().toISOString(),
       author: {
         first_name: form.first_name,
