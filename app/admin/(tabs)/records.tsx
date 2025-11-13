@@ -4,10 +4,12 @@ import { PlotItem } from "@/components/admin/records/plot-item";
 import { mockData } from "@/constants/mock-data-structure";
 import { processDataIntoHierarchy } from "@/scripts/admin/process-data";
 import { plotMatchesSearch } from "@/scripts/admin/search-data";
+import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -30,7 +32,7 @@ export const RecordPage = () => {
   const handleEdit = (id) => {
     const plotToEdit = filteredPlots.find((plot) => plot.id === id);
     if (plotToEdit) {
-      setEditingPlot(plotToEdit);
+      setEditingPlot(JSON.parse(JSON.stringify(plotToEdit))); // deep clone
       setIsEditModalVisible(true);
     }
   };
@@ -38,7 +40,6 @@ export const RecordPage = () => {
   const handleSaveEdit = () => {
     if (!editingPlot) return;
 
-    // Update hierarchicalData
     const updatedHierarchy = hierarchicalData.map((phase) => {
       if (phase.phase !== selectedPhase) return phase;
 
@@ -56,14 +57,9 @@ export const RecordPage = () => {
     });
 
     setHierarchicalData(updatedHierarchy);
-
-    // Update filtered plots for current view
-    const updatedFiltered = filteredPlots.map((plot) =>
-      plot.id === editingPlot.id ? editingPlot : plot
+    setFilteredPlots((prev) =>
+      prev.map((plot) => (plot.id === editingPlot.id ? editingPlot : plot))
     );
-    setFilteredPlots(updatedFiltered);
-
-    // Close modal
     setIsEditModalVisible(false);
   };
 
@@ -191,58 +187,122 @@ export const RecordPage = () => {
       {isEditModalVisible && editingPlot && (
         <Modal
           visible={isEditModalVisible}
-          animationType="fade"
+          animationType="slide"
           transparent={true}
           onRequestClose={() => setIsEditModalVisible(false)}
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Edit Owner Info</Text>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.modalTitle}>Edit Plot Information</Text>
 
-              <TextInput
-                style={styles.modalInput}
-                placeholder="First Name"
-                value={editingPlot?.owner?.first_name || ""}
-                onChangeText={(text) =>
-                  setEditingPlot({
-                    ...editingPlot,
-                    owner: { ...editingPlot.owner, first_name: text },
-                  })
-                }
-              />
+                {/* --- PLOT INFO --- */}
+                <Text style={styles.sectionHeader}>Plot Info</Text>
+                {/* STATUS DROPDOWN */}
+                <Text style={styles.sectionHeader}>Status</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={editingPlot?.status || ""}
+                    onValueChange={(value) =>
+                      setEditingPlot({ ...editingPlot, status: value })
+                    }
+                  >
+                    {plotStatusOptions.map((opt) => (
+                      <Picker.Item label={opt} value={opt} key={opt} />
+                    ))}
+                  </Picker>
+                </View>
 
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Last Name"
-                value={editingPlot?.owner?.last_name || ""}
-                onChangeText={(text) =>
-                  setEditingPlot({
-                    ...editingPlot,
-                    owner: { ...editingPlot.owner, last_name: text },
-                  })
-                }
-              />
+                {/* MAINTENANCE STATUS DROPDOWN */}
+                <Text style={styles.sectionHeader}>Maintenance Status</Text>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={editingPlot?.maintenance_status || ""}
+                    onValueChange={(value) =>
+                      setEditingPlot({
+                        ...editingPlot,
+                        maintenance_status: value,
+                      })
+                    }
+                  >
+                    {maintenanceStatusOptions.map((opt) => (
+                      <Picker.Item label={opt} value={opt} key={opt} />
+                    ))}
+                  </Picker>
+                </View>
 
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Status"
-                value={editingPlot?.status || ""}
-                onChangeText={(text) =>
-                  setEditingPlot({ ...editingPlot, status: text })
-                }
-              />
+                {/* --- OWNER INFO --- */}
+                <Text style={styles.sectionHeader}>Owner Info</Text>
+                {Object.keys(editingPlot?.owner || {}).map((key) => {
+                  // Render dropdown for sex
+                  if (key === "sex") {
+                    return (
+                      <View style={styles.pickerContainer} key={key}>
+                        <Text style={{ marginBottom: 4 }}>Sex</Text>
+                        <Picker
+                          selectedValue={editingPlot.owner.sex || ""}
+                          onValueChange={(value) =>
+                            setEditingPlot({
+                              ...editingPlot,
+                              owner: { ...editingPlot.owner, sex: value },
+                            })
+                          }
+                        >
+                          {genderOptions.map((opt) => (
+                            <Picker.Item label={opt} value={opt} key={opt} />
+                          ))}
+                        </Picker>
+                      </View>
+                    );
+                  }
 
-              <View style={styles.modalButtons}>
-                <Text style={styles.saveButton} onPress={handleSaveEdit}>
-                  Save
-                </Text>
-                <Text
-                  style={styles.cancelButton}
-                  onPress={() => setIsEditModalVisible(false)}
-                >
-                  Cancel
-                </Text>
-              </View>
+                  // Render normal TextInput for all other fields
+                  return (
+                    <TextInput
+                      key={key}
+                      style={styles.modalInput}
+                      placeholder={key.replace(/_/g, " ").toUpperCase()}
+                      value={editingPlot?.owner?.[key]?.toString() || ""}
+                      onChangeText={(text) =>
+                        setEditingPlot({
+                          ...editingPlot,
+                          owner: { ...editingPlot.owner, [key]: text },
+                        })
+                      }
+                    />
+                  );
+                })}
+
+                {/* --- DECEASED INFO --- */}
+                <Text style={styles.sectionHeader}>Deceased Info</Text>
+                {Object.keys(editingPlot?.deceased || {}).map((key) => (
+                  <TextInput
+                    key={key}
+                    style={styles.modalInput}
+                    placeholder={key.replace(/_/g, " ").toUpperCase()}
+                    value={editingPlot?.deceased?.[key]?.toString() || ""}
+                    onChangeText={(text) =>
+                      setEditingPlot({
+                        ...editingPlot,
+                        deceased: { ...editingPlot.deceased, [key]: text },
+                      })
+                    }
+                  />
+                ))}
+
+                {/* --- BUTTONS --- */}
+                <View style={styles.modalButtons}>
+                  <Text style={styles.saveButton} onPress={handleSaveEdit}>
+                    Save
+                  </Text>
+                  <Text
+                    style={styles.cancelButton}
+                    onPress={() => setIsEditModalVisible(false)}
+                  >
+                    Cancel
+                  </Text>
+                </View>
+              </ScrollView>
             </View>
           </View>
         </Modal>
@@ -283,47 +343,75 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
   },
   modalContainer: {
     backgroundColor: "white",
-    padding: 20,
-    borderRadius: 8,
-    width: "80%",
+    borderRadius: 10,
+    width: "100%",
+    maxHeight: "90%",
+    padding: 15,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
+  sectionHeader: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 10,
+    marginBottom: 5,
+    color: "dodgerblue",
+  },
   modalInput: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 8,
-    marginBottom: 10,
+    marginBottom: 8,
+    fontSize: 14,
   },
   modalButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginTop: 15,
   },
   saveButton: {
     color: "white",
     backgroundColor: "dodgerblue",
     padding: 10,
     borderRadius: 5,
+    flex: 1,
+    textAlign: "center",
+    marginRight: 5,
   },
   cancelButton: {
     color: "white",
     backgroundColor: "gray",
     padding: 10,
     borderRadius: 5,
+    flex: 1,
+    textAlign: "center",
+    marginLeft: 5,
+  },
+  pickerContainer: {
+    padding: 4,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
+    overflow: "hidden",
+    backgroundColor: "#f9f9f9",
   },
 });
+
+const plotStatusOptions = ["available", "reserved", "occupied"];
+
+const maintenanceStatusOptions = ["good", "needs_care", "under_maintenance"];
+
+const genderOptions = ["male", "female"];
