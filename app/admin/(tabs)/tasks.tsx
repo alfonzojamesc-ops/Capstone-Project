@@ -103,7 +103,11 @@ export default function TasksPage() {
       </div>
 
       {isModalOpen && (
-        <EventDetailsModal event={selectedEvent} onClose={closeModal} />
+        <EventDetailsModal
+          event={selectedEvent}
+          onClose={closeModal}
+          onUpdate={fetchEvents}
+        />
       )}
     </div>
   );
@@ -165,6 +169,8 @@ function SidebarEvent({ event }) {
   );
 }
 
+import { deleteDoc } from "firebase/firestore";
+
 export function EventDetailsModal({
   event,
   onClose,
@@ -172,43 +178,40 @@ export function EventDetailsModal({
 }: {
   event: any;
   onClose: () => void;
-  onUpdate?: (updatedEvent: any) => void; // ✅ optional now
+  onUpdate?: (updatedEvent?: any) => void;
 }) {
   if (!event) return null;
 
   const [isEditing, setIsEditing] = useState(false);
+  const [status, setStatus] = useState("");
   const [formData, setFormData] = useState({
     title: event.title || "",
     description: event.description || "",
     author: event.author || "",
     date_due: event.date_due || "",
   });
-  const [status, setStatus] = useState(""); // for success/error feedback
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /** ✅ SAVE CHANGES **/
   const handleSave = async () => {
     if (!formData.title.trim()) {
       setStatus("⚠️ Title cannot be empty");
       return;
     }
-
     try {
       setStatus("Saving...");
       const taskRef = doc(db, "tasks", event.id);
-
       await updateDoc(taskRef, {
-        title: formData.title,
-        description: formData.description,
-        author: formData.author,
-        date_due: formData.date_due,
+        ...formData,
         last_modified: new Date().toISOString(),
       });
 
-      // Update the parent’s state so the calendar refreshes instantly
       if (onUpdate) {
         onUpdate({
           ...event,
@@ -224,7 +227,25 @@ export function EventDetailsModal({
       }, 800);
     } catch (error) {
       console.error("Error updating task:", error);
-      setStatus("❌ Failed to update. Check console for details.");
+      setStatus("❌ Failed to update task");
+    }
+  };
+
+  /** 🗑️ DELETE TASK **/
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
+
+    try {
+      setStatus("Deleting...");
+      const taskRef = doc(db, "tasks", event.id);
+      await deleteDoc(taskRef);
+
+      setStatus("✅ Task deleted!");
+      if (onUpdate) onUpdate(); // trigger a refresh
+      setTimeout(() => onClose(), 500);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      setStatus("❌ Failed to delete task");
     }
   };
 
@@ -234,6 +255,7 @@ export function EventDetailsModal({
         {isEditing ? (
           <>
             <h3>Edit Task</h3>
+
             <label>
               <strong>Title:</strong>
               <input
@@ -277,6 +299,7 @@ export function EventDetailsModal({
               <button onClick={handleSave}>💾 Save</button>
               <button onClick={() => setIsEditing(false)}>Cancel</button>
             </div>
+
             {status && <p className="status-msg">{status}</p>}
           </>
         ) : (
@@ -300,10 +323,13 @@ export function EventDetailsModal({
 
             <div className="modal-buttons">
               <button onClick={() => setIsEditing(true)}>✏️ Edit</button>
+              <button onClick={handleDelete}>🗑️ Delete</button>
               <button className="close-button" onClick={onClose}>
                 Close
               </button>
             </div>
+
+            {status && <p className="status-msg">{status}</p>}
           </>
         )}
       </div>
