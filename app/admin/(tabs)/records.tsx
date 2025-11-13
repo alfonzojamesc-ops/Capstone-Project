@@ -6,7 +6,7 @@ import { db } from "@/firebaseConfig";
 import { processDataIntoHierarchy } from "@/scripts/admin/process-data";
 import { plotMatchesSearch } from "@/scripts/admin/search-data";
 import { Picker } from "@react-native-picker/picker";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -78,6 +78,43 @@ export const RecordPage = () => {
       setIsEditModalVisible(false);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleDelete = async (plotId) => {
+    if (!editingPlot) return;
+
+    try {
+      const plotDocRef = doc(
+        db,
+        "phases",
+        selectedPhase, // e.g., "phase_0"
+        "blocks",
+        selectedBlock, // e.g., "block_1"
+        "plots",
+        editingPlot.id.split("-")[2] // "ph0_blk1_plot_1"
+      );
+
+      await deleteDoc(plotDocRef);
+
+      const updatedHierarchy = hierarchicalData.map((phase) => {
+        if (phase.phase !== selectedPhase) return phase;
+
+        const updatedBlocks = phase.blocks.map((block) => {
+          if (block.block !== selectedBlock) return block;
+
+          const updatedPlots = block.plots.filter((plot) => plot.id !== plotId);
+
+          return { ...block, plots: updatedPlots };
+        });
+
+        return { ...phase, blocks: updatedBlocks };
+      });
+
+      setHierarchicalData(updatedHierarchy);
+      setFilteredPlots((prev) => prev.filter((plot) => plot.id !== plotId));
+    } catch (error) {
+      console.error("Failed to delete plot:", error);
     }
   };
 
