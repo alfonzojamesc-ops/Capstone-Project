@@ -67,7 +67,7 @@ export default function TasksPage() {
     setSelectedEvent(null);
     fetchEvents();
   }
-  const { events: initialEvents, fetchEvents } = useInitialEvents();
+  const { events: initialEvents, fetchEvents, loading } = useInitialEvents();
 
   return (
     <div className="calendar">
@@ -77,7 +77,7 @@ export default function TasksPage() {
         currentEvents={currentEvents}
       />
       <div className="calendar-main">
-        {initialEvents.length === 0 ? (
+        {loading ? (
           <p>Loading Events...</p>
         ) : (
           <FullCalendar
@@ -239,62 +239,62 @@ export function EventDetailsModal({ event, onClose, onUpdate }) {
             <>
               <h3 className="edit-task-title">Edit Task</h3>
 
-                <label className="form-group">
-                  <strong className="form-label">Title:</strong>
-                  <input
-                    className="form-input"
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                  />
-                </label>
+              <label className="form-group">
+                <strong className="form-label">Title:</strong>
+                <input
+                  className="form-input"
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </label>
 
-                <label className="form-group">
-                  <strong className="form-label">Description:</strong>
-                  <textarea
-                    className="form-textarea"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                  />
-                </label>
+              <label className="form-group">
+                <strong className="form-label">Description:</strong>
+                <textarea
+                  className="form-textarea"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </label>
 
-                <label className="form-group">
-                  <strong className="form-label">Author:</strong>
-                  <input
-                    className="form-input"
-                    type="text"
-                    name="author"
-                    value={formData.author}
-                    onChange={handleChange}
-                  />
-                </label>
+              {/* <label className="form-group">
+                <strong className="form-label">Author:</strong>
+                <input
+                  className="form-input"
+                  type="text"
+                  name="author"
+                  value={formData.author}
+                  onChange={handleChange}
+                />
+              </label> */}
 
-                <label className="form-group">
-                  <strong className="form-label">Date Due:</strong>
-                  <input
-                    className="form-input"
-                    type="date"
-                    name="date_due"
-                    value={formData.date_due}
-                    onChange={handleChange}
-                  />
-                </label>
+              <label className="form-group">
+                <strong className="form-label">Date Due:</strong>
+                <input
+                  className="form-input"
+                  type="date"
+                  name="date_due"
+                  value={formData.date_due}
+                  onChange={handleChange}
+                />
+              </label>
 
-                <div className="modal-buttons">
-                  <button className="btn btn-save" onClick={handleSave}>
-                    Save
-                  </button>
-                  <button
-                    className="btn btn-cancel"
-                    onClick={() => setIsEditing(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
+              <div className="modal-buttons">
+                <button className="btn btn-save" onClick={handleSave}>
+                  Save
+                </button>
+                <button
+                  className="btn btn-cancel"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
+                </button>
+              </div>
 
-                {status && <p className="status-msg">{status}</p>}
+              {status && <p className="status-msg">{status}</p>}
             </>
           ) : (
             <>

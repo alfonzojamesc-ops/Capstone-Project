@@ -7,33 +7,36 @@ let todayStr = new Date().toISOString().replace(/T.*$/, "");
 // sample events
 export function useInitialEvents() {
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true); // track loading
 
   const fetchEvents = async () => {
+    setLoading(true);
     try {
       const snapshot = await getDocs(collection(db, "tasks"));
       if (snapshot.empty) {
-        console.log("No tasks found");
-        setEvents([]);
-        return;
+        setEvents([]); // no events
+      } else {
+        const eventsData = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title,
+            description: data.description,
+            date_created: data.date_created,
+            last_modified: data.last_modified,
+            date_due: data.date_due,
+            author: data.author,
+            start: data.date_due,
+            type: "event",
+          };
+        });
+        setEvents(eventsData);
       }
-
-      const eventsData = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          description: data.description,
-          date_created: data.date_created,
-          last_modified: data.last_modified,
-          date_due: data.date_due,
-          author: data.author,
-          start: data.date_due,
-          type: "event",
-        };
-      });
-      setEvents(eventsData);
     } catch (error) {
       console.error("Error fetching tasks:", error);
+      setEvents([]);
+    } finally {
+      setLoading(false); // done fetching
     }
   };
 
@@ -41,7 +44,7 @@ export function useInitialEvents() {
     fetchEvents();
   }, []);
 
-  return { events, fetchEvents };
+  return { events, fetchEvents, loading };
 }
 
 export function createEventId() {
