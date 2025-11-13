@@ -5,7 +5,14 @@ import { mockData } from "@/constants/mock-data-structure";
 import { processDataIntoHierarchy } from "@/scripts/admin/process-data";
 import { plotMatchesSearch } from "@/scripts/admin/search-data";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { RenderPagination } from "./pagination";
 
 export const RecordPage = () => {
@@ -17,6 +24,48 @@ export const RecordPage = () => {
   const plotsPerPage = 10;
   const [expandedOwnerId, setExpandedOwnerId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editingPlot, setEditingPlot] = useState(null);
+
+  const handleEdit = (id) => {
+    const plotToEdit = filteredPlots.find((plot) => plot.id === id);
+    if (plotToEdit) {
+      setEditingPlot(plotToEdit);
+      setIsEditModalVisible(true);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingPlot) return;
+
+    // Update hierarchicalData
+    const updatedHierarchy = hierarchicalData.map((phase) => {
+      if (phase.phase !== selectedPhase) return phase;
+
+      const updatedBlocks = phase.blocks.map((block) => {
+        if (block.block !== selectedBlock) return block;
+
+        const updatedPlots = block.plots.map((plot) =>
+          plot.id === editingPlot.id ? editingPlot : plot
+        );
+
+        return { ...block, plots: updatedPlots };
+      });
+
+      return { ...phase, blocks: updatedBlocks };
+    });
+
+    setHierarchicalData(updatedHierarchy);
+
+    // Update filtered plots for current view
+    const updatedFiltered = filteredPlots.map((plot) =>
+      plot.id === editingPlot.id ? editingPlot : plot
+    );
+    setFilteredPlots(updatedFiltered);
+
+    // Close modal
+    setIsEditModalVisible(false);
+  };
 
   useEffect(() => {
     const data = processDataIntoHierarchy(mockData);
@@ -79,65 +128,126 @@ export const RecordPage = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.navigatorContainer}>
-        <RenderPhasePicker
-          hierarchicalData={hierarchicalData}
-          selectedPhase={selectedPhase}
-          setSelectedPhase={(value) => {
-            setSelectedPhase(value);
-            const phaseData = hierarchicalData.find((p) => p.phase === value);
-            const defaultBlock =
-              phaseData?.blocks.find((b) => b.block === "block_1") ||
-              phaseData?.blocks[0];
-            setSelectedBlock(defaultBlock ? defaultBlock.block : null);
-          }}
-          blocks={blocks}
-        />
-        <RenderBlockPicker
-          selectedBlock={selectedBlock}
-          setSelectedBlock={(value) => {
-            setSelectedBlock(value);
-            setCurrentPage(1);
-            setExpandedOwnerId(null);
-          }}
-          blocks={blocks}
-        />
-        <RenderPagination
-          currentPage={currentPage}
-          totalItems={filteredPlots.length}
-          itemsPerPage={plotsPerPage}
-          handlePrevPage={handlePrevPage}
-          handleNextPage={handleNextPage}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search..."
-          value={searchQuery}
-          onChangeText={(text) => {
-            setSearchQuery(text);
-            setCurrentPage(1);
-          }}
+    <>
+      <View style={{ flex: 1 }}>
+        <View style={styles.navigatorContainer}>
+          <RenderPhasePicker
+            hierarchicalData={hierarchicalData}
+            selectedPhase={selectedPhase}
+            setSelectedPhase={(value) => {
+              setSelectedPhase(value);
+              const phaseData = hierarchicalData.find((p) => p.phase === value);
+              const defaultBlock =
+                phaseData?.blocks.find((b) => b.block === "block_1") ||
+                phaseData?.blocks[0];
+              setSelectedBlock(defaultBlock ? defaultBlock.block : null);
+            }}
+            blocks={blocks}
+          />
+          <RenderBlockPicker
+            selectedBlock={selectedBlock}
+            setSelectedBlock={(value) => {
+              setSelectedBlock(value);
+              setCurrentPage(1);
+              setExpandedOwnerId(null);
+            }}
+            blocks={blocks}
+          />
+          <RenderPagination
+            currentPage={currentPage}
+            totalItems={filteredPlots.length}
+            itemsPerPage={plotsPerPage}
+            handlePrevPage={handlePrevPage}
+            handleNextPage={handleNextPage}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            value={searchQuery}
+            onChangeText={(text) => {
+              setSearchQuery(text);
+              setCurrentPage(1);
+            }}
+          />
+        </View>
+
+        <FlatList
+          data={currentPlots}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <PlotItem
+              item={item}
+              isOwnerExpanded={item.id === expandedOwnerId}
+              toggleOwnerExpansion={toggleOwnerExpansion}
+              showDetails={true}
+              handleAdd={(id) => console.log(`Add plot ${id}`)}
+              handleEdit={handleEdit}
+              handleDelete={(id) => console.log(`Delete plot ${id}`)}
+            />
+          )}
+          contentContainerStyle={styles.listContainer}
         />
       </View>
+      {isEditModalVisible && editingPlot && (
+        <Modal
+          visible={isEditModalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setIsEditModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Edit Owner Info</Text>
 
-      <FlatList
-        data={currentPlots}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <PlotItem
-            item={item}
-            isOwnerExpanded={item.id === expandedOwnerId}
-            toggleOwnerExpansion={toggleOwnerExpansion}
-            showDetails={true}
-            handleAdd={(id) => console.log(`Add plot ${id}`)}
-            handleEdit={(id) => console.log(`Edit plot ${id}`)}
-            handleDelete={(id) => console.log(`Delete plot ${id}`)}
-          />
-        )}
-        contentContainerStyle={styles.listContainer}
-      />
-    </View>
+              <TextInput
+                style={styles.modalInput}
+                placeholder="First Name"
+                value={editingPlot?.owner?.first_name || ""}
+                onChangeText={(text) =>
+                  setEditingPlot({
+                    ...editingPlot,
+                    owner: { ...editingPlot.owner, first_name: text },
+                  })
+                }
+              />
+
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Last Name"
+                value={editingPlot?.owner?.last_name || ""}
+                onChangeText={(text) =>
+                  setEditingPlot({
+                    ...editingPlot,
+                    owner: { ...editingPlot.owner, last_name: text },
+                  })
+                }
+              />
+
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Status"
+                value={editingPlot?.status || ""}
+                onChangeText={(text) =>
+                  setEditingPlot({ ...editingPlot, status: text })
+                }
+              />
+
+              <View style={styles.modalButtons}>
+                <Text style={styles.saveButton} onPress={handleSaveEdit}>
+                  Save
+                </Text>
+                <Text
+                  style={styles.cancelButton}
+                  onPress={() => setIsEditModalVisible(false)}
+                >
+                  Cancel
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+    </>
   );
 };
 
@@ -171,5 +281,49 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 8,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 8,
+    marginBottom: 10,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  saveButton: {
+    color: "white",
+    backgroundColor: "dodgerblue",
+    padding: 10,
+    borderRadius: 5,
+  },
+  cancelButton: {
+    color: "white",
+    backgroundColor: "gray",
+    padding: 10,
+    borderRadius: 5,
   },
 });
