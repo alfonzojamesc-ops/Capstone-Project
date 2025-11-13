@@ -22,8 +22,8 @@ export default function Dashboard() {
         return <AnalyticsPage />;
       case "Tasks":
         return <TasksPage />;
-      case "Settings":
-        return <AccountSettings />;
+      // case "Settings":
+      //   return <AccountSettings />;
       case "Records":
         return <RecordPage />;
       case "Admins":
@@ -109,7 +109,7 @@ export default function Dashboard() {
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity onPress={() => setActiveTab("Settings")}>
+            {/* <TouchableOpacity onPress={() => setActiveTab("Settings")}>
               <View
                 style={[
                   styles.navItem,
@@ -125,7 +125,7 @@ export default function Dashboard() {
                   Account Settings
                 </Text>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Link href="/" asChild>
               <TouchableOpacity>
                 <View style={styles.navItem}>
