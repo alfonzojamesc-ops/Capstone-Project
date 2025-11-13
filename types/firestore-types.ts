@@ -62,6 +62,7 @@ export interface Task {
 }
 
 export interface TaskReservation {
+  type: "reservation" ,
   date_sent: string;
   author: {
     first_name: string;
@@ -76,6 +77,7 @@ export interface TaskReservation {
 }
 
 export interface TaskAppointment {
+  type: "appointment",
   date_sent: string;
   author: {
     first_name: string;

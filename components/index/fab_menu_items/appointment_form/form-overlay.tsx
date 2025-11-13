@@ -1,5 +1,6 @@
+import { db } from "@/firebaseConfig";
 import { TaskAppointment } from "@/types/firestore-types";
-import { Timestamp } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -17,6 +18,12 @@ import {
   MIN_DATE,
 } from "./input_fields/form-validate";
 import { InputFields, InputTexts } from "./input_fields/input-texts";
+
+function write(data: TaskAppointment) {
+  (async () => {
+    await addDoc(collection(db, "tasks"), data);
+  })();
+}
 
 type AppointmentFormOverlayProps = {
   visible: boolean;
@@ -80,8 +87,8 @@ export const FormOverlay: React.FC<AppointmentFormOverlayProps> = ({
     const error = formValidate(form);
     if (error) return setErrorMessage(error);
 
-    setSubmitting(true);
-    onSubmit({
+    const parsedData: TaskAppointment = {
+      type: "appointment",
       date_sent: Timestamp.now().toDate().toDateString(),
       author: {
         first_name: form.first_name,
@@ -95,7 +102,13 @@ export const FormOverlay: React.FC<AppointmentFormOverlayProps> = ({
         .toDate()
         .toDateString(),
       message: form.message,
-    });
+    };
+
+    setSubmitting(true);
+    onSubmit(parsedData);
+
+    write(parsedData);
+
     setSubmitting(false);
     handleReset();
   }, [form, onSubmit, handleReset]);
