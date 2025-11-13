@@ -237,49 +237,64 @@ export function EventDetailsModal({ event, onClose, onUpdate }) {
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           {isEditing ? (
             <>
-              <h3>Edit Task</h3>
-              <label>
-                <strong>Title:</strong>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                <strong>Description:</strong>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                <strong>Author:</strong>
-                <input
-                  type="text"
-                  name="author"
-                  value={formData.author}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                <strong>Date Due:</strong>
-                <input
-                  type="date"
-                  name="date_due"
-                  value={formData.date_due}
-                  onChange={handleChange}
-                />
-              </label>
+              <h3 className="edit-task-title">Edit Task</h3>
 
-              <div className="modal-buttons">
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setIsEditing(false)}>Cancel</button>
-              </div>
+                <label className="form-group">
+                  <strong className="form-label">Title:</strong>
+                  <input
+                    className="form-input"
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                  />
+                </label>
 
-              {status && <p className="status-msg">{status}</p>}
+                <label className="form-group">
+                  <strong className="form-label">Description:</strong>
+                  <textarea
+                    className="form-textarea"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                  />
+                </label>
+
+                <label className="form-group">
+                  <strong className="form-label">Author:</strong>
+                  <input
+                    className="form-input"
+                    type="text"
+                    name="author"
+                    value={formData.author}
+                    onChange={handleChange}
+                  />
+                </label>
+
+                <label className="form-group">
+                  <strong className="form-label">Date Due:</strong>
+                  <input
+                    className="form-input"
+                    type="date"
+                    name="date_due"
+                    value={formData.date_due}
+                    onChange={handleChange}
+                  />
+                </label>
+
+                <div className="modal-buttons">
+                  <button className="btn btn-save" onClick={handleSave}>
+                    Save
+                  </button>
+                  <button
+                    className="btn btn-cancel"
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                {status && <p className="status-msg">{status}</p>}
             </>
           ) : (
             <>
@@ -301,8 +316,18 @@ export function EventDetailsModal({ event, onClose, onUpdate }) {
               </p>
 
               <div className="modal-buttons">
-                <button onClick={() => setIsEditing(true)} className="edit-button">Edit</button>
-                <button onClick={() => setShowConfirm(true)} className="delete-button">Delete</button>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="edit-button"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => setShowConfirm(true)}
+                  className="delete-button"
+                >
+                  Delete
+                </button>
                 <button className="close-button" onClick={onClose}>
                   Close
                 </button>
