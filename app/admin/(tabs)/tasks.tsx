@@ -31,11 +31,9 @@ export default function TasksPage() {
 
     if (title) {
       const newEvent = {
-        type: "event",
         title,
         description: "New task description",
         date_created: new Date().toISOString(),
-        last_modified: new Date().toISOString(),
         date_due: selectInfo.startStr,
         author: "User",
         start: selectInfo.startStr,

@@ -1,6 +1,6 @@
 import { db } from "@/firebaseConfig";
-import { TaskReservation } from "@/types/firestore-types";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { Task } from "@/types/firestore-types";
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 
-function write(data: TaskReservation) {
+function write(data: Task) {
   (async () => {
     await addDoc(collection(db, "tasks"), data);
   })();
@@ -53,25 +53,17 @@ export function ReservationFormOverlay({
       }
     }
 
-    const reservation: TaskReservation = {
-      type: "reservation",
-      date_sent: new Date().toISOString(),
-      author: {
-        first_name: form.first_name,
-        middle_name: form.middle_name || "",
-        last_name: form.last_name,
-        address: form.address || "",
-        phone: form.phone,
-        email: form.email || "",
-      },
-      target_plot: targetPlotId,
+    const reservation: Task = {
+      title: `Reservation: ${form.first_name + " " + form.last_name}`,
+      date_created: new Date().toISOString(),
+      start: new Date().toISOString().split("T")[0],
+      date_due: new Date().toISOString().split("T")[0],
+      author: form.first_name + " " + form.middle_name + " " + form.last_name,
+      description: `Address: ${form.address};\nPhone: ${form.phone};\nEmail: ${form.email};\nTarget Plot: ${targetPlotId}`,
     };
 
     try {
-      await addDoc(collection(db, "tasks"), {
-        ...reservation,
-        created_at: serverTimestamp(),
-      });
+      await addDoc(collection(db, "tasks"), reservation);
 
       alert("Task reservation submitted successfully!");
       onClose();

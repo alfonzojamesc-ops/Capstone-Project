@@ -53,41 +53,10 @@ export interface UserAdmin {
 }
 
 export interface Task {
-  type: "event",
   title: string;
   description: string;
   date_created: string;
-  last_modified: string;
   date_due: string;
   author: string;
   start: string;
-}
-
-export interface TaskReservation {
-  type: "reservation";
-  date_sent: string;
-  author: {
-    first_name: string;
-    middle_name: string;
-    last_name: string;
-    address: string;
-    phone: string;
-    email: string;
-  }; // input name
-  target_plot: string;
-}
-
-export interface TaskAppointment {
-  type: "appointment";
-  date_sent: string;
-  author: {
-    first_name: string;
-    middle_name: string;
-    last_name: string;
-    address: string;
-    phone: string;
-    email: string;
-  }; // input name
-  meeting_date: string;
-  message: string;
 }

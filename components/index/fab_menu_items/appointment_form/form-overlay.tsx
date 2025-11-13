@@ -1,5 +1,5 @@
 import { db } from "@/firebaseConfig";
-import { TaskAppointment } from "@/types/firestore-types";
+import { Task } from "@/types/firestore-types";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -19,7 +19,7 @@ import {
 } from "./input_fields/form-validate";
 import { InputFields, InputTexts } from "./input_fields/input-texts";
 
-function write(data: TaskAppointment) {
+function write(data: Task) {
   (async () => {
     await addDoc(collection(db, "tasks"), data);
   })();
@@ -28,7 +28,7 @@ function write(data: TaskAppointment) {
 type AppointmentFormOverlayProps = {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (data: TaskAppointment) => void;
+  onSubmit: (data: Task) => void;
 };
 
 const defaultForm: InputFields = {
@@ -87,21 +87,16 @@ export const FormOverlay: React.FC<AppointmentFormOverlayProps> = ({
     const error = formValidate(form);
     if (error) return setErrorMessage(error);
 
-    const parsedData: TaskAppointment = {
-      type: "appointment",
-      date_sent: Timestamp.now().toDate().toDateString(),
-      author: {
-        first_name: form.first_name,
-        middle_name: form.middle_name || undefined,
-        last_name: form.last_name,
-        address: form.address,
-        phone: form.phone,
-        email: form.email,
-      },
-      date_specified: Timestamp.fromDate(form.date_specified)
+    const parsedData: Task = {
+      title: `Appointment: ${form.first_name + " " + form.last_name}`,
+      date_created: new Date().toISOString(),
+      start: new Date().toISOString().split("T")[0],
+      date_due: Timestamp.fromDate(form.date_specified)
         .toDate()
-        .toDateString(),
-      message: form.message,
+        .toISOString()
+        .split("T")[0],
+      author: form.first_name + " " + form.middle_name + " " + form.last_name,
+      description: `Address: ${form.address};\nPhone: ${form.phone};\nEmail: ${form.email};\nMessage: ${form.message}`,
     };
 
     setSubmitting(true);
