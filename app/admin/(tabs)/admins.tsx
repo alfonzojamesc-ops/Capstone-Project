@@ -5,9 +5,11 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
+  query,
   updateDoc,
 } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -20,22 +22,34 @@ import {
 } from "react-native";
 
 export const AdminManagement = () => {
-  const [admins, setAdmins] = useState([
-    {
-      id: 1,
-      username: "AdminOne",
-      realName: "John Doe",
-      password: "pass123",
-      creationDate: new Date().toLocaleString(),
-    },
-  ]);
+  const [admins, setAdmins] = useState<UserAdmin[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentAdmin, setCurrentAdmin] = useState(null);
+  const [currentAdmin, setCurrentAdmin] = useState<UserAdmin | null>(null);
   const [username, setUsername] = useState("");
   const [realName, setRealName] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // for toggle
+  const [showPassword, setShowPassword] = useState(false);
 
+  // Load admins from Firestore on mount
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      try {
+        const q = query(collection(db, "admins"));
+        const snapshot = await getDocs(q);
+        const data: UserAdmin[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as UserAdmin[];
+        setAdmins(data);
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", "Failed to load admins");
+      }
+    };
+    fetchAdmins();
+  }, []);
+
+  // Add new admin
   const handleAddAdmin = async () => {
     if (!username || !password) {
       Alert.alert("Validation", "Please fill all fields.");
@@ -43,16 +57,15 @@ export const AdminManagement = () => {
     }
 
     const newAdmin: UserAdmin = {
-      level: 1, // default regular admin
-      username, // from input
-      password_hash: password, // storing password directly as requested
-      last_login: "", // initially empty
+      level: 1,
+      username,
+      password_hash: password,
+      last_login: "",
     };
 
     try {
-      await addDoc(collection(db, "admins"), newAdmin);
-
-      // Clear form
+      const docRef = await addDoc(collection(db, "admins"), newAdmin);
+      setAdmins([...admins, { ...newAdmin, id: docRef.id }]);
       setUsername("");
       setPassword("");
     } catch (error) {
@@ -61,58 +74,35 @@ export const AdminManagement = () => {
     }
   };
 
-  const handleEditAdmin = async () => {
-    if (!currentAdmin || !username || !password) {
-      alert("Fill all fields");
-      return;
-    }
-
-    const adminRef = doc(db, "admins", currentAdmin.id);
-
-    const updatedAdmin = {
-      username,
-      password_hash: password,
-      level: currentAdmin.level, // keep existing level
-      last_login: currentAdmin.last_login, // keep existing last login
-    };
-
-    try {
-      await updateDoc(adminRef, updatedAdmin);
-      setIsEditing(false);
-      setCurrentAdmin(null);
-      setUsername("");
-      setPassword("");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update admin");
-    }
+  const handleEditAdmin = (admin: UserAdmin) => {
+    setIsEditing(true);
+    setCurrentAdmin(admin);
+    setUsername(admin.username);
+    setPassword(admin.password_hash);
+    setShowPassword(false);
   };
 
   const handleUpdateAdmin = async () => {
     if (!currentAdmin || !username || !password) {
-      alert("Fill all fields");
+      Alert.alert("Validation", "Please fill all fields.");
       return;
     }
 
     const adminRef = doc(db, "admins", currentAdmin.id);
-
     const updatedAdmin: UserAdmin = {
-      level: currentAdmin.level, // keep existing level
-      username, // updated
-      password_hash: password, // updated
-      last_login: currentAdmin.last_login, // keep existing last login
+      level: currentAdmin.level,
+      username,
+      password_hash: password,
+      last_login: currentAdmin.last_login,
     };
 
     try {
       await updateDoc(adminRef, updatedAdmin);
-
-      // Update local state for UI
       setAdmins(
         admins.map((admin) =>
           admin.id === currentAdmin.id ? { ...admin, ...updatedAdmin } : admin
         )
       );
-
       setIsEditing(false);
       setCurrentAdmin(null);
       setUsername("");
@@ -120,10 +110,11 @@ export const AdminManagement = () => {
       setShowPassword(false);
     } catch (error) {
       console.error(error);
-      alert("Failed to update admin");
+      Alert.alert("Error", "Failed to update admin");
     }
   };
 
+  // Delete admin
   const handleDeleteAdmin = (id: string) => {
     Alert.alert(
       "Confirm Delete",
@@ -135,15 +126,11 @@ export const AdminManagement = () => {
           style: "destructive",
           onPress: async () => {
             try {
-              // Delete from Firestore
-              const adminRef = doc(db, "admins", id);
-              await deleteDoc(adminRef);
-
-              // Update local state
+              await deleteDoc(doc(db, "admins", id));
               setAdmins(admins.filter((admin) => admin.id !== id));
             } catch (error) {
               console.error(error);
-              alert("Failed to delete admin");
+              Alert.alert("Error", "Failed to delete admin");
             }
           },
         },
@@ -155,20 +142,21 @@ export const AdminManagement = () => {
     setIsEditing(false);
     setCurrentAdmin(null);
     setUsername("");
-    setRealName("");
     setPassword("");
     setShowPassword(false);
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: UserAdmin }) => (
     <View style={styles.itemContainer}>
       <View style={styles.infoContainer}>
         <Text style={styles.username}>{item.username}</Text>
-        <Text style={styles.realName}>Name: {item.realName}</Text>
+        <Text style={styles.realName}>Level: {item.level}</Text>
         <Text style={styles.email}>
-          Password: {"*".repeat(item.password.length)}
+          Password: {"*".repeat(item.password_hash.length)}
         </Text>
-        <Text style={styles.creationDate}>Created: {item.creationDate}</Text>
+        <Text style={styles.creationDate}>
+          Last Login: {item.last_login || "Never"}
+        </Text>
       </View>
       <View style={styles.actionsContainer}>
         <TouchableOpacity
@@ -192,11 +180,10 @@ export const AdminManagement = () => {
       <Text style={styles.header}>Admin Accounts</Text>
       <FlatList
         data={admins}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
         style={styles.list}
       />
-
       <View style={styles.formContainer}>
         <Text style={styles.formHeader}>
           {isEditing ? "Edit Admin" : "Add New Admin"}
@@ -206,12 +193,6 @@ export const AdminManagement = () => {
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Real Name"
-          value={realName}
-          onChangeText={setRealName}
         />
         <View style={styles.passwordContainer}>
           <TextInput

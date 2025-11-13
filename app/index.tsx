@@ -27,14 +27,14 @@ export default function Index() {
           <MySearchFeature />
         </View>
       </View>
-      <View style={{ position: "absolute", top: "50%", left: "50%" }}>
+      {/* <View style={{ position: "absolute", top: "50%", left: "50%" }}>
         <Button
           title="test"
           onPress={() => {
             moveCamera([21, 31, 15]);
           }}
         />
-      </View>
+      </View> */}
     </SafeArea>
   );
 }
