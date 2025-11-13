@@ -53,12 +53,14 @@ export interface UserAdmin {
 }
 
 export interface Task {
+  type: "event",
   title: string;
   description: string;
   date_created: string;
   last_modified: string;
   date_due: string;
   author: string;
+  start: string;
 }
 
 export interface TaskReservation {

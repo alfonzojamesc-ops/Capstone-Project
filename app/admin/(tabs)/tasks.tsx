@@ -1,13 +1,12 @@
 import "@/constants/tasks.css";
-import {
-  INITIAL_EVENTS,
-  createEventId,
-} from "@/scripts/admin/tasks/event-utils";
+import { db } from "@/firebaseConfig";
+import { createEventId } from "@/scripts/admin/tasks/event-utils";
 import { formatDate } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 
 export default function TasksPage() {
@@ -29,7 +28,7 @@ export default function TasksPage() {
 
     if (title) {
       const newEvent = {
-        id: createEventId(),
+        type: "event",
         title,
         description: "New task description",
         date_created: new Date().toISOString(),
@@ -38,7 +37,9 @@ export default function TasksPage() {
         author: "User",
         start: selectInfo.startStr,
       };
-      calendarApi.addEvent(newEvent);
+      calendarApi.addEvent({ ...newEvent, id: createEventId() });
+
+      addDoc(collection(db, "tasks"), newEvent);
     }
   }
 
@@ -77,7 +78,7 @@ export default function TasksPage() {
           selectMirror={true}
           dayMaxEvents={true}
           weekends={weekendsVisible}
-          initialEvents={INITIAL_EVENTS}
+          // initialEvents={INITIAL_EVENTS}
           select={handleDateSelect}
           eventContent={renderEventContent}
           eventClick={handleEventClick}
@@ -153,7 +154,9 @@ function EventDetailsModal({ event, onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="modal-title">{event.title}</h2>
+        <p>
+          <strong>Title:</strong> {event.title}
+        </p>
         <p>
           <strong>Description:</strong> {event.description}
         </p>
@@ -164,13 +167,7 @@ function EventDetailsModal({ event, onClose }) {
           <strong>Date Created:</strong> {event.date_created}
         </p>
         <p>
-          <strong>Last Modified:</strong> {event.last_modified}
-        </p>
-        <p>
           <strong>Date Due:</strong> {event.date_due}
-        </p>
-        <p>
-          <strong>Start:</strong> {event.start}
         </p>
         <button className="close-button" onClick={onClose}>
           Close
