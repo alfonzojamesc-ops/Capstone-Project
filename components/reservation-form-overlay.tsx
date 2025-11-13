@@ -126,13 +126,33 @@ export function ReservationFormOverlay({
               <View style={styles.buttonRow}>
                 <TouchableOpacity
                   style={[styles.button, styles.cancel]}
-                  onPress={onClose}
+                  onPress={() => {
+                    setForm({
+                      first_name: "",
+                      middle_name: "",
+                      last_name: "",
+                      address: "",
+                      phone: "",
+                      email: "",
+                    });
+                    onClose();
+                  }}
                 >
                   <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.button, styles.submit]}
-                  onPress={handleSubmit}
+                  onPress={() => {
+                    setForm({
+                      first_name: "",
+                      middle_name: "",
+                      last_name: "",
+                      address: "",
+                      phone: "",
+                      email: "",
+                    });
+                    handleSubmit();
+                  }}
                 >
                   <Text style={styles.buttonText}>Submit</Text>
                 </TouchableOpacity>
