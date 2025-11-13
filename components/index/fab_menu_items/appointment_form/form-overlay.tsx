@@ -84,28 +84,33 @@ export const FormOverlay: React.FC<AppointmentFormOverlayProps> = ({
   }, [onClose]);
 
   const handleSubmit = useCallback(async () => {
-    const error = formValidate(form);
-    if (error) return setErrorMessage(error);
+    try {
+      const error = formValidate(form);
+      if (error) return setErrorMessage(error);
 
-    const parsedData: Task = {
-      title: `Appointment: ${form.first_name + " " + form.last_name}`,
-      date_created: new Date().toISOString(),
-      start: new Date().toISOString().split("T")[0],
-      date_due: Timestamp.fromDate(form.date_specified)
-        .toDate()
-        .toISOString()
-        .split("T")[0],
-      author: form.first_name + " " + form.middle_name + " " + form.last_name,
-      description: `Address: ${form.address};\nPhone: ${form.phone};\nEmail: ${form.email};\nMessage: ${form.message}`,
-    };
+      const parsedData: Task = {
+        title: `Appointment: ${form.first_name + " " + form.last_name}`,
+        date_created: new Date().toISOString(),
+        start: new Date().toISOString().split("T")[0],
+        date_due: Timestamp.fromDate(form.date_specified)
+          .toDate()
+          .toISOString()
+          .split("T")[0],
+        author: form.first_name + " " + form.middle_name + " " + form.last_name,
+        description: `Address: ${form.address};\nPhone: ${form.phone};\nEmail: ${form.email};\nMessage: ${form.message}`,
+      };
 
-    setSubmitting(true);
-    onSubmit(parsedData);
+      setSubmitting(true);
+      onSubmit(parsedData);
 
-    write(parsedData);
+      write(parsedData);
 
-    setSubmitting(false);
-    handleReset();
+      setSubmitting(false);
+      handleReset();
+      alert("Reservation sent. We will contact you back sooner or later!");
+    } catch (error) {
+      alert(error);
+    }
   }, [form, onSubmit, handleReset]);
 
   if (!visible) return null;
