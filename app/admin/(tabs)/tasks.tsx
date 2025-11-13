@@ -1,12 +1,15 @@
 import "@/constants/tasks.css";
 import { db } from "@/firebaseConfig";
-import { createEventId } from "@/scripts/admin/tasks/event-utils";
+import {
+  createEventId,
+  useInitialEvents,
+} from "@/scripts/admin/tasks/event-utils";
 import { formatDate } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 
 export default function TasksPage() {
@@ -44,7 +47,14 @@ export default function TasksPage() {
   }
 
   function handleEventClick(clickInfo) {
-    setSelectedEvent({ ...clickInfo.event.extendedProps });
+    const event = clickInfo.event;
+    setSelectedEvent({
+      id: event.id,
+      title: event.title,
+      start: event.start,
+      end: event.end,
+      ...event.extendedProps,
+    });
     setIsModalOpen(true);
   }
 
@@ -55,7 +65,9 @@ export default function TasksPage() {
   function closeModal() {
     setIsModalOpen(false);
     setSelectedEvent(null);
+    fetchEvents();
   }
+  const { events: initialEvents, fetchEvents } = useInitialEvents();
 
   return (
     <div className="calendar">
@@ -65,25 +77,29 @@ export default function TasksPage() {
         currentEvents={currentEvents}
       />
       <div className="calendar-main">
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
-          initialView="dayGridMonth"
-          editable={true}
-          selectable={true}
-          selectMirror={true}
-          dayMaxEvents={true}
-          weekends={weekendsVisible}
-          // initialEvents={INITIAL_EVENTS}
-          select={handleDateSelect}
-          eventContent={renderEventContent}
-          eventClick={handleEventClick}
-          eventsSet={handleEvents}
-        />
+        {initialEvents.length === 0 ? (
+          <p>Loading Events...</p>
+        ) : (
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay",
+            }}
+            initialView="dayGridMonth"
+            editable={true}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            weekends={weekendsVisible}
+            events={initialEvents}
+            select={handleDateSelect}
+            eventContent={renderEventContent}
+            eventClick={handleEventClick}
+            eventsSet={handleEvents}
+          />
+        )}
       </div>
 
       {isModalOpen && (
@@ -149,29 +165,147 @@ function SidebarEvent({ event }) {
   );
 }
 
-function EventDetailsModal({ event, onClose }) {
+export function EventDetailsModal({
+  event,
+  onClose,
+  onUpdate,
+}: {
+  event: any;
+  onClose: () => void;
+  onUpdate?: (updatedEvent: any) => void; // ✅ optional now
+}) {
   if (!event) return null;
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    title: event.title || "",
+    description: event.description || "",
+    author: event.author || "",
+    date_due: event.date_due || "",
+  });
+  const [status, setStatus] = useState(""); // for success/error feedback
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    if (!formData.title.trim()) {
+      setStatus("⚠️ Title cannot be empty");
+      return;
+    }
+
+    try {
+      setStatus("Saving...");
+      const taskRef = doc(db, "tasks", event.id);
+
+      await updateDoc(taskRef, {
+        title: formData.title,
+        description: formData.description,
+        author: formData.author,
+        date_due: formData.date_due,
+        last_modified: new Date().toISOString(),
+      });
+
+      // Update the parent’s state so the calendar refreshes instantly
+      if (onUpdate) {
+        onUpdate({
+          ...event,
+          ...formData,
+          last_modified: new Date().toISOString(),
+        });
+      }
+
+      setStatus("✅ Task updated!");
+      setTimeout(() => {
+        setIsEditing(false);
+        onClose();
+      }, 800);
+    } catch (error) {
+      console.error("Error updating task:", error);
+      setStatus("❌ Failed to update. Check console for details.");
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <p>
-          <strong>Title:</strong> {event.title}
-        </p>
-        <p>
-          <strong>Description:</strong> {event.description}
-        </p>
-        <p>
-          <strong>Author:</strong> {event.author}
-        </p>
-        <p>
-          <strong>Date Created:</strong> {event.date_created}
-        </p>
-        <p>
-          <strong>Date Due:</strong> {event.date_due}
-        </p>
-        <button className="close-button" onClick={onClose}>
-          Close
-        </button>
+        {isEditing ? (
+          <>
+            <h3>Edit Task</h3>
+            <label>
+              <strong>Title:</strong>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label>
+              <strong>Description:</strong>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label>
+              <strong>Author:</strong>
+              <input
+                type="text"
+                name="author"
+                value={formData.author}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label>
+              <strong>Date Due:</strong>
+              <input
+                type="date"
+                name="date_due"
+                value={formData.date_due}
+                onChange={handleChange}
+              />
+            </label>
+
+            <div className="modal-buttons">
+              <button onClick={handleSave}>💾 Save</button>
+              <button onClick={() => setIsEditing(false)}>Cancel</button>
+            </div>
+            {status && <p className="status-msg">{status}</p>}
+          </>
+        ) : (
+          <>
+            <h3>Task Details</h3>
+            <p>
+              <strong>Title:</strong> {event.title}
+            </p>
+            <p>
+              <strong>Description:</strong> {event.description}
+            </p>
+            <p>
+              <strong>Author:</strong> {event.author}
+            </p>
+            <p>
+              <strong>Date Created:</strong> {event.date_created}
+            </p>
+            <p>
+              <strong>Date Due:</strong> {event.date_due}
+            </p>
+
+            <div className="modal-buttons">
+              <button onClick={() => setIsEditing(true)}>✏️ Edit</button>
+              <button className="close-button" onClick={onClose}>
+                Close
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
