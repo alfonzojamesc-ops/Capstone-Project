@@ -2,9 +2,11 @@ import { RenderBlockPicker } from "@/components/admin/records/block-picker";
 import { RenderPhasePicker } from "@/components/admin/records/phase-picker";
 import { PlotItem } from "@/components/admin/records/plot-item";
 import { mockData } from "@/constants/mock-data-structure";
+import { db } from "@/firebaseConfig";
 import { processDataIntoHierarchy } from "@/scripts/admin/process-data";
 import { plotMatchesSearch } from "@/scripts/admin/search-data";
 import { Picker } from "@react-native-picker/picker";
+import { doc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -37,30 +39,46 @@ export const RecordPage = () => {
     }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editingPlot) return;
 
-    const updatedHierarchy = hierarchicalData.map((phase) => {
-      if (phase.phase !== selectedPhase) return phase;
+    try {
+      const plotDocRef = doc(
+        db,
+        "phases",
+        selectedPhase, // e.g., "phase_0"
+        "blocks",
+        selectedBlock, // e.g., "block_1"
+        "plots",
+        editingPlot.id.split("-")[2] // "ph0_blk1_plot_1"
+      );
 
-      const updatedBlocks = phase.blocks.map((block) => {
-        if (block.block !== selectedBlock) return block;
+      await setDoc(plotDocRef, editingPlot, { merge: true });
 
-        const updatedPlots = block.plots.map((plot) =>
-          plot.id === editingPlot.id ? editingPlot : plot
-        );
+      const updatedHierarchy = hierarchicalData.map((phase) => {
+        if (phase.phase !== selectedPhase) return phase;
 
-        return { ...block, plots: updatedPlots };
+        const updatedBlocks = phase.blocks.map((block) => {
+          if (block.block !== selectedBlock) return block;
+
+          const updatedPlots = block.plots.map((plot) =>
+            plot.id === editingPlot.id ? editingPlot : plot
+          );
+
+          return { ...block, plots: updatedPlots };
+        });
+
+        return { ...phase, blocks: updatedBlocks };
       });
 
-      return { ...phase, blocks: updatedBlocks };
-    });
-
-    setHierarchicalData(updatedHierarchy);
-    setFilteredPlots((prev) =>
-      prev.map((plot) => (plot.id === editingPlot.id ? editingPlot : plot))
-    );
-    setIsEditModalVisible(false);
+      setHierarchicalData(updatedHierarchy);
+      setFilteredPlots((prev) =>
+        prev.map((plot) => (plot.id === editingPlot.id ? editingPlot : plot))
+      );
+      setIsEditModalVisible(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -196,9 +214,7 @@ export const RecordPage = () => {
               <ScrollView showsVerticalScrollIndicator={false}>
                 <Text style={styles.modalTitle}>Edit Plot Information</Text>
 
-                {/* --- PLOT INFO --- */}
                 <Text style={styles.sectionHeader}>Plot Info</Text>
-                {/* STATUS DROPDOWN */}
                 <Text style={styles.sectionHeader}>Status</Text>
                 <View style={styles.pickerContainer}>
                   <Picker
@@ -213,7 +229,6 @@ export const RecordPage = () => {
                   </Picker>
                 </View>
 
-                {/* MAINTENANCE STATUS DROPDOWN */}
                 <Text style={styles.sectionHeader}>Maintenance Status</Text>
                 <View style={styles.pickerContainer}>
                   <Picker
@@ -231,32 +246,27 @@ export const RecordPage = () => {
                   </Picker>
                 </View>
 
-                {/* --- OWNER INFO --- */}
                 <Text style={styles.sectionHeader}>Owner Info</Text>
                 {Object.keys(editingPlot?.owner || {}).map((key) => {
-                  // Render dropdown for sex
                   if (key === "sex") {
                     return (
-                      <View style={styles.pickerContainer} key={key}>
-                        <Text style={{ marginBottom: 4 }}>Sex</Text>
-                        <Picker
-                          selectedValue={editingPlot.owner.sex || ""}
-                          onValueChange={(value) =>
-                            setEditingPlot({
-                              ...editingPlot,
-                              owner: { ...editingPlot.owner, sex: value },
-                            })
-                          }
-                        >
-                          {genderOptions.map((opt) => (
-                            <Picker.Item label={opt} value={opt} key={opt} />
-                          ))}
-                        </Picker>
-                      </View>
+                      <Picker
+                        selectedValue={editingPlot.owner.sex || ""}
+                        onValueChange={(value) =>
+                          setEditingPlot({
+                            ...editingPlot,
+                            owner: { ...editingPlot.owner, sex: value },
+                          })
+                        }
+                        style={styles.picker}
+                      >
+                        {genderOptions.map((opt) => (
+                          <Picker.Item label={opt} value={opt} key={opt} />
+                        ))}
+                      </Picker>
                     );
                   }
 
-                  // Render normal TextInput for all other fields
                   return (
                     <TextInput
                       key={key}
@@ -273,24 +283,44 @@ export const RecordPage = () => {
                   );
                 })}
 
-                {/* --- DECEASED INFO --- */}
                 <Text style={styles.sectionHeader}>Deceased Info</Text>
-                {Object.keys(editingPlot?.deceased || {}).map((key) => (
-                  <TextInput
-                    key={key}
-                    style={styles.modalInput}
-                    placeholder={key.replace(/_/g, " ").toUpperCase()}
-                    value={editingPlot?.deceased?.[key]?.toString() || ""}
-                    onChangeText={(text) =>
-                      setEditingPlot({
-                        ...editingPlot,
-                        deceased: { ...editingPlot.deceased, [key]: text },
-                      })
-                    }
-                  />
-                ))}
+                {Object.keys(editingPlot?.deceased || {}).map((key) => {
+                  if (key === "sex") {
+                    return (
+                      <Picker
+                        key={key}
+                        selectedValue={editingPlot.deceased.sex || ""}
+                        onValueChange={(value) =>
+                          setEditingPlot({
+                            ...editingPlot,
+                            deceased: { ...editingPlot.deceased, sex: value },
+                          })
+                        }
+                        style={styles.picker}
+                      >
+                        <Picker.Item label="Select Gender" value="" />
+                        <Picker.Item label="Male" value="male" />
+                        <Picker.Item label="Female" value="female" />
+                      </Picker>
+                    );
+                  }
 
-                {/* --- BUTTONS --- */}
+                  return (
+                    <TextInput
+                      key={key}
+                      style={styles.modalInput}
+                      placeholder={key.replace(/_/g, " ").toUpperCase()}
+                      value={editingPlot.deceased[key]?.toString() || ""}
+                      onChangeText={(text) =>
+                        setEditingPlot({
+                          ...editingPlot,
+                          deceased: { ...editingPlot.deceased, [key]: text },
+                        })
+                      }
+                    />
+                  );
+                })}
+
                 <View style={styles.modalButtons}>
                   <Text style={styles.saveButton} onPress={handleSaveEdit}>
                     Save
@@ -407,6 +437,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     overflow: "hidden",
     backgroundColor: "#f9f9f9",
+  },
+  picker: {
+    height: 40,
+    width: 150,
+    backgroundColor: "white",
+    marginBottom: 10,
   },
 });
 
