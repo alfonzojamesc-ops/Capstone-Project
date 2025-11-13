@@ -1,3 +1,12 @@
+import { db } from "@/firebaseConfig";
+import { UserAdmin } from "@/types/firestore-types";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import {
   Alert,
@@ -27,63 +36,116 @@ export const AdminManagement = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // for toggle
 
-  const handleAddAdmin = () => {
-    if (!username || !password || !realName) {
+  const handleAddAdmin = async () => {
+    if (!username || !password) {
       Alert.alert("Validation", "Please fill all fields.");
       return;
     }
-    const newAdmin = {
-      id: Date.now(),
-      username,
-      realName,
-      password,
-      creationDate: new Date().toLocaleString(),
+
+    const newAdmin: UserAdmin = {
+      level: 1, // default regular admin
+      username, // from input
+      password_hash: password, // storing password directly as requested
+      last_login: "", // initially empty
     };
-    setAdmins([...admins, newAdmin]);
-    setUsername("");
-    setRealName("");
-    setPassword("");
+
+    try {
+      await addDoc(collection(db, "admins"), newAdmin);
+
+      // Clear form
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Failed to add admin.");
+    }
   };
 
-  const handleEditAdmin = (admin) => {
-    setIsEditing(true);
-    setCurrentAdmin(admin);
-    setUsername(admin.username);
-    setRealName(admin.realName);
-    setPassword(admin.password);
-    setShowPassword(false); // reset toggle when editing
+  const handleEditAdmin = async () => {
+    if (!currentAdmin || !username || !password) {
+      alert("Fill all fields");
+      return;
+    }
+
+    const adminRef = doc(db, "admins", currentAdmin.id);
+
+    const updatedAdmin = {
+      username,
+      password_hash: password,
+      level: currentAdmin.level, // keep existing level
+      last_login: currentAdmin.last_login, // keep existing last login
+    };
+
+    try {
+      await updateDoc(adminRef, updatedAdmin);
+      setIsEditing(false);
+      setCurrentAdmin(null);
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update admin");
+    }
   };
 
-  const handleUpdateAdmin = () => {
-    setAdmins(
-      admins.map((admin) =>
-        // @ts-expect-error TS(18047): 'currentAdmin' is possibly 'null'.
-        admin.id === currentAdmin.id
-          ? { ...admin, username, realName, password }
-          : admin
-      )
-    );
-    setIsEditing(false);
-    setCurrentAdmin(null);
-    setUsername("");
-    setRealName("");
-    setPassword("");
-    setShowPassword(false);
+  const handleUpdateAdmin = async () => {
+    if (!currentAdmin || !username || !password) {
+      alert("Fill all fields");
+      return;
+    }
+
+    const adminRef = doc(db, "admins", currentAdmin.id);
+
+    const updatedAdmin: UserAdmin = {
+      level: currentAdmin.level, // keep existing level
+      username, // updated
+      password_hash: password, // updated
+      last_login: currentAdmin.last_login, // keep existing last login
+    };
+
+    try {
+      await updateDoc(adminRef, updatedAdmin);
+
+      // Update local state for UI
+      setAdmins(
+        admins.map((admin) =>
+          admin.id === currentAdmin.id ? { ...admin, ...updatedAdmin } : admin
+        )
+      );
+
+      setIsEditing(false);
+      setCurrentAdmin(null);
+      setUsername("");
+      setPassword("");
+      setShowPassword(false);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update admin");
+    }
   };
 
-  const handleDeleteAdmin = (id) => {
+  const handleDeleteAdmin = (id: string) => {
     Alert.alert(
       "Confirm Delete",
       "Are you sure you want to delete this admin?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => setAdmins(admins.filter((admin) => admin.id !== id)),
+          onPress: async () => {
+            try {
+              // Delete from Firestore
+              const adminRef = doc(db, "admins", id);
+              await deleteDoc(adminRef);
+
+              // Update local state
+              setAdmins(admins.filter((admin) => admin.id !== id));
+            } catch (error) {
+              console.error(error);
+              alert("Failed to delete admin");
+            }
+          },
         },
       ]
     );
