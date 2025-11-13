@@ -1,4 +1,14 @@
-import React, { useState } from "react";
+import { db } from "@/firebaseConfig";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -10,39 +20,52 @@ import {
   View,
 } from "react-native";
 
-export const AdminManagement = () => {
-  const [admins, setAdmins] = useState([
-    {
-      id: 1,
-      username: "AdminOne",
-      realName: "John Doe",
-      password: "pass123",
-      creationDate: new Date().toLocaleString(),
-    },
-  ]);
+export const superAdmin = { user: "super", pass: "1234" };
+
+const AdminManagement = () => {
+  const [admins, setAdmins] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentAdmin, setCurrentAdmin] = useState(null);
   const [username, setUsername] = useState("");
   const [realName, setRealName] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // for toggle
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleAddAdmin = () => {
+  const adminsRef = collection(db, "admins");
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(adminsRef, (snapshot) => {
+      const fetched = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setAdmins(
+        fetched.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds)
+      );
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleAddAdmin = async () => {
     if (!username || !password || !realName) {
       Alert.alert("Validation", "Please fill all fields.");
       return;
     }
-    const newAdmin = {
-      id: Date.now(),
-      username,
-      realName,
-      password,
-      creationDate: new Date().toLocaleString(),
-    };
-    setAdmins([...admins, newAdmin]);
-    setUsername("");
-    setRealName("");
-    setPassword("");
+
+    try {
+      await addDoc(adminsRef, {
+        username,
+        realName,
+        password,
+        createdAt: serverTimestamp(),
+      });
+      setUsername("");
+      setRealName("");
+      setPassword("");
+    } catch (err) {
+      console.error("Error adding admin:", err);
+      Alert.alert("Error", "Failed to add admin.");
+    }
   };
 
   const handleEditAdmin = (admin) => {
@@ -51,24 +74,28 @@ export const AdminManagement = () => {
     setUsername(admin.username);
     setRealName(admin.realName);
     setPassword(admin.password);
-    setShowPassword(false); // reset toggle when editing
+    setShowPassword(false);
   };
 
-  const handleUpdateAdmin = () => {
-    setAdmins(
-      admins.map((admin) =>
-        // @ts-expect-error TS(18047): 'currentAdmin' is possibly 'null'.
-        admin.id === currentAdmin.id
-          ? { ...admin, username, realName, password }
-          : admin
-      )
-    );
-    setIsEditing(false);
-    setCurrentAdmin(null);
-    setUsername("");
-    setRealName("");
-    setPassword("");
-    setShowPassword(false);
+  const handleUpdateAdmin = async () => {
+    if (!currentAdmin) return;
+    try {
+      const adminDoc = doc(db, "admins", currentAdmin.id);
+      await updateDoc(adminDoc, {
+        username,
+        realName,
+        password,
+      });
+      setIsEditing(false);
+      setCurrentAdmin(null);
+      setUsername("");
+      setRealName("");
+      setPassword("");
+      setShowPassword(false);
+    } catch (err) {
+      console.error("Error updating admin:", err);
+      Alert.alert("Error", "Failed to update admin.");
+    }
   };
 
   const handleDeleteAdmin = (id) => {
@@ -76,14 +103,18 @@ export const AdminManagement = () => {
       "Confirm Delete",
       "Are you sure you want to delete this admin?",
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => setAdmins(admins.filter((admin) => admin.id !== id)),
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(db, "admins", id));
+            } catch (err) {
+              console.error("Error deleting admin:", err);
+              Alert.alert("Error", "Failed to delete admin.");
+            }
+          },
         },
       ]
     );
@@ -104,9 +135,13 @@ export const AdminManagement = () => {
         <Text style={styles.username}>{item.username}</Text>
         <Text style={styles.realName}>Name: {item.realName}</Text>
         <Text style={styles.email}>
-          Password: {"*".repeat(item.password.length)}
+          Password: {"*".repeat(item.password?.length || 0)}
         </Text>
-        <Text style={styles.creationDate}>Created: {item.creationDate}</Text>
+        {item.createdAt && (
+          <Text style={styles.creationDate}>
+            Created: {new Date(item.createdAt.seconds * 1000).toLocaleString()}
+          </Text>
+        )}
       </View>
       <View style={styles.actionsContainer}>
         <TouchableOpacity
@@ -117,7 +152,9 @@ export const AdminManagement = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDeleteAdmin(item.id)}
+          onPress={() => {
+            deleteDoc(doc(db, `admins/${item.id}`));
+          }}
         >
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
@@ -128,9 +165,10 @@ export const AdminManagement = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Admin Accounts</Text>
+
       <FlatList
         data={admins}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
         style={styles.list}
       />
@@ -193,21 +231,13 @@ export const AdminManagement = () => {
   );
 };
 
+export default AdminManagement;
+
+// ✅ Your same styles
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  list: {
-    flexGrow: 0,
-    marginBottom: 20,
-  },
+  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  header: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
+  list: { flexGrow: 0, marginBottom: 20 },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -216,25 +246,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#ccc",
   },
-  infoContainer: {
-    flex: 3,
-  },
-  username: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  realName: {
-    fontSize: 14,
-    color: "#555",
-  },
-  email: {
-    fontSize: 14,
-    color: "#555",
-  },
-  creationDate: {
-    fontSize: 12,
-    color: "#999",
-  },
+  infoContainer: { flex: 3 },
+  username: { fontSize: 16, fontWeight: "600" },
+  realName: { fontSize: 14, color: "#555" },
+  email: { fontSize: 14, color: "#555" },
+  creationDate: { fontSize: 12, color: "#999" },
   actionsContainer: {
     flexDirection: "row",
     flex: 1,
@@ -246,25 +262,10 @@ const styles = StyleSheet.create({
     backgroundColor: "dodgerblue",
     borderRadius: 4,
   },
-  deleteButton: {
-    padding: 5,
-    backgroundColor: "#F44336",
-    borderRadius: 4,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 14,
-  },
-  formContainer: {
-    padding: 10,
-    borderTopWidth: 1,
-    borderColor: "#ccc",
-  },
-  formHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
+  deleteButton: { padding: 5, backgroundColor: "#F44336", borderRadius: 4 },
+  buttonText: { color: "#fff", fontSize: 14 },
+  formContainer: { padding: 10, borderTopWidth: 1, borderColor: "#ccc" },
+  formHeader: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
   input: {
     height: 40,
     borderColor: "#999",
@@ -273,10 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 4,
   },
-  passwordContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-  },
+  passwordContainer: { flexDirection: "row", alignItems: "flex-start" },
   toggleButton: {
     width: 55,
     marginLeft: 10,
@@ -284,16 +282,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
     borderRadius: 4,
   },
-  toggleButtonText: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 14,
-  },
+  toggleButtonText: { flex: 1, textAlign: "center", fontSize: 14 },
   buttonsRow: {
     gap: 10,
     flexDirection: "row",
     justifyContent: "space-between",
   },
 });
-
-export default AdminManagement;
