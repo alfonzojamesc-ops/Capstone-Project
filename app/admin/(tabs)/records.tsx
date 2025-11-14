@@ -6,7 +6,7 @@ import { db } from "@/firebaseConfig";
 import { processDataIntoHierarchy } from "@/scripts/admin/process-data";
 import { plotMatchesSearch } from "@/scripts/admin/search-data";
 import { Picker } from "@react-native-picker/picker";
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -83,27 +83,63 @@ export const RecordPage = () => {
 
   const handleDelete = async (plotId) => {
     if (!editingPlot) return;
+    console.log("resetting plot info for plotId:", plotId);
 
     try {
       const plotDocRef = doc(
         db,
         "phases",
-        selectedPhase, // e.g., "phase_0"
+        selectedPhase,
         "blocks",
-        selectedBlock, // e.g., "block_1"
+        selectedBlock,
         "plots",
-        editingPlot.id.split("-")[2] // "ph0_blk1_plot_1"
+        editingPlot.id.split("-")[2]
       );
 
-      await deleteDoc(plotDocRef);
+      // Create a blank template based on your data structure
+      const resetPlot = {
+        status: "available",
+        maintenance_status: "",
+        owner: {
+          sex: "",
+          first_name: "",
+          middle_name: "",
+          last_name: "",
+          date_of_birth: "",
+          address: "",
+          phone: "",
+          email: "",
+          purchase_date: "",
+          deed_number: "",
+          notes: "",
+        },
+        deceased: {
+          sex: "",
+          first_name: "",
+          middle_name: "",
+          last_name: "",
+          date_of_birth: "",
+          date_of_death: "",
+          date_of_interment: "",
+          burial_type: "",
+          funeral_home: "",
+          image: "",
+          notes: "",
+        },
+      };
 
+      await setDoc(plotDocRef, resetPlot, { merge: true });
+
+      // Update local state
       const updatedHierarchy = hierarchicalData.map((phase) => {
         if (phase.phase !== selectedPhase) return phase;
 
         const updatedBlocks = phase.blocks.map((block) => {
           if (block.block !== selectedBlock) return block;
 
-          const updatedPlots = block.plots.filter((plot) => plot.id !== plotId);
+          const updatedPlots = block.plots.map((plot) =>
+            plot.id === plotId ? { ...plot, ...resetPlot } : plot
+          );
 
           return { ...block, plots: updatedPlots };
         });
@@ -112,9 +148,13 @@ export const RecordPage = () => {
       });
 
       setHierarchicalData(updatedHierarchy);
-      setFilteredPlots((prev) => prev.filter((plot) => plot.id !== plotId));
+      setFilteredPlots((prev) =>
+        prev.map((plot) =>
+          plot.id === plotId ? { ...plot, ...resetPlot } : plot
+        )
+      );
     } catch (error) {
-      console.error("Failed to delete plot:", error);
+      console.error("Failed to reset plot:", error);
     }
   };
 
@@ -233,7 +273,7 @@ export const RecordPage = () => {
               showDetails={true}
               handleAdd={(id) => console.log(`Add plot ${id}`)}
               handleEdit={handleEdit}
-              handleDelete={(id) => console.log(`Delete plot ${id}`)}
+              handleDelete={handleDelete}
             />
           )}
           contentContainerStyle={styles.listContainer}
