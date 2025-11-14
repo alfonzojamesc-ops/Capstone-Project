@@ -1,4 +1,5 @@
 import { db } from "@/firebaseConfig";
+import { useAuth } from "@/lib/auth-context";
 import {
   addDoc,
   collection,
@@ -20,7 +21,7 @@ import {
   View,
 } from "react-native";
 
-export const superAdmin = { user: "super", pass: "1234" };
+export const superAdmin = { username: "super", password: "1234" };
 
 const AdminManagement = () => {
   const [admins, setAdmins] = useState([]);
@@ -32,6 +33,12 @@ const AdminManagement = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const adminsRef = collection(db, "admins");
+
+  const { user } = useAuth();
+
+  if (user?.username !== superAdmin.username) {
+    return <Text>Access Denied</Text>;
+  }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(adminsRef, (snapshot) => {

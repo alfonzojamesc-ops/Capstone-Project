@@ -1,4 +1,5 @@
-import { Link } from "expo-router";
+import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -7,14 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import AdminManagement from "./(tabs)/admins";
+import AdminManagement, { superAdmin } from "./(tabs)/admins";
 import AnalyticsPage from "./(tabs)/analytics";
-import AccountSettings from "./(tabs)/settings";
-import TasksPage from "./(tabs)/tasks";
 import RecordPage from "./(tabs)/records";
+import TasksPage from "./(tabs)/tasks";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("Analytics");
+  const { user, logout } = useAuth();
+  const router = useRouter();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -90,23 +92,25 @@ export default function Dashboard() {
                 </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setActiveTab("Admins")}>
-              <View
-                style={[
-                  styles.navItem,
-                  activeTab === "Admins" && styles.activeNavItem,
-                ]}
-              >
-                <Text
+            {user?.username === superAdmin.username && (
+              <TouchableOpacity onPress={() => setActiveTab("Admins")}>
+                <View
                   style={[
-                    styles.navText,
-                    activeTab === "Admins" && styles.activeNavText,
+                    styles.navItem,
+                    activeTab === "Admins" && styles.activeNavItem,
                   ]}
                 >
-                  Manage Admins
-                </Text>
-              </View>
-            </TouchableOpacity>
+                  <Text
+                    style={[
+                      styles.navText,
+                      activeTab === "Admins" && styles.activeNavText,
+                    ]}
+                  >
+                    Manage Admins
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
           <View>
             {/* <TouchableOpacity onPress={() => setActiveTab("Settings")}>
@@ -126,13 +130,16 @@ export default function Dashboard() {
                 </Text>
               </View>
             </TouchableOpacity> */}
-            <Link href="/" asChild>
-              <TouchableOpacity>
-                <View style={styles.navItem}>
-                  <Text style={styles.navText}>Logout</Text>
-                </View>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity
+              onPress={() => {
+                logout();
+                router.replace("/login");
+              }}
+            >
+              <View style={styles.navItem}>
+                <Text style={styles.navText}>Logout</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
