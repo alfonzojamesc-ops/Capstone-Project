@@ -13,7 +13,21 @@ const SceneContent = () => {
 
   useEffect(() => {
     setCamera(camera);
+
+    // Set up interval to log camera position every 2 seconds
+    const interval = setInterval(() => {
+      const { x, y, z } = camera.position;
+      console.log(
+        `Camera position: x=${x.toFixed(3)}, y=${y.toFixed(3)}, z=${z.toFixed(
+          3
+        )}`
+      );
+    }, 2000);
+
+    // Cleanup interval when component unmounts
+    return () => clearInterval(interval);
   }, [camera]);
+
   return (
     <>
       <ambientLight color="#ffffff" />
@@ -28,7 +42,7 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls autoRotate target={startTarget} />
+      <OrbitControls  target={startTarget} />
     </>
   );
 };

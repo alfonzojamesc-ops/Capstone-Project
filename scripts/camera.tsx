@@ -28,3 +28,33 @@ export function moveCamera(to, speed = 1) {
     }
   })();
 }
+
+export function sortByDistance(
+  vectors: THREE.Vector3[],
+  target: THREE.Vector3
+): THREE.Vector3[] {
+  const distanceSquared = (a: THREE.Vector3, b: THREE.Vector3): number => {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    const dz = a.z - b.z;
+    return dx * dx + dy * dy + dz * dz;
+  };
+
+  return [...vectors].sort((a, b) => {
+    return distanceSquared(a, target) - distanceSquared(b, target);
+  });
+}
+
+export function parsePath(
+  waypoints: THREE.Vector3[],
+  target: THREE.Vector3
+): THREE.Vector3[] {
+  let parsedPath: THREE.Vector3[] = [];
+
+  for (let i = 0; i < waypoints.length; i++) {
+    if (waypoints[i] === sortByDistance(waypoints, target)[0])
+      parsedPath = waypoints.slice(0, i);
+  }
+
+  return parsedPath;
+}
