@@ -1,4 +1,5 @@
 import { db } from "@/firebaseConfig";
+import { pathCamera } from "@/scripts/camera";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -126,8 +127,8 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
       renderItem={({ item }) => (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => {
-            //
+          onPress={async () => {
+            await pathCamera([item.grid_coordinates![0], 0, item.grid_coordinates![1]]);
           }}
           style={styles.item}
         >

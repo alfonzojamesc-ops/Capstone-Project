@@ -1,38 +1,53 @@
+import { waypoints } from "@/constants/map3d/waypoints";
+import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 let cameraRef: THREE.Camera | null = null;
+let controlsRef: typeof OrbitControls | null = null;
 
 export function setCamera(cam: THREE.Camera) {
   cameraRef = cam;
 }
 
+export function setControls(controls) {
+  controlsRef = controls;
+}
+
 let moving = false;
 
-export function moveCamera(to, speed = 1) {
-  if (!cameraRef || moving) return;
+export async function moveCamera(to, speed = 1) {
+  if (!cameraRef || moving) return Promise.resolve(false);
+
   const start = cameraRef.position.clone();
-  const end = Array.isArray(to) ? new THREE.Vector3(...to) : to;
+  const end = Array.isArray(to) ? new THREE.Vector3(...to) : to.clone();
   const dist = start.distanceTo(end);
   const duration = (dist / (speed * 25)) * 1000;
   const startTime = performance.now();
   moving = true;
 
-  (function animate() {
-    const elapsed = performance.now() - startTime;
-    const alpha = Math.min(elapsed / duration, 1);
-    cameraRef.position.lerpVectors(start, end, alpha);
-    if (alpha < 1) requestAnimationFrame(animate);
-    else {
-      cameraRef.position.copy(end);
-      moving = false;
-    }
-  })();
+  return new Promise((resolve) => {
+    (function animate() {
+      const elapsed = performance.now() - startTime;
+      const alpha = Math.min(elapsed / duration, 1);
+      cameraRef!.position.lerpVectors(start, end, alpha);
+
+      if (alpha < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        cameraRef!.position.copy(end);
+        moving = false;
+
+        // check if camera is close enough to target
+        const epsilon = 1e-4; // tolerance
+        const reached = cameraRef!.position.distanceTo(end) <= epsilon;
+        resolve(reached);
+      }
+    })();
+  });
 }
 
-export function sortByDistance(
-  vectors: THREE.Vector3[],
-  target: THREE.Vector3
-): THREE.Vector3[] {
+export function parsePath(target: THREE.Vector3): THREE.Vector3[] {
+  // squared dist
   const distanceSquared = (a: THREE.Vector3, b: THREE.Vector3): number => {
     const dx = a.x - b.x;
     const dy = a.y - b.y;
@@ -40,21 +55,36 @@ export function sortByDistance(
     return dx * dx + dy * dy + dz * dz;
   };
 
-  return [...vectors].sort((a, b) => {
-    return distanceSquared(a, target) - distanceSquared(b, target);
-  });
-}
+  // sort waypoints
+  const sorted = [...waypoints].sort(
+    (a, b) => distanceSquared(a, target) - distanceSquared(b, target)
+  );
 
-export function parsePath(
-  waypoints: THREE.Vector3[],
-  target: THREE.Vector3
-): THREE.Vector3[] {
-  let parsedPath: THREE.Vector3[] = [];
+  const closest = sorted[0];
 
-  for (let i = 0; i < waypoints.length; i++) {
-    if (waypoints[i] === sortByDistance(waypoints, target)[0])
-      parsedPath = waypoints.slice(0, i);
-  }
+  // slice original path up to that closest waypoint
+  const index = waypoints.indexOf(closest);
+  const parsedPath = index >= 0 ? waypoints.slice(0, index) : [];
 
   return parsedPath;
+}
+
+export async function pathCamera(target: THREE.Vector3 | number[], speed = 1) {
+  // convert to Vector3
+  const normalizedTarget = Array.isArray(target)
+    ? new THREE.Vector3(...target)
+    : target;
+
+  const path = parsePath(normalizedTarget);
+
+  for (let i = 0; i < path.length; i++) {
+    const point = path[i];
+    const success =
+      i != 0 ? await moveCamera(point, speed) : cameraRef!.position.copy(point);
+
+    if (!success) {
+      console.warn("Camera failed to reach point:", point);
+      break;
+    }
+  }
 }

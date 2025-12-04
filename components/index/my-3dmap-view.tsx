@@ -1,4 +1,4 @@
-import { setCamera } from "@/scripts/camera";
+import { setCamera, setControls } from "@/scripts/camera";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
@@ -18,9 +18,7 @@ const SceneContent = () => {
     const interval = setInterval(() => {
       const { x, y, z } = camera.position;
       console.log(
-        `Camera position: x=${x.toFixed(3)}, y=${y.toFixed(3)}, z=${z.toFixed(
-          3
-        )}`
+        `Camera position: ${x.toFixed(8)}, ${y.toFixed(8)}, ${z.toFixed(8)}`
       );
     }, 2000);
 
@@ -42,7 +40,12 @@ const SceneContent = () => {
           <Model />
         </Instances>
       </Suspense>
-      <OrbitControls  target={startTarget} />
+       <OrbitControls
+        target={startTarget}
+        ref={(controls) => {
+          if (controls) setControls(controls);
+        }}
+      />
     </>
   );
 };
