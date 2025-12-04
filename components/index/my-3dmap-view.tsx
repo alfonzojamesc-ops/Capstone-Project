@@ -6,10 +6,8 @@ import { Suspense, useEffect, useRef } from "react";
 import { Vector3 } from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
-const startTarget = new Vector3(-32.853, 0, 36.792);
-const startPos = new Vector3(-45.155, 6.192, 42.063);
-
 const SceneContent = () => {
+  const { demandedCameraPosition, demandedCameraTarget } = useCamera();
   const { camera } = useThree();
   const controls = useRef<OrbitControlsType>(null);
 
@@ -53,19 +51,28 @@ const SceneContent = () => {
 
 const My3DMap = () => {
   return (
-    <>
-      <Canvas
-        style={{ backgroundColor: "#aaffff" }}
-        camera={{
-          position: startPos,
-          fov: 60,
-          far: 120,
-        }}
-      >
-        <SceneContent />
-      </Canvas>
-    </>
+    <Canvas
+      style={{ backgroundColor: "#aaffff" }}
+      camera={{
+        position: new Vector3(-45.155, 6.192, 42.063),
+        fov: 60,
+        far: 120,
+      }}
+    >
+      <SceneContent />
+    </Canvas>
   );
 };
 
 export default My3DMap;
+
+function moveTowardsUniformSpeed(current, target, speed, delta) {
+  const direction = new Vector3().subVectors(target, current).normalize();
+  const distance = current.distanceTo(target);
+  const moveDistance = Math.min(speed * delta, distance);
+  current.add(direction.multiplyScalar(moveDistance));
+}
+
+function moveTowardsLerp(current, target, damping) {
+  current.lerp(target, damping);
+}

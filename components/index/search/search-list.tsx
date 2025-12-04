@@ -1,5 +1,5 @@
 import { db } from "@/firebaseConfig";
-import { pathCamera } from "@/scripts/camera";
+import { useCamera } from "@/hooks/camera-context";
 import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -31,6 +31,7 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
   const [deceasedList, setDeceasedList] = useState<Deceased[]>([]);
   const [filtered, setFiltered] = useState<Deceased[]>([]);
   const [loading, setLoading] = useState(true);
+  const { demandCamera } = useCamera();
 
   useEffect(() => {
     const fetchDeceased = async () => {
@@ -127,8 +128,13 @@ export default function SearchList({ searchQuery, onSelect }: SearchListProps) {
       renderItem={({ item }) => (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={async () => {
-            await pathCamera([item.grid_coordinates![0], 0, item.grid_coordinates![1]]);
+          onPress={() => {
+            if (item.grid_coordinates) {
+              const [x, _, z] = item.grid_coordinates;
+              demandCamera([x, 0, z]);
+            }
+            console.log("Selected:", item.first_name, item.last_name);
+            onSelect?.(item);
           }}
           style={styles.item}
         >
