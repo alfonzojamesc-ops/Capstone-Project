@@ -1,7 +1,8 @@
 import { setCamera, setControls } from "@/scripts/camera";
 import { OrbitControls } from "@react-three/drei";
+import type { OrbitControls as OrbitControlsType } from "three-stdlib";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { Vector3 } from "three";
 import { Instances, Model } from "./my-3dmap-model";
 
@@ -10,9 +11,11 @@ const startPos = new Vector3(-45.155, 6.192, 42.063);
 
 const SceneContent = () => {
   const { camera } = useThree();
+  const controls = useRef<OrbitControlsType>(null);
 
   useEffect(() => {
     setCamera(camera);
+    if (controls.current) setControls(controls.current);
 
     // Set up interval to log camera position every 2 seconds
     const interval = setInterval(() => {
@@ -42,9 +45,7 @@ const SceneContent = () => {
       </Suspense>
        <OrbitControls
         target={startTarget}
-        ref={(controls) => {
-          if (controls) setControls(controls);
-        }}
+        ref={controls}
       />
     </>
   );

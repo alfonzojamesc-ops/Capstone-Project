@@ -66,7 +66,7 @@ export function parsePath(target: THREE.Vector3): THREE.Vector3[] {
   const index = waypoints.indexOf(closest);
   const parsedPath = index >= 0 ? waypoints.slice(0, index) : [];
 
-  return parsedPath;
+  return [...parsedPath, target];
 }
 
 export async function pathCamera(target: THREE.Vector3 | number[], speed = 1) {
@@ -78,9 +78,17 @@ export async function pathCamera(target: THREE.Vector3 | number[], speed = 1) {
   const path = parsePath(normalizedTarget);
 
   for (let i = 0; i < path.length; i++) {
-    const point = path[i];
+    const point = path[i].clone();
+    const forward = path[i + 1] ? path[i + 1] : path[i];
     const success =
       i != 0 ? await moveCamera(point, speed) : cameraRef!.position.copy(point);
+
+    if (controlsRef) {
+      if (controlsRef.target != forward) {
+        controlsRef.target.copy(forward);
+        controlsRef.update();
+      }
+    }
 
     if (!success) {
       console.warn("Camera failed to reach point:", point);
