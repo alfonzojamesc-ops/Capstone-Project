@@ -81,7 +81,7 @@ export async function pathCamera(target: THREE.Vector3 | number[], speed = 1) {
   for (let i = 0; i < path.length; i++) {
     const point = path[i + 1]
       ? path[i].clone()
-      : new THREE.Vector3().lerpVectors(path[i - 48], path[i], 0.75).clone();
+      : new THREE.Vector3().lerpVectors(path[i - 96], path[i], 0.75).clone();
     const forward = path[i + 1] ? path[i + 1] : path[i];
     const success =
       i != 0 ? await moveCamera(point, speed) : cameraRef!.position.copy(point);

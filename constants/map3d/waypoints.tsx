@@ -11,11 +11,35 @@ export const waypoints = [
 
 import { CatmullRomCurve3 } from "three";
 
+function clamp(v: number, a = 0, b = 1) { return Math.max(a, Math.min(b, v)); }
+function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+
+function softNormalizeY(
+  y: number,
+  yTarget = 3.14,
+  strength = 0.5,
+  falloff = 1.0,
+  pullLarge = true
+) {
+  const dy = Math.abs(y - yTarget);
+  // normalized distance in [0,1]
+  const d = clamp(dy / Math.max(1e-6, falloff), 0, 1);
+
+  const shaped = pullLarge ? (1 - Math.exp(-3 * d)) : Math.exp(-3 * d);
+  const weight = clamp(strength * shaped, 0, 1);
+
+  return lerp(y, yTarget, weight);
+}
+
 export function getLerpedWaypoints(
   waypoints: Vector3[],
   samplesPerSegment: number,
   closed = false,
-  curveType: "centripetal" | "chordal" | "catmullrom" = "centripetal"
+  curveType: "centripetal" | "chordal" | "catmullrom" = "centripetal",
+  yTarget = 3.14,
+  strength = 0.5,
+  falloff = 1.0,
+  pullLarge = true
 ): Vector3[] {
   if (!waypoints || waypoints.length === 0) return [];
   if (waypoints.length === 1 || samplesPerSegment <= 0)
@@ -33,9 +57,14 @@ export function getLerpedWaypoints(
   const totalSamples = segments * samplesPerSegment + 1;
 
   const out: Vector3[] = [];
+  const tmp = new Vector3();
+
   for (let i = 0; i < totalSamples; i++) {
-    const u = i / (totalSamples - 1); 
-    out.push(curve.getPointAt(u).clone());
+    const u = i / (totalSamples - 1);
+    curve.getPointAt(u, tmp);
+    // apply soft normalization to y
+    const newY = softNormalizeY(tmp.y, yTarget, strength, falloff, pullLarge);
+    out.push(new Vector3(tmp.x, newY, tmp.z));
   }
 
   return out;
