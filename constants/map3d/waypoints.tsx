@@ -2,27 +2,33 @@
 import { Vector3 } from "three";
 
 export const waypoints = [
-  new Vector3(-114.40268356, 3.14, 71.76660357),
-  new Vector3(-76.2920358, 3.14, 54.32058035),
-  new Vector3(-62.71791199, 13.14, 50.26124237), // chapel
-  new Vector3(-53.85924362, 13.14, 45.30669785), // chapel
-  new Vector3(-41.74045526, 3.14, 40.16410852),
-  new Vector3(-29.18511141, 3.14, 35.02279097),
-  new Vector3(-19.59691719, 3.14, 30.65221904),
-  new Vector3(-7.53795393, 3.14, 25.48232563),
-  new Vector3(4.56939422, 3.14, 20.35706118),
-  new Vector3(10.7304517, 3.14, 15.07469619),
-  new Vector3(12.28133873, 3.14, 10.03515739),
-  new Vector3(14.35306449, 3.14, 5.47469163),
-  new Vector3(15.86081309, 3.14, 0.08407441),
-  new Vector3(18.05576163, 3.14, -5.62260732),
-  new Vector3(19.58739195, 3.14, -10.68544707),
-  new Vector3(21.55658996, 3.14, -14.88721035),
-  new Vector3(32.87147473, 3.14, -12.40840342),
-  new Vector3(39.76224308, 3.14, -9.95297144),
-  new Vector3(50.79143833, 3.14, -6.42072162),
-  new Vector3(68.97073732, 3.14, 0.01930901),
-  new Vector3(84.46377817, 3.14, 5.55928034),
-  new Vector3(89.01977378, 3.14, 6.14787984),
-  new Vector3(98.9023728, 3.14, 10.35491719),
+  new Vector3(-97.43622760, 3.14, 64.68728537),
+  new Vector3(-56.71305451, 13.14, 47.02548982), // chapel
+  new Vector3(9.01175385, 3.14, 17.66966296),
+  new Vector3(21.53909037, 3.14, -14.76261872),
+  new Vector3(98.11740528, 3.14, 9.84566634),
 ];
+
+export function getLerpedWaypoints(
+  waypoints: Vector3[],
+  stepsPerSegment: number
+): Vector3[] {
+  if (!waypoints || waypoints.length === 0) return [];
+  if (waypoints.length === 1 || stepsPerSegment <= 0) return waypoints.map(p => p.clone());
+
+  const out: Vector3[] = [];
+  for (let i = 0; i < waypoints.length - 1; i++) {
+    const a = waypoints[i];
+    const b = waypoints[i + 1];
+    out.push(a.clone()); // keep start of segment
+
+    // create intermediate points
+    for (let s = 1; s <= stepsPerSegment; s++) {
+      const t = s / (stepsPerSegment + 1); // evenly spaced between a and b
+      const v = new Vector3().lerpVectors(a, b, t);
+      out.push(v);
+    }
+  }
+  out.push(waypoints[waypoints.length - 1].clone()); // keep final endpoint
+  return out;
+}
